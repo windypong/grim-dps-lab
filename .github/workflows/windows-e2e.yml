@@ -1,0 +1,62 @@
+name: Native Windows live database end-to-end
+on:
+  push:
+    branches:
+      - fix/windows-duckdb-startup
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: native-windows-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    env:
+      PYTHONUTF8: '1'
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Remove old reports so results belong to this run
+        shell: pwsh
+        run: |
+          if (Test-Path tests/reports) { Remove-Item tests/reports -Recurse -Force }
+          New-Item tests/reports -ItemType Directory -Force | Out-Null
+      - name: Build and deterministic tests
+        shell: pwsh
+        run: |
+          python build.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node tests/auto.test.js
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node tests/engine.test.js
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node tests/catalog.test.js
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tests/auto_backend_test.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Install test browser separately from app runtime
+        run: |
+          python -m pip install playwright==1.55.0
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m playwright install chromium
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Actual CMD launcher, real DB, Windows Chromium, offline restart
+        run: python tests/windows_e2e.py
+      - name: Upload actual reports even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-windows-test-results-${{ github.run_number }}
+          path: tests/reports/
+          retention-days: 7
+          if-no-files-found: warn
