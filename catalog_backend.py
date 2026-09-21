@@ -47,8 +47,8 @@ def read_parquet(path: Path):
     try: import duckdb
     except ImportError as e:
         raise RuntimeError('DuckDB not installed. Start with START_WINDOWS.cmd or run: python -m pip install -r requirements.txt') from e
-    with duckdb.connect() as con:
-        con.execute("SET enable_external_access=true")
+    # Set startup-only options before the database is opened (DuckDB 1.4.1).
+    with duckdb.connect(config={"enable_external_access": True}) as con:
         cur=con.execute('SELECT * FROM read_parquet(?)',[str(path)])
         cols=[d[0] for d in cur.description]
         return [dict(zip(cols,row)) for row in cur.fetchall()]
@@ -89,7 +89,7 @@ def normalize(tables: dict, meta: dict) -> dict:
         domain=r['domain']; rec=r['record']; tag=r.get('name_tag')
         if domain not in {'gear','component','augment','relic','affix'} or not tag: continue
         ko=label(tag,'ko'); en=label(tag,'en')
-        if ko==tag and en==tag: continue  # Unnamed internal templates are not searchable items.
+        if ko==tag and en==tag: continue
         slots=[]
         for x in arr(r.get('slots')):
             y=SLOTS.get(x,x)
