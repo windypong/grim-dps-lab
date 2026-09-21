@@ -1,0 +1,39 @@
+PASS HTTP server embeds explicit fixture marker
+PASS App starts with no JavaScript exception
+PASS Fixture label visibly warns not real game data
+PASS Initial missing-primary has no invented DPS
+PASS Korean item search returns items
+PASS Item selected in UI stores DB record
+PASS Preset sets exact total hard points 250
+PASS Skill levels receive automatic equipment bonuses
+PASS Supported-effect DPS is computed
+PASS Devotion preset has 55 selected stars
+PASS Changing hard skill points automatically changes DPS
+PASS Restoring skill points restores DPS
+PASS Area buff toggle changes auto damage
+PASS Area buff is not duplicated on restore
+PASS Attribute allocation automatically changes OA
+PASS Keyboard toggles devotion star and recalculates
+PASS Restored devotion returns original damage
+PASS Target resistance automatically lowers DPS
+PASS A/B comparison section visible
+PASS Analysis includes real modeled skill rows
+PASS Build export includes points/attributes/devotions
+PASS Build JSON re-import restores automatic build
+PASS Diagnostics expose reference-growth limits
+PASS Raw enemy RR is included in audit
+PASS Audit export includes unsupported/approximate effects
+PASS Offline export includes catalogue and current build
+PASS Embedded offline HTML restores same result
+PASS Embedded labels cannot escape JSON script tags
+PASS Repeated offline export has one copy of DB/build
+PASS Mobile no whole-page overflow: gear
+PASS Mobile no whole-page overflow: character
+PASS Mobile no whole-page overflow: skills
+PASS Mobile no whole-page overflow: devotions
+PASS Mobile no whole-page overflow: target
+PASS Mobile no whole-page overflow: analysis
+PASS Mobile no whole-page overflow: audit
+PASS Mobile no whole-page overflow: logs
+PASS Mobile no whole-page overflow: help
+PASS No unhandled browser exceptions across tested interactions

@@ -1,0 +1,35 @@
+{
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "node": "v22.16.0",
+  "nativeWindows": false,
+  "tools": {
+    "cmd.exe": null,
+    "powershell": null,
+    "pwsh": null,
+    "wine": null,
+    "wine64": null,
+    "qemu-system-x86_64": null,
+    "chromium": "/usr/bin/chromium"
+  },
+  "network": [
+    {
+      "url": "https://raw.githubusercontent.com/tednaleid/grimdawn-devotions/main/deposit.lock",
+      "status": "failed",
+      "error": "URLError(gaierror(-3, 'Temporary failure in name resolution'))",
+      "seconds": 0.014
+    },
+    {
+      "url": "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip",
+      "status": "failed",
+      "error": "URLError(gaierror(-3, 'Temporary failure in name resolution'))",
+      "seconds": 5.02
+    },
+    {
+      "url": "https://pypi.org/pypi/duckdb/1.4.1/json",
+      "status": "failed",
+      "error": "URLError(gaierror(-3, 'Temporary failure in name resolution'))",
+      "seconds": 0.009
+    }
+  ]
+}

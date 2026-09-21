@@ -1,0 +1,235 @@
+{
+  "suite": "v3 Chromium UI integration",
+  "platform": "linux",
+  "fixture": true,
+  "gameAccuracyValidated": false,
+  "mode": "Python HTTP from actual local server -> Chromium set_content; NOT browser navigation / native Windows",
+  "checks": [
+    {
+      "name": "HTTP server embeds explicit fixture marker",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "App starts with no JavaScript exception",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Fixture label visibly warns not real game data",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Initial missing-primary has no invented DPS",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Korean item search returns items",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Item selected in UI stores DB record",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Preset sets exact total hard points 250",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Skill levels receive automatic equipment bonuses",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Supported-effect DPS is computed",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Devotion preset has 55 selected stars",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Changing hard skill points automatically changes DPS",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Restoring skill points restores DPS",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Area buff toggle changes auto damage",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Area buff is not duplicated on restore",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Attribute allocation automatically changes OA",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Keyboard toggles devotion star and recalculates",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Restored devotion returns original damage",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Target resistance automatically lowers DPS",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "A/B comparison section visible",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Analysis includes real modeled skill rows",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Build export includes points/attributes/devotions",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Build JSON re-import restores automatic build",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Diagnostics expose reference-growth limits",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Raw enemy RR is included in audit",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Audit export includes unsupported/approximate effects",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Offline export includes catalogue and current build",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Embedded offline HTML restores same result",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Embedded labels cannot escape JSON script tags",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Repeated offline export has one copy of DB/build",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "Mobile no whole-page overflow: gear",
+      "status": "passed",
+      "details": {
+        "doc": 390,
+        "win": 390
+      }
+    },
+    {
+      "name": "Mobile no whole-page overflow: character",
+      "status": "passed",
+      "details": {
+        "doc": 390,
+        "win": 390
+      }
+    },
+    {
+      "name": "Mobile no whole-page overflow: skills",
+      "status": "passed",
+      "details": {
+        "doc": 390,
+        "win": 390
+      }
+    },
+    {
+      "name": "Mobile no whole-page overflow: devotions",
+      "status": "passed",
+      "details": {
+        "doc": 390,
+        "win": 390
+      }
+    },
+    {
+      "name": "Mobile no whole-page overflow: target",
+      "status": "passed",
+      "details": {
+        "doc": 390,
+        "win": 390
+      }
+    },
+    {
+      "name": "Mobile no whole-page overflow: analysis",
+      "status": "passed",
+      "details": {
+        "doc": 390,
+        "win": 390
+      }
+    },
+    {
+      "name": "Mobile no whole-page overflow: audit",
+      "status": "passed",
+      "details": {
+        "doc": 390,
+        "win": 390
+      }
+    },
+    {
+      "name": "Mobile no whole-page overflow: logs",
+      "status": "passed",
+      "details": {
+        "doc": 390,
+        "win": 390
+      }
+    },
+    {
+      "name": "Mobile no whole-page overflow: help",
+      "status": "passed",
+      "details": {
+        "doc": 390,
+        "win": 390
+      }
+    },
+    {
+      "name": "No unhandled browser exceptions across tested interactions",
+      "status": "passed",
+      "details": []
+    }
+  ],
+  "status": "passed",
+  "passed": 39,
+  "failed": 0,
+  "jsErrors": []
+}

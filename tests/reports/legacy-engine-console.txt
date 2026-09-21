@@ -1,0 +1,50 @@
+PASS OA == DA gives PTH 90
+PASS PTH minimum is 55
+PASS hit/crit probabilities always sum to 1
+PASS below 70 reduced normal damage
+PASS OA 3400/DA3000 expected critical probability
+PASS flat elemental split into thirds
+PASS local conversion then unconverted remainder only
+PASS full local conversion cannot double convert
+PASS Armor Piercing converts remaining physical once
+PASS empty WPS pool leaves 100% ordinary
+PASS WPS 150% is normalized to 100%
+PASS disabled WPS does not dilute pool
+PASS simple baseline deals 90 DPS after 90% hit chance
+PASS DAR and WPS damage coefficients multiply; flats add
+PASS main and offhand local flat damage are not double counted
+PASS non-weapon flat damage applies globally
+PASS global % bonuses on offhand also apply to mainhand
+PASS normal dual basic average uses 1.5 hands
+PASS weighted time is denominator, not average of per-skill DPS
+PASS attack speed cap
+PASS measured rate ignores attack speed changes
+PASS uptime scales direct damage only
+PASS final zero resistance differs from -100 by factor two
+PASS 100% resistance yields zero for that type
+PASS physical armor applied to each packet
+PASS flat absorption follows armor and percentage absorption
+PASS avoidance multiplies landed damage
+PASS same RR ID is not stacked; flat RR uses highest
+PASS final resistance mode bypasses RR list
+PASS same dot source keeps max; distinct sources add
+PASS ascension proc chance from equipment affects pool
+PASS seeded simulation is reproducible
+PASS long simulated averages approach expectation
+PASS trace total includes silent time in denominator
+PASS rolling window drops exact left boundary
+PASS full-window peak at event times, not sampled grid
+PASS short trace does not claim full-window peak
+PASS long trace has bounded chart point count
+PASS invalid duration is rejected
+PASS nested timestamp milliseconds map explicitly
+PASS timestamp zero is valid, missing timestamp is not invented
+PASS no timing information is rejected
+PASS CSV quoting and embedded commas
+PASS CSV unclosed quote is rejected
+PASS tooltip supported fields
+PASS tooltip ranges become averages and regeneration is not health
+PASS tooltip Korean supported fields
+PASS template does not silently install fabricated weapon stats
+
+48 engine tests passed.

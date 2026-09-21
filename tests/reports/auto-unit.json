@@ -1,0 +1,282 @@
+{
+  "suite": "v3 automatic model unit tests",
+  "fixture": true,
+  "gameAccuracyValidated": false,
+  "platform": "linux",
+  "passed": 68,
+  "failed": 0,
+  "results": [
+    {
+      "name": "rank: exact nonlinear middle point, never interpolation",
+      "status": "passed"
+    },
+    {
+      "name": "rank: clamps short array to last value",
+      "status": "passed"
+    },
+    {
+      "name": "rank: no investment contributes zero",
+      "status": "passed"
+    },
+    {
+      "name": "rank: constant scalar",
+      "status": "passed"
+    },
+    {
+      "name": "skill bonuses require an invested skill",
+      "status": "passed"
+    },
+    {
+      "name": "skill + mastery + all bonus, capped at ultimate",
+      "status": "passed"
+    },
+    {
+      "name": "transmuter ignores all gear levels",
+      "status": "passed"
+    },
+    {
+      "name": "raw min/max average once",
+      "status": "passed"
+    },
+    {
+      "name": "chance gated damage is expectation weighted",
+      "status": "passed"
+    },
+    {
+      "name": "elemental direct thirding",
+      "status": "passed"
+    },
+    {
+      "name": "elemental resistance mapped once",
+      "status": "passed"
+    },
+    {
+      "name": "crit and cast speed mapping",
+      "status": "passed"
+    },
+    {
+      "name": "DoT raw is rate not divided again by duration",
+      "status": "passed"
+    },
+    {
+      "name": "local conversion first and converted damage never reconverted",
+      "status": "passed"
+    },
+    {
+      "name": "competing conversions normalize above 100",
+      "status": "passed"
+    },
+    {
+      "name": "elemental conversion affects each component",
+      "status": "passed"
+    },
+    {
+      "name": "armor piercing acts on unconverted physical only",
+      "status": "passed"
+    },
+    {
+      "name": "physical->pierce does not create bleed from trauma",
+      "status": "passed"
+    },
+    {
+      "name": "cold->fire transfers analogous DoT",
+      "status": "passed"
+    },
+    {
+      "name": "equations use whitelist and case insensitive variables",
+      "status": "passed"
+    },
+    {
+      "name": "equations block property access and code injection",
+      "status": "passed"
+    },
+    {
+      "name": "equations reject missing variables",
+      "status": "passed"
+    },
+    {
+      "name": "on-hit cooldown renewal",
+      "status": "passed"
+    },
+    {
+      "name": "zero trigger rate gives zero procs",
+      "status": "passed"
+    },
+    {
+      "name": "proc uptime asymptotically bounded",
+      "status": "passed"
+    },
+    {
+      "name": "same-source -RR uses max, different sources stack",
+      "status": "passed"
+    },
+    {
+      "name": "flat RR uses max not sum",
+      "status": "passed"
+    },
+    {
+      "name": "percent reduced resistance magnifies negative resistance",
+      "status": "passed"
+    },
+    {
+      "name": "single weapon expected damage oracle",
+      "status": "passed"
+    },
+    {
+      "name": "gear bonus changes rank coefficient automatically",
+      "status": "passed"
+    },
+    {
+      "name": "gear mastery bonus affects skill, not mastery bar",
+      "status": "passed"
+    },
+    {
+      "name": "equip item skill modifier changes weapon multiplier",
+      "status": "passed"
+    },
+    {
+      "name": "manual legacy stats do not double count in auto mode",
+      "status": "passed"
+    },
+    {
+      "name": "dual weapon local damage remains local",
+      "status": "passed"
+    },
+    {
+      "name": "off weapon can be explicitly disabled",
+      "status": "passed"
+    },
+    {
+      "name": "global armor flat applied to every armor slot, body armor local",
+      "status": "passed"
+    },
+    {
+      "name": "spell without WD does not accidentally receive weapon damage",
+      "status": "passed"
+    },
+    {
+      "name": "missing primary does not fabricate DPS",
+      "status": "passed"
+    },
+    {
+      "name": "missing v3 DB gives preparation result",
+      "status": "passed"
+    },
+    {
+      "name": "unlearned prerequisite flagged",
+      "status": "passed"
+    },
+    {
+      "name": "point budget validated",
+      "status": "passed"
+    },
+    {
+      "name": "attribute budget validated",
+      "status": "passed"
+    },
+    {
+      "name": "unverified primary skill arrays diagnosed",
+      "status": "passed"
+    },
+    {
+      "name": "unsupported pet never presented as exact zero DPS complete",
+      "status": "passed"
+    },
+    {
+      "name": "weapons cannot silently turn on pet bonuses",
+      "status": "passed"
+    },
+    {
+      "name": "WPS probability overcap normalizes, does not stack extra attacks",
+      "status": "passed"
+    },
+    {
+      "name": "measured APS mode honors override",
+      "status": "passed"
+    },
+    {
+      "name": "uptime 0 results in zero offensive DPS",
+      "status": "passed"
+    },
+    {
+      "name": "DoT saturates instead of multiplying directly by APS",
+      "status": "passed"
+    },
+    {
+      "name": "completed constellation affinity granted once",
+      "status": "passed"
+    },
+    {
+      "name": "partial constellation no completion affinity",
+      "status": "passed"
+    },
+    {
+      "name": "missing predecessor invalid",
+      "status": "passed"
+    },
+    {
+      "name": "duplicate identical set piece does not count twice",
+      "status": "passed"
+    },
+    {
+      "name": "distinct set threshold boosts mastery levels",
+      "status": "passed"
+    },
+    {
+      "name": "fixture marker travels into report",
+      "status": "passed"
+    },
+    {
+      "name": "catalog fixture skills all exact-array callable",
+      "status": "passed"
+    },
+    {
+      "name": "malicious label is data not executable",
+      "status": "passed"
+    },
+    {
+      "name": "RR measured positive order oracle (Y -> Z -> X)",
+      "status": "passed"
+    },
+    {
+      "name": "RR measured negative oracle",
+      "status": "passed"
+    },
+    {
+      "name": "Assassins Mark public raw defensivePierce is enemy RR",
+      "status": "passed"
+    },
+    {
+      "name": "Manticore public TotalResistanceReduction key recognized",
+      "status": "passed"
+    },
+    {
+      "name": "Viper raw elemental percent reduced applies each elemental type only",
+      "status": "passed"
+    },
+    {
+      "name": "positive defensive resistance is not enemy RR",
+      "status": "passed"
+    },
+    {
+      "name": "conditional cooldown reset does not sum with flat cooldown",
+      "status": "passed"
+    },
+    {
+      "name": "Skill_BuffDebuff classified as enemy attack not player buff",
+      "status": "passed"
+    },
+    {
+      "name": "passive viper propagates through weapon damage and not player cold resistance",
+      "status": "passed"
+    },
+    {
+      "name": "skill-tree damage bonus follows converted type additively",
+      "status": "passed"
+    },
+    {
+      "name": "lowercase conversion damage types work",
+      "status": "passed"
+    }
+  ]
+}

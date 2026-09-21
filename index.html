@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101216">
+<meta name="description" content="관통 쌍권총 장비 기반 DPS 예측과 DPYes 기록 분석을 위한 로컬 웹앱">
+<title>Grim DPS Lab 3 — 장비·스킬·별자리 자동 계산</title>
+<style>:root{color-scheme:dark;--bg:#101216;--panel:#181c22;--panel2:#1e232b;--line:#2c333d;--text:#eef0ee;--muted:#9ca8b5;--green:#b9ed86;--gold:#e5bc75;--blue:#80b7ff;--danger:#f1a293;--font:Inter,'Pretendard','Noto Sans KR','Malgun Gothic',system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.65 var(--font)}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.4}a{color:var(--green);text-decoration:none}a:hover{text-decoration:underline}button,input,select,textarea,a{outline-offset:4px}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--green)}button{color:inherit;background:transparent;border:0}input,select,textarea{background:#12161c;color:var(--text);border:1px solid #353d48;border-radius:8px;padding:9px 11px;min-width:0;width:100%}input[type=number]{font-variant-numeric:tabular-nums}input[type=checkbox]{width:16px;height:16px;accent-color:var(--green)}input[type=range]{padding:0;accent-color:var(--green)}textarea{resize:vertical;line-height:1.7}select{padding-right:26px}.shell{display:grid;grid-template-columns:212px 1fr;min-height:100vh}.sidebar{border-right:1px solid var(--line);padding:31px 19px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;background:#12151a}.brand{display:flex;gap:10px;align-items:center;margin:0 8px 37px}.brand svg{width:32px;height:39px;color:var(--green)}.brand strong{font-size:17px;letter-spacing:1.5px;display:block;line-height:1.3}.brand small{font-size:10px;color:var(--muted);letter-spacing:2px}.side-label{font-size:10px;font-weight:650;letter-spacing:1.8px;color:#7e8996;padding:0 12px;margin:20px 0 10px}.nav{display:flex;flex-direction:column;gap:5px}.nav button{display:flex;align-items:center;gap:12px;padding:12px;border-radius:9px;text-align:left;color:var(--muted)}.nav button svg{width:18px;height:18px}.nav button.active{background:#253023;color:var(--green)}.nav button:hover{background:#242a31}.side-bottom{margin-top:auto;border-top:1px solid var(--line);padding:20px 12px 0;color:var(--muted);font-size:11px}.side-bottom strong{display:block;color:#c6d1d9;font-size:12px;margin-bottom:6px}.dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:7px}.main{padding:24px 32px 50px;min-width:0;max-width:1700px}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:24px}.breadcrumb{font-size:12px;color:var(--muted)}.breadcrumb b{font-weight:450;color:#d4dbe2}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:8px;padding:8px 13px;background:var(--panel);display:inline-flex;gap:7px;align-items:center;justify-content:center;font-size:12px;white-space:nowrap}.btn:hover{border-color:#64735d;background:#222c24}.btn.primary{background:var(--green);color:#182019;border-color:var(--green);font-weight:750}.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}.btn.small{padding:5px 10px;font-size:11px}.btn.danger{color:var(--danger)}.btn svg{width:14px;height:14px}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:21px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:650;color:var(--green);margin-bottom:4px}h1{font-size:29px;letter-spacing:-1.3px;margin:0 0 4px;line-height:1.4}h2{font-size:17px;margin:0;letter-spacing:-.45px}h3{font-size:14px;margin:0 0 12px}p{margin:8px 0}.subtitle{color:var(--muted);font-size:12px}.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;font-size:10px;border-radius:5px;background:#2e2a20;color:var(--gold);border:1px solid #4a3e29;white-space:nowrap}.badge.good{background:#243022;color:var(--green);border-color:#394a32}.badge.blue{background:#212d3c;color:var(--blue);border-color:#344763}.notice{display:flex;gap:10px;align-items:flex-start;font-size:12px;border:1px solid #493d28;background:#211f1a;padding:12px 15px;border-radius:9px;color:#c6b99f;margin-bottom:18px}.notice svg{flex:0 0 15px;width:15px;margin-top:3px;color:var(--gold)}.notice strong{color:var(--gold)}.notice.info{background:#182029;border-color:#303c4a;color:#b3c3d7}.stats{display:grid;grid-template-columns:1.55fr 1fr 1fr 1fr;gap:12px;margin-bottom:22px}.stat{padding:19px 21px;background:var(--panel);border:1px solid var(--line);border-radius:11px;min-width:0}.stat.primary{background:linear-gradient(130deg,#242c21,#192119);border-color:#415239}.stat-label{font-size:11px;color:#b3bdc8;display:flex;gap:8px;align-items:center}.stat-value{font-size:28px;letter-spacing:-1px;font-weight:720;font-variant-numeric:tabular-nums;line-height:1.5;white-space:nowrap}.stat.primary .stat-value{color:var(--green);font-size:34px}.stat-unit{font-size:11px;color:var(--muted);font-weight:400;letter-spacing:0;margin-left:6px}.stat-foot{font-size:10px;color:var(--muted);margin-top:2px}.delta{color:var(--green)}.delta.negative{color:var(--danger)}.tabbar{display:flex;gap:24px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow:auto}.tabbar button{white-space:nowrap;font-size:12px;color:var(--muted);padding:0 0 13px;position:relative}.tabbar button.active{color:var(--text);font-weight:650}.tabbar button.active:after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--green)}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 315px;gap:18px;align-items:start}.panel{border:1px solid var(--line);border-radius:11px;background:var(--panel);overflow:hidden;margin-bottom:16px}.panel-head{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.panel-body{padding:19px}.panel-sub{color:var(--muted);font-size:11px;margin-top:3px}.equipment-layout{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:650px}.slot-list{padding:13px;border-right:1px solid var(--line);max-height:880px;overflow-y:auto}.slot{width:100%;display:flex;align-items:center;text-align:left;padding:10px;gap:10px;border:1px solid transparent;border-radius:8px;margin-bottom:4px}.slot:hover{background:#20262d}.slot.active{background:#262d25;border-color:#506045}.slot.off{opacity:.45}.slot-icon{height:38px;width:38px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;background:#252b33;border:1px solid #3a434b;border-radius:7px;color:var(--gold)}.slot-icon svg{width:24px;height:24px}.slot.active .slot-icon{background:#343c2d;border-color:#586449;color:var(--green)}.slot-copy{min-width:0}.slot-copy small{display:block;color:var(--muted);font-size:10px}.slot-copy strong{display:block;font-weight:500;font-size:11px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:157px}.slot-status{font-size:9px;color:#b99e70}.slot-status.ok{color:#8ca477}.editor{padding:20px;min-width:0}.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.stack{display:flex;flex-direction:column;gap:12px}.muted{color:var(--muted)}.small{font-size:11px}.tiny{font-size:10px}.part-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:17px 0}.part-tabs button{font-size:10px;padding:6px 8px;color:var(--muted);border-radius:5px}.part-tabs .active{background:#303932;color:var(--green)}label.field{display:block;color:var(--muted);font-size:10px}.field input,.field select{margin-top:5px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px 13px}.field-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.field-grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}.field span{display:block}.field em{font-style:normal;font-size:9px;display:block;margin-top:4px}.field.full{grid-column:1/-1}.check{display:flex;align-items:center;gap:7px;font-size:11px;color:#bac5d0}.sep{border:0;border-top:1px solid var(--line);margin:20px 0}details{border-top:1px solid var(--line);padding:12px 0}summary{cursor:pointer;font-size:12px;color:#d5dce4;list-style:none;display:flex;justify-content:space-between;align-items:center;margin-bottom:0}summary:after{content:'＋';color:var(--muted)}details[open] summary{margin-bottom:14px}details[open] summary:after{content:'−'}.inline-message{padding:8px 10px;background:#232a22;border-radius:7px;font-size:10px;color:#b1c7a5;margin:12px 0}.result-aside .panel-body{padding:16px 18px}.mini-row{display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:7px 0}.mini-row b{font-weight:550;font-variant-numeric:tabular-nums}.mini-row .muted{font-size:11px}.track{height:5px;border-radius:6px;background:#2c3440;overflow:hidden;margin:5px 0 12px}.track i{height:100%;display:block;background:var(--green)}.track.gold i{background:var(--gold)}.track.blue i{background:var(--blue)}.chart{width:100%;height:auto;display:block}.chart-label{font-size:9px;fill:#8492a2}.chart-grid{stroke:#303943;stroke-width:1;stroke-dasharray:3 5}.chart-line{stroke:var(--green);stroke-width:2;fill:none}.chart-fill{fill:url(#chartGrad)}.legend{display:flex;gap:12px;color:var(--muted);font-size:10px;margin-top:8px;align-items:center}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:4px}.warning-list{font-size:10px;color:#b8b2a3;padding-left:16px;margin:0}.warning-list li{margin:7px 0}.scroll-table{overflow:auto;max-width:100%}table{border-collapse:collapse;width:100%;font-size:11px;white-space:nowrap}th{text-align:left;font-size:10px;color:var(--muted);font-weight:500;padding:10px 9px;border-bottom:1px solid var(--line);background:#151a20}td{padding:10px 9px;border-bottom:1px solid #272e37;font-variant-numeric:tabular-nums}tr:last-child td{border-bottom:0}td input{min-width:63px;padding:7px;width:78px;font-size:11px}td input[type=checkbox]{min-width:0;width:14px}.cell-name{min-width:110px}.tag-legend{font-size:10px;color:var(--muted);padding:9px 0}.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}.note-block{padding:13px 15px;background:#13181e;border:1px solid var(--line);border-radius:8px;font-size:11px;color:#abb8c7}.note-block strong{color:#d9e1e9}.code{font-family:ui-monospace,Consolas,monospace;font-size:12px;white-space:pre-wrap;word-break:break-word;background:#10151a;padding:16px;border:1px solid var(--line);border-radius:8px;color:#b9cdb8}.scope-pill{display:inline-block;color:#9bb0a0;font-size:9px;background:#222d26;border:1px solid #37483b;padding:2px 6px;border-radius:4px}.empty{text-align:center;color:var(--muted);padding:32px 20px;font-size:12px}.empty svg{width:36px;height:36px;margin-bottom:10px;color:#76866d}.modal-backdrop{position:fixed;inset:0;background:#040609bc;backdrop-filter:blur(5px);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px}.modal{background:var(--panel);border:1px solid #4a5647;border-radius:14px;width:730px;max-width:100%;max-height:90vh;overflow:auto;box-shadow:0 30px 90px #0009}.modal .panel-head{position:sticky;top:0;background:var(--panel);z-index:1}.modal-body{padding:20px}.search-input{padding:12px 14px;font-size:13px}.library-list{margin-top:15px;max-height:440px;overflow:auto}.library-item{width:100%;text-align:left;padding:14px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;gap:12px}.library-item:hover{background:#263022;border-color:#647758}.library-item strong{font-size:13px;color:#dae5cf}.library-item p{font-size:10px;color:var(--muted);margin:4px 0}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 20px;border:1px solid #576f48;border-radius:9px;background:#263124;color:#d5ecc4;z-index:200;box-shadow:0 8px 30px #0007;font-size:12px;max-width:90vw}.upload-zone{border:1px dashed #4b5c45;border-radius:10px;padding:33px;text-align:center;background:#171f19}.upload-zone svg{width:28px;height:28px;color:var(--green)}.metric-mini{padding:14px;border:1px solid var(--line);border-radius:8px;background:#141920}.metric-mini .big{font-size:24px;line-height:1.5;color:var(--green);font-weight:650}.source-card{padding:12px 0;border-bottom:1px solid var(--line)}.source-card a{font-size:12px}.source-card p{font-size:10px;color:var(--muted);margin:3px 0}.danger-text{color:var(--danger)}.pos{color:var(--green)}.footnote{color:#7e8b99;font-size:10px;margin-top:18px}.nowrap{white-space:nowrap}.linkbutton{color:var(--green);text-decoration:underline;padding:0;font-size:11px}.compare-strip{padding:12px 16px;border-radius:9px;border:1px solid #45583b;background:#1f291d;font-size:11px;margin-bottom:15px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}.hint{border-left:2px solid var(--gold);padding-left:11px;font-size:11px;color:var(--muted);margin:14px 0}.svg-icon{width:17px;height:17px;display:inline-block;vertical-align:middle}.action-footer{display:flex;justify-content:space-between;gap:10px;margin-top:15px}.math-step{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)}.math-step span.num{font:12px ui-monospace,monospace;color:var(--green);padding-top:2px}.math-step strong{font-size:12px}.math-step p{font-size:11px;color:var(--muted);margin:5px 0}.shrink{min-width:0}.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.statbreak{font-size:11px}.statbreak b{font-size:14px;display:block}.hide{display:none!important}
+@media(min-width:1700px){.workspace{grid-template-columns:minmax(0,1fr) 360px}.equipment-layout{grid-template-columns:280px minmax(0,1fr)}.slot-copy strong{max-width:180px}.main{padding-left:40px;padding-right:40px}}@media(max-width:1250px){.shell{grid-template-columns:170px 1fr}.sidebar{padding:25px 11px}.main{padding:22px}.workspace{grid-template-columns:minmax(0,1fr) 275px}.equipment-layout{grid-template-columns:1fr}.slot-list{display:grid;grid-template-columns:1fr 1fr;gap:2px;max-height:220px;border-right:0;border-bottom:1px solid var(--line)}.slot-copy strong{max-width:150px}.stat-value{font-size:24px}.stat.primary .stat-value{font-size:29px}.stat{padding:16px}.brand strong{font-size:14px}.brand{margin-left:0}.nav button{font-size:12px}}@media(max-width:1000px){.workspace{grid-template-columns:1fr}.result-aside{display:grid;grid-template-columns:1fr 1fr;gap:14px}.stats{grid-template-columns:1fr 1fr}.hero{align-items:start}.equipment-layout{grid-template-columns:240px minmax(0,1fr)}.slot-list{display:block;max-height:870px;border-right:1px solid var(--line);border-bottom:0}.toolbar .btn{font-size:10px}}@media(max-width:720px){.shell{display:block}.sidebar{position:static;height:auto;padding:15px 18px;border-right:0;border-bottom:1px solid var(--line);flex-direction:row;align-items:center;justify-content:space-between}.brand{margin:0}.brand svg{height:28px;width:25px}.brand strong{font-size:13px}.brand small{font-size:8px}.side-label,.side-bottom{display:none}.nav{flex-direction:row;gap:2px}.nav button{padding:8px;font-size:0;gap:0}.nav button svg{width:20px;height:20px}.main{padding:19px 14px 35px}.topbar{align-items:flex-start;margin-bottom:20px}.breadcrumb{display:none}.toolbar{width:100%;justify-content:flex-end}.hero{flex-direction:column;gap:10px}h1{font-size:26px}.stats{gap:8px}.stat{padding:14px}.stat.primary .stat-value{font-size:27px}.stat-value{font-size:23px}.stat-label{font-size:10px}.stat-foot{font-size:9px}.stat-unit{font-size:9px}.tabbar{gap:20px}.workspace{display:block}.equipment-layout{display:block}.slot-list{display:grid;grid-template-columns:1fr 1fr;max-height:255px;border-bottom:1px solid var(--line);border-right:0;padding:8px}.slot{padding:7px;gap:7px}.slot-icon{height:30px;width:30px;flex-basis:30px}.slot-icon svg{width:19px}.slot-copy strong{max-width:111px;font-size:10px}.editor{padding:15px}.panel-head{padding:14px}.panel-body{padding:15px}.field-grid.four,.field-grid.three{grid-template-columns:1fr 1fr}.result-aside{display:block}.split{grid-template-columns:1fr}.modal-backdrop{padding:10px}.modal{max-height:95vh}.notice{font-size:11px}.slot-status{font-size:8px}.hero .btn{padding:7px 10px}.panel-head .row{flex-wrap:wrap}.field-grid{gap:11px}.stat-value{white-space:normal}.comparison-description{font-size:10px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+@media(max-width:720px){.brand small{display:none}.brand{gap:7px}.brand strong{white-space:nowrap;letter-spacing:.5px;font-size:11px}.brand svg{width:21px;height:27px}.nav button{padding:6px}.stat.primary .stat-value{line-height:1.45}.stat.primary .stat-unit{white-space:nowrap}}
+/* v2: searchable data catalogue */
+.version-tag{font-size:14px;border:1px solid var(--line);padding:4px 8px;border-radius:5px;vertical-align:middle;color:var(--gold)}
+.db-connection{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:18px 20px;border:1px solid var(--line);background:linear-gradient(110deg,#17231c,#171d20);border-radius:10px;margin:16px 0}
+.db-connection strong{font-size:14px;margin-left:12px}.db-connection .tiny{margin-top:7px}.db-connection .row{flex-wrap:wrap}
+.db-equipped{background:#151c1b;border:1px solid #33443b;border-radius:10px;padding:18px;margin-top:14px}.db-equipped h3{margin:17px 0 6px}.auto-stats{padding:8px 0;max-height:330px;overflow-y:auto}.auto-stats .mini-row{font-size:12px}.manual-edit{margin:18px 0}.manual-edit>summary{color:var(--muted);font-size:12px}.code-wrap{overflow-wrap:anywhere;white-space:pre-wrap}
+.modal:has(.db-browser),.modal:has(#library-results){width:min(1030px,96vw);max-width:1030px}.db-search-sub{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:12px 0}.db-result-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin:14px 0}.db-browser{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;min-height:400px}.db-results{max-height:64vh;overflow:auto;padding-right:3px}.db-card{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#171c21;color:var(--text);padding:14px 16px;border-radius:8px;margin-bottom:9px;cursor:pointer}.db-card:hover,.db-card.selected{border-color:var(--green);background:#1c2823}.db-card strong{display:block;font-size:14px;margin:8px 0 4px}.db-card .tiny{display:block;line-height:1.6}.db-en{display:block;font-size:11px;color:var(--muted);margin-bottom:7px}.db-type{font-size:10px;text-transform:uppercase;display:flex;justify-content:space-between;color:var(--blue)}.db-type.legendary{color:#bd94ed}.db-type.rare{color:var(--green)}.db-detail{background:#12171b;border:1px solid var(--line);border-radius:10px;padding:20px;max-height:64vh;overflow:auto}.db-detail h3{margin:15px 0 0}.db-detail h4{font-size:13px;color:var(--gold);margin-bottom:8px}.db-detail .empty{line-height:2;padding:100px 10px}.db-detail a{color:var(--green)}#library-search{flex:1;min-width:0}#db-rarity{width:130px}.part-tabs{flex-wrap:wrap}.slot-copy strong{overflow-wrap:anywhere}
+@media(max-width:720px){.db-connection{align-items:stretch;flex-direction:column;gap:12px}.db-connection strong{display:block;margin:8px 0 0}.db-browser{grid-template-columns:1fr}.db-results{max-height:30vh}.db-detail{max-height:38vh}.db-detail .empty{padding:20px 5px}.db-search-sub .tiny{display:none}.modal:has(#library-results){width:96vw}.db-detail{padding:14px}.hero h1{font-size:26px}#db-rarity{width:105px}}
+/* v3 automatic build compiler */
+.auto-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 20px;background:linear-gradient(105deg,#222b29,#1b201f);border:1px solid #384638;border-radius:12px;margin-bottom:12px}.auto-toolbar>div{flex:1;min-width:180px}.auto-toolbar b{display:block;color:#bbe995;font-size:11px;letter-spacing:2px}.auto-toolbar span{display:block;margin-top:6px;font-size:13px}.auto-legend{color:#a7b2aa;font-size:12px;line-height:1.7;margin:0 0 20px}.auto-masteries{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}.mastery-box{padding:14px;border:1px solid #343c37;border-radius:10px;background:#191e1c}.mastery-box.selected{border-color:#8bb76b;background:#242d24}.mastery-box h3{margin:0 0 3px;font-size:15px}.mastery-box small{display:block;margin-bottom:12px;color:#8d9990}.auto-numbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}.auto-numbers>div{background:#191e1c;border:1px solid #353b36;border-radius:9px;padding:14px}.auto-numbers small{color:#9ea99f;display:block;font-size:11px}.auto-numbers strong{font-variant-numeric:tabular-nums;font-size:23px;display:block;margin-top:6px}.auto-skill-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.auto-skill{padding:15px;border-radius:10px;border:1px solid #323a35;background:#171c19;min-width:0}.auto-skill.learned{border-color:#5d714f;background:#202820}.auto-skill.child{border-left:3px solid #485149}.auto-skill .skill-top{display:flex;gap:10px;align-items:center;justify-content:space-between}.skill-top strong{display:block;font-size:14px}.skill-top small{display:block;color:#96a49b;margin-top:4px;font-size:11px}.rank-pill{font-size:24px;font-weight:700;color:#c1e598;white-space:nowrap}.rank-pill small{display:inline;font-size:11px;color:#7d8d82}.skill-controls{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-top:12px}.skill-controls .field{max-width:84px;font-size:11px}.skill-controls input[type=number]{width:78px}.level-detail{font-size:11px;flex:1;padding:7px 0;color:#aab9a9;min-width:82px}.level-detail span{display:block;font-size:10px;color:#77887a;margin-top:5px}.auto-mastery-title{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #343e35;margin:24px 0 15px}.auto-mastery-title span{font-size:12px;color:#9cb086}.auto-stat-grid{margin:10px 0;display:grid;grid-template-columns:1fr;gap:0;font-size:11px}.auto-stat-grid>div{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid #2b342e;overflow-wrap:anywhere}.auto-stat-grid dt{color:#adb5ab}.auto-stat-grid dd{margin:0;white-space:nowrap;color:#dbe8cc;font-variant-numeric:tabular-nums}.auto-stat-grid dt{flex:1;min-width:0}.grow{flex:1;min-width:140px}.affinity-strip{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.aff{padding:9px 13px;border:1px solid #435042;border-radius:8px;background:#232a23;font-size:12px}.aff b{font-size:17px;margin-left:10px}.affinity-0{color:#c9b5f2}.affinity-1{color:#e9aaa4}.affinity-2{color:#ade0a4}.affinity-3{color:#ead39b}.affinity-4{color:#a2c9ed}.devotion-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.dev-card{background:#181e1c;border:1px solid #374237;border-radius:12px;padding:16px;min-width:0}.dev-card.selected{border-color:#7c9f5b;background:radial-gradient(ellipse at center,#27332a,#191f1c)}.dev-card h3{font-size:15px;max-width:80%}.constellation{width:100%;max-height:195px;margin:8px 0;background-image:radial-gradient(#84977444 .6px,transparent .6px);background-size:23px 23px;border-radius:7px}.star-edge{stroke:#435643;stroke-width:2;fill:none}.star-edge.on{stroke:#a4c973}.star-node{cursor:pointer;outline:none}.star-node circle{fill:#283429;stroke:#749260;stroke-width:1.5}.star-node.on circle{fill:#b5dc89;stroke:#e4f5c9}.star-node text{fill:#93a781;font-size:10px;pointer-events:none;font-weight:bold}.star-node.on text{fill:#172113}.star-node.power circle{stroke:#dbba80;stroke-width:2.5}.star-node:hover circle,.star-node:focus circle{stroke:#fff;stroke-width:3}.power-card{padding:13px;margin:14px 0 8px;background:#242b20;border:1px solid #514d36;border-radius:8px}.power-card>b{color:#e9c890;display:block;margin-bottom:10px}.power-card small{display:block;color:#9a9e8d;margin-top:8px;font-size:10px}.power-card .field{margin:8px 0}.audit-item{display:flex;align-items:flex-start;gap:13px;padding:14px;border-bottom:1px solid #323a34}.audit-item.error{background:#42282355;border-left:3px solid #c68262}.audit-item p{margin:5px 0;line-height:1.7;font-size:12px;color:#adb9ac}.audit-item small{color:#7e9381;font-size:10px}.audit-item b{font-size:12px}.audit-item .badge{flex-shrink:0}.auto-panel .code{font-size:11px;max-height:500px;overflow:auto}.metric-validity{display:inline-block;font-size:10px;background:#463326;color:#eed3a6;border:1px solid #7d5d3c;padding:3px 6px;border-radius:5px;vertical-align:middle}.auto-skill[hidden],.dev-card[hidden]{display:none}.auto-panel [type=search]{width:100%}.auto-panel .field select{max-width:100%}.auto-panel .notice{line-height:1.8}.auto-panel .scroll-table{max-width:100%;overflow:auto}.tabbar{overflow:auto;white-space:nowrap}.version-tag{font-size:11px!important}.auto-keyline{background:#1f2922;padding:12px 14px;border:1px solid #475c42;border-radius:8px;color:#c8dfa6;font-size:12px;margin:12px 0}
+@media(min-width:1500px){.auto-skill-list{grid-template-columns:repeat(2,minmax(0,1fr))}.auto-masteries{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:900px){.auto-masteries{grid-template-columns:repeat(2,minmax(0,1fr))}.auto-skill-list,.devotion-grid{grid-template-columns:1fr}.auto-numbers{grid-template-columns:repeat(2,minmax(0,1fr))}.auto-toolbar{padding:14px}.auto-toolbar .btn{flex:1}.audit-item{flex-direction:column;gap:8px}.auto-panel .field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){.auto-masteries{grid-template-columns:1fr 1fr}.auto-panel .field-grid{grid-template-columns:1fr}.skill-controls{gap:8px}.auto-toolbar span{font-size:12px}.auto-numbers strong{font-size:20px}.auto-panel .panel-body{padding:15px}.dev-card{padding:12px}.aff{padding:7px 9px}.tabbar button{font-size:12px}.auto-skill{padding:12px}}
+/* Small screens use the complete horizontal tabbar instead of duplicate icon rails. */
+@media(max-width:720px){.sidebar .nav{display:none}.sidebar{justify-content:flex-start}.main,.workspace,#tab-content{min-width:0}.hero>div,.panel-head>div{min-width:0}.badge{max-width:100%;white-space:normal;overflow-wrap:anywhere}.notice{overflow-wrap:anywhere}}
+</style>
+</head>
+<body>
+<div id="app"></div><div id="modal-root"></div>
+<noscript><p style="padding:30px">계산기를 실행하려면 JavaScript를 허용해야 합니다. Chrome 또는 Edge에서 이 HTML 파일을 여세요.</p></noscript>
+<!-- EMBEDDED_CATALOG -->
+<!-- EMBEDDED_BUILD -->
+<script>/* Grim DPS Lab — independent analytical model, not DPYes or GrimTools source. */
+(function(root){
+'use strict';
+const TYPES=['physical','pierce','fire','cold','lightning','acid','vitality','aether','chaos'];
+const LABELS={physical:'물리',pierce:'관통',fire:'화염',cold:'냉기',lightning:'번개',acid:'산성',vitality:'생명력',aether:'에테르',chaos:'카오스',bleed:'출혈'};
+const n=(v,d=0)=>Number.isFinite(Number(v))?Number(v):d;
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,n(x)));
+const vec=()=>Object.fromEntries(TYPES.map(t=>[t,0]));
+const copy=x=>JSON.parse(JSON.stringify(x));
+function sumStats(rows){ const out={}; for(const r of rows||[]) for(const [k,v] of Object.entries(r||{})) if(Number.isFinite(Number(v))) out[k]=n(out[k])+n(v); return out; }
+function flat(s){const r=vec(); for(const t of TYPES)r[t]=Math.max(0,n(s?.['flat_'+t])); for(const t of ['fire','cold','lightning'])r[t]+=Math.max(0,n(s?.flat_elemental))/3;return r;}
+function add(a,b,m=1){const r=vec();for(const t of TYPES)r[t]=n(a?.[t])+n(b?.[t])*m;return r;}
+function scale(a,m){const r=vec();for(const t of TYPES)r[t]=n(a?.[t])*m;return r;}
+function pth(oa,da){oa=Math.max(1,n(oa));da=Math.max(0,n(da));return Math.max(55,90*oa/(oa+da/3.5)+.02275*(oa-da)+20);}
+/* Continuous intervals: endpoints have zero probability. PTH>100 uses PTH as the roll range. */
+function critProfile(oa,da,bonus=0){
+ const p=pth(oa,da),den=Math.max(100,p),bins=[];
+ if(p<100)bins.push({p:(100-p)/100,m:0,kind:'miss'});
+ bins.push({p:Math.min(90,p)/den,m:p<70?p/70:1,kind:'normal'});
+ const cuts=[90,105,120,130,135,Infinity];
+ for(let i=0;i<5;i++){const len=Math.max(0,Math.min(p,cuts[i+1])-cuts[i]);if(len)bins.push({p:len/den,m:1.1+i*.1+Math.max(0,n(bonus))/100,kind:'critical'});}
+ return {pth:p,bins,hit:1-(bins.find(b=>b.kind==='miss')?.p||0),crit:bins.filter(b=>b.kind==='critical').reduce((s,b)=>s+b.p,0),mean:bins.reduce((s,b)=>s+b.p*b.m,0)};
+}
+/* Only conversions INTO pierce are represented. A source packet may be converted only once. */
+function convert(input,global,local,armorPiercing=0){
+ const out=vec();out.pierce=n(input?.pierce);
+ for(const t of TYPES.filter(t=>t!=='pierce')){
+  const amount=n(input?.[t]); const l=clamp(n(local?.['conv_'+t])+(['fire','cold','lightning'].includes(t)?n(local?.conv_elemental):0),0,100)/100;
+  const g=clamp(n(global?.['conv_'+t])+(['fire','cold','lightning'].includes(t)?n(global?.conv_elemental):0),0,100)/100;
+  const toPierce=amount*l+amount*(1-l)*g;
+  const remaining=amount*(1-l)*(1-g);
+  const ap=t==='physical'?clamp(armorPiercing,0,100)/100:0;
+  out.pierce+=toPierce+remaining*ap; out[t]+=remaining*(1-ap);
+ }
+ return out;
+}
+function rrValue(target,type){
+ if(target?.resistMode==='final')return n(target.resists?.[type]);
+ const rows=(target?.rr||[]).filter(x=>x.enabled!==false&&(x.type==='all'||x.type===type));
+ const stack={};let flatRR=0;
+ for(const r of rows){const value=Math.max(0,n(r.value));if(r.kind==='flat')flatRR=Math.max(flatRR,value);else stack[String(r.group||r.id||r.name)]=Math.max(n(stack[String(r.group||r.id||r.name)]),value);}
+ return n(target?.resists?.[type])-Object.values(stack).reduce((a,b)=>a+b,0)-flatRR;
+}
+function aggregate(state){
+ const rows=[state.base||{}];const local={main:{},off:{}};const warnings=[];const itemMods=[];let unsupported=0,missingParts=0;let confirmed=0,named=0;
+ for(const [slot,e] of Object.entries(state.equipment||{})){
+  if(e.enabled===false)continue;
+  for(const p of Object.values(e.parts||{})){if(p.enabled!==false&&p.name&&!p.db&&!Object.keys(p.stats||{}).length)missingParts++;if(p.enabled!==false&&p.db){itemMods.push(...(p.db.modifiers||[]));unsupported+=(p.db.unapplied||[]).length;if(p.db.boosts?.length)unsupported++;if(p.db.set)unsupported++;}}
+  if(e.parts?.item?.name){named++;if(e.reviewed)confirmed++;}
+  const s=sumStats(Object.values(e.parts||{}).filter(p=>p.enabled!==false).map(p=>p.stats||{}));
+  if(slot==='main'||slot==='off'){
+   local[slot]=s;const rest={...s};for(const k of Object.keys(rest))if(k.startsWith('flat_')||k==='armorPiercing')delete rest[k];rows.push(rest);
+  }else rows.push(s);
+ }
+ for(const b of state.buffs||[])if(b.enabled)rows.push(b.stats||{});
+ const g=sumStats(rows);
+ if(named>confirmed)warnings.push(`장비 ${named-confirmed}개가 수치 확인 전입니다. 비어 있는 옵션은 0으로 처리됩니다.`);
+ const speed=clamp(100+n(g.attackSpeed),1,n(state.combat?.speedCap,200));
+ const oa=Math.max(1,n(g.oa)*(1+n(g.oaPct)/100));
+ const hp=Math.max(0,n(g.hp)*(1+n(g.hpPct)/100));
+ const da=Math.max(0,n(g.da)*(1+n(g.daPct)/100));
+ const hands={};
+ for(const h of ['main','off'])hands[h]=flat(sumStats([g,local[h]]));
+ if(missingParts)warnings.push(`${missingParts}개 본체/부품/접사의 이름만 있고 옵션은 비어 있습니다. 검색 DB에서 항목을 선택하세요.`);
+ if(unsupported)warnings.push(`장비의 스킬·세트·발동 등 ${unsupported}개 묶음/항목은 표시만 하며 자동 합산하지 않습니다. DB 검색과 완전한 게임 시뮬레이션은 다릅니다.`);
+ if(n(g.physique)||n(g.cunning)||n(g.spirit)||n(g.physiquePct)||n(g.cunningPct)||n(g.spiritPct))warnings.push('장비의 체격·교활·정신으로 파생되는 효과는 자동 계산하지 않습니다. 장비 외 합계에서 별도로 보정하세요.');
+ return {g,local,hands,speed,oa,hp,da,warnings,confirmed,named,itemMods};
+}
+function pool(rows){
+ const enabled=(rows||[]).filter(r=>r.enabled!==false),sum=enabled.reduce((s,r)=>s+Math.max(0,n(r.chance)),0),den=Math.max(100,sum);
+ return {sum,rows:enabled.map(r=>({...r,p:Math.max(0,n(r.chance))/den})),basic:Math.max(0,1-sum/100)};
+}
+function packetBefore(state,a,row,hand){
+ const c=state.combat||{},g=a.g;
+ const relevant=(a.itemMods||[]).filter(m=>m.scope==='dar'||m.scope===row.id);
+ const localConv=sumStats([c.skillConversion||{},row.conversion||{},...relevant.filter(m=>m.kind==='conversion').map(m=>({[m.key]:m.value}))]);
+ const ap=clamp(n(a.local[hand].armorPiercing)*(1+n(g.armorPiercingPct)/100),0,100);
+ const wd=Math.max(0,n(c.darWD,100)+n(g.darWD))/100;
+ const rowWD=Math.max(0,n(row.wd,100)+n(g['wd_'+row.id]))/100;
+ let v=scale(convert(a.hands[hand],g,localConv,ap),wd*rowWD);
+ const sf=flat(sumStats([c.darFlat||{},...relevant.filter(m=>m.scope==='dar'&&m.kind==='flat').map(m=>({[m.key]:m.value}))])),wf=flat(sumStats([row.flat||{},...relevant.filter(m=>m.scope===row.id&&m.kind==='flat').map(m=>({[m.key]:m.value}))]));
+ v=add(v,convert(sf,g,localConv,ap));v=add(v,convert(wf,g,localConv,ap));
+ for(const t of TYPES)v[t]*=Math.max(0,1+(n(g.incAll)+n(g['inc_'+t])+(['fire','cold','lightning'].includes(t)?n(g.incElemental):0))/100);
+ return scale(v,Math.max(0,1+n(c.totalDamageModifier)/100));
+}
+function mitigate(v,state,m=1){
+ const t=state.target||{},out=vec();const evade=1-clamp(t.avoidance,0,100)/100;
+ for(const type of TYPES){
+  let d=Math.max(0,n(v[type])*m)*Math.max(0,1-rrValue(t,type)/100);
+  if(type==='physical')d-=Math.min(d,Math.max(0,n(t.armor)))*clamp(t.armorAbsorption,0,100)/100;
+  out[type]=Math.max(0,d)*(1-clamp(t.absorption,0,100)/100);
+ }
+ const total=Object.values(out).reduce((x,y)=>x+y,0),fac=total>0?Math.max(0,total-Math.max(0,n(t.flatAbsorption)))/total:0;
+ return scale(out,fac*evade);
+}
+function expectedPacket(v,state,profile){let out=vec();for(const b of profile.bins)if(b.m>0)out=add(out,mitigate(v,state,b.m),b.p);return out;}
+function calculate(state){
+ const a=aggregate(state),c=state.combat||{},target=state.target||{};
+ const prof=critProfile(a.oa,Math.max(0,n(target.da)-n(target.daReduction)),n(a.g.crit));
+ const p=pool((state.wps||[]).map(r=>({...r,chance:Math.max(0,n(r.chance)+n(a.g["chance_"+r.id]))}))),dual=c.dual!==false;
+ const rows=p.rows.map(r=>({...r,p:r.p}));
+ if(p.basic>0)rows.push({id:'basic',name:'일반 맹공격',p:p.basic,wd:100,hitsMain:dual?.75:1,hitsOff:dual?.75:0,cycleMs:n(c.basicCycleMs,333),flat:{}});
+ let mean=0,time=0;const damageByType=vec();
+ const computed=rows.map(r=>{
+  const countM=Math.max(0,n(r.hitsMain)),countO=dual?Math.max(0,n(r.hitsOff)):0;
+  const vm=packetBefore(state,a,r,'main'),vo=packetBefore(state,a,r,'off');
+  const em=expectedPacket(vm,state,prof),eo=expectedPacket(vo,state,prof);
+  const types=add(scale(em,countM),eo,countO);const damage=Object.values(types).reduce((x,y)=>x+y,0);
+  const seconds=Math.max(.02,n(r.cycleMs,400)/1000)*(Math.max(1,n(c.referenceSpeed,200))/a.speed);
+  mean+=r.p*damage;time+=r.p*seconds;for(const t of TYPES)damageByType[t]+=r.p*types[t];
+  return {...r,damage,seconds,types,rawMain:vm,rawOff:vo};
+ });
+ const aps=c.timingMode==='measured'?clamp(c.measuredAPS,0,100):time>0?1/time:0;
+ const uptime=clamp(c.uptime,0,100)/100;
+ const direct=mean*aps*uptime;
+ for(const t of TYPES)damageByType[t]*=aps*uptime;
+ const extraGroups={};
+ for(const x of state.extras||[]){
+  if(x.enabled===false)continue;
+  const amount=Math.max(0,n(x.rate))*(clamp(x.uptime,0,100)/100)*(x.afterMitigation?1:Math.max(0,1-rrValue(target,x.type)/100)*(1-clamp(target.absorption,0,100)/100));
+  const key=x.kind==='dot'?`${x.type}:${x.group||x.name}`:x.id;
+  if(!extraGroups[key]||extraGroups[key].dps<amount)extraGroups[key]={...x,dps:amount};
+ }
+ const extras=Object.values(extraGroups),extra=extras.reduce((s,x)=>s+x.dps,0),total=direct+extra;
+ for(const r of computed)r.dps=r.p*r.damage*aps*uptime;
+ const warnings=[...a.warnings];
+ if(c.timingMode==='measured')warnings.push('공격 빈도 고정 모드: 장비의 공격 속도를 바꿔도 빈도는 자동 변하지 않습니다.');
+ if(state.meta?.demo)warnings.unshift('작동 예제입니다. 실제 서약운반자 장비 롤이나 실측값이 아닙니다.');
+ if(n(target.flatAbsorption)>0&&extras.length)warnings.push('추가 피해의 타격당 고정 흡수는 모델링하지 않습니다. 경감 후 입력을 권장합니다.');
+ if((state.extras||[]).filter(x=>x.enabled!==false).length!==extras.length)warnings.push('동일 지속 피해 출처는 합산하지 않고 가장 높은 유지 DPS만 적용합니다.');
+ if(Object.values(a.hands.main).every(x=>!x))warnings.push('주무기·전역 기본 피해를 입력하세요.');
+ if(p.sum>100)warnings.push(`발동 확률 ${p.sum.toFixed(1)}%: 실제 선택 비중을 100%로 정규화했습니다.`);
+ return {a,profile:prof,pool:p,rows:computed,aps,meanCycle:time,meanDamage:mean,direct,extra,total,types:damageByType,extras,warnings,uptime};
+}
+function rng(seed){let a=(n(seed,7)|0)||7;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function choose(rows,random,field='p'){let u=random();for(const r of rows){u-=r[field];if(u<=0)return r;}return rows[rows.length-1];}
+/* Visual renewal-process sample, not an emulation of GD's engine scheduling. */
+function simulate(state,duration=60,seed=37){
+ const result=calculate(state),rand=rng(seed),events=[];let t=0;const up=result.uptime;
+ if(up>0&&result.rows.length){
+  for(let guard=0;t<duration&&guard<50000;guard++){
+   const row=choose(result.rows,rand);const cycle=state.combat.timingMode==='measured'?1/Math.max(.01,result.aps):row.seconds;
+   t+=cycle/up;if(t>duration)break;
+   let damage=0;
+   for(const hand of ['Main','Off']){
+    if(hand==='Off'&&state.combat.dual===false)continue;
+    const expected=Math.max(0,n(row['hits'+hand]));let count=Math.floor(expected)+(rand()<expected%1?1:0);
+    if(row.id==='basic'&&state.combat.dual!==false){ /* resolve basic dual pattern jointly below */count=0; }
+    for(let i=0;i<count;i++){const b=choose(result.profile.bins,rand);damage+=Object.values(mitigate(row['raw'+hand],state,b.m)).reduce((x,y)=>x+y,0);}
+   }
+   if(row.id==='basic'&&state.combat.dual!==false){const u=rand();for(const h of (u<.25?['Main']:u<.5?['Off']:['Main','Off'])){const b=choose(result.profile.bins,rand);damage+=Object.values(mitigate(row['raw'+h],state,b.m)).reduce((x,y)=>x+y,0);}}
+   if(damage>0)events.push({time:t,damage,skill:row.name,target:'단일 대상',source:'player',kind:'direct'});
+  }
+ }
+ if(result.extra>0)for(let x=.25;x<=duration;x+=.25)events.push({time:x,damage:result.extra*.25,skill:'입력한 추가 피해',target:'단일 대상',source:'player',kind:'extra'});
+ events.sort((a,b)=>a.time-b.time);return {events,result};
+}
+function analyzeEvents(events,{start=0,end=60,window=5,step=.25}={}){
+ start=n(start);end=n(end);window=clamp(window,.1,120);step=clamp(step,.05,10);
+ if(!(end>start))throw new Error('종료 시간은 시작 시간보다 커야 합니다.');
+ const rows=events.filter(e=>Number.isFinite(e.time)&&Number.isFinite(e.damage)&&e.damage>=0&&e.time>=start&&e.time<=end).sort((a,b)=>a.time-b.time);
+ const duration=end-start;step=Math.max(step,duration/2000);const total=rows.reduce((s,e)=>s+e.damage,0),groups={},targets={};
+ for(const e of rows){groups[e.skill||'미지정']=n(groups[e.skill||'미지정'])+e.damage;targets[e.target||'미지정']=n(targets[e.target||'미지정'])+e.damage;}
+ let left=0,right=0,sum=0,peak=0;const points=[];
+ const evaluate=t=>{while(right<rows.length&&rows[right].time<=t){sum+=rows[right].damage;right++;}const bound=t-window;while(left<right&&rows[left].time<=bound){sum-=rows[left].damage;left++;}const denom=Math.min(window,t-start);return denom>0?sum/denom:0;};
+ // True moving-window peak (at event timestamps), excluding warm-up < window.
+ for(const e of rows){const v=evaluate(e.time);if(e.time-start>=window)peak=Math.max(peak,v);}
+ left=0;right=0;sum=0;
+ for(let t=start+step;t<end-1e-8;t+=step)points.push({time:t-start,dps:evaluate(t)});
+ points.push({time:duration,dps:evaluate(end)});
+ if(duration<window)peak=null;
+ return {total,duration,average:total/duration,peak,points,groups,targets,count:rows.length,window};
+}
+function flatten(obj,prefix='',out={}){if(obj===null||typeof obj!=='object'){out[prefix]=obj;return out;}if(Array.isArray(obj)){obj.slice(0,30).forEach((x,i)=>flatten(x,prefix?`${prefix}.${i}`:`${i}`,out));return out;}for(const[k,v]of Object.entries(obj))flatten(v,prefix?`${prefix}.${k}`:k,out);return out;}
+function parseCSV(text){
+ const rows=[];let row=[],value='',quote=false;
+ for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quote&&text[i+1]==='"'){value+='"';i++;}else quote=!quote;}else if(c===','&&!quote){row.push(value);value='';}else if((c==='\n'||c==='\r')&&!quote){if(c==='\r'&&text[i+1]==='\n')i++;row.push(value);if(row.some(x=>x.trim()))rows.push(row);row=[];value='';}else value+=c;}
+ if(quote)throw new Error('CSV의 따옴표가 닫히지 않았습니다.');row.push(value);if(row.some(x=>x.trim()))rows.push(row);if(rows.length<2)throw new Error('헤더와 최소 한 행의 데이터가 필요합니다.');const headers=rows.shift().map((x,i)=>x.trim().replace(/^\uFEFF/,'')||`column_${i}`);return rows.map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]??''])));
+}
+function findArrays(v,path='',depth=0,out=[]){if(depth>8)return out;if(Array.isArray(v)){if(v.length&&v.some(x=>x&&typeof x==='object'&&!Array.isArray(x)))out.push({path:path||'(root)',rows:v});return out;}if(v&&typeof v==='object')for(const[k,x]of Object.entries(v))findArrays(x,path?`${path}.${k}`:k,depth+1,out);return out;}
+function mapEvents(rows,map){
+ const result=[];let skipped=0;const mult=map.unit==='ms'?.001:map.unit==='us'?.000001:1;
+ for(const raw of rows){const r=flatten(raw);const tv=r[map.time],dv=r[map.damage];if(tv===undefined||tv===null||tv===''||dv===undefined||dv===null||dv===''){skipped++;continue;}const time=Number(tv)*mult,damage=Number(dv);if(!Number.isFinite(time)||!Number.isFinite(damage)||damage<0){skipped++;continue;}result.push({time,damage,skill:String(r[map.skill]??'미지정'),target:String(r[map.target]??'미지정'),source:String(r[map.source]??'미지정')});}
+ if(!result.length)throw new Error('시간·피해에 해당하는 숫자 필드를 찾지 못했습니다. 단위와 필드 매핑을 확인하세요.');const origin=result.reduce((v,e)=>Math.min(v,e.time),Infinity);if(map.relative!==false)for(const e of result)e.time-=origin;return {events:result,skipped,origin};
+}
+function parseTooltip(text){
+ const stats={},recognized=[],unknown=[];
+ const typeWords={physical:['Physical','물리'],pierce:['Piercing','Pierce','관통'],fire:['Fire','화염'],cold:['Cold','냉기'],lightning:['Lightning','번개'],acid:['Acid','산성'],vitality:['Vitality','생명력'],aether:['Aether','에테르'],chaos:['Chaos','카오스'],elemental:['Elemental','원소']};
+ for(const raw of String(text).split(/\r?\n/)){const line=raw.trim();if(!line)continue;let key=null,value=null;
+  if(/(converted|전환|변환|확률|chance|seconds|초간|over \d|per second|duration|regenerat|재생|[+]\d+ to )/i.test(line)){unknown.push(line);continue;}
+  const nums=line.match(/[+-]?\d+(?:\.\d+)?/g)?.map(Number)||[];
+  if(!nums.length){unknown.push(line);continue;}
+  const pct=/%/.test(line);value=nums[0];
+  if(!pct&&/\d\s*[-–~]\s*\d/.test(line)&&nums.length>=2)value=(Math.abs(nums[0])+Math.abs(nums[1]))/2;
+  if(/Offensive Ability|공격 능력/i.test(line))key=pct?'oaPct':'oa';
+  else if(/Defensive Ability|방어 능력/i.test(line))key=pct?'daPct':'da';
+  else if(/Critical Damage|치명타 피해/i.test(line))key='crit';
+  else if(/Attack Speed|공격 속도/i.test(line))key='attackSpeed';
+  else if(/All Damage|모든 피해/i.test(line))key='incAll';
+  else if(/Armor Piercing|방어구 관통/i.test(line))key='armorPiercing';
+  else if(/Health|최대 체력|생명력 최대|^체력/i.test(line))key=pct?'hpPct':'hp';
+  else if(!/Resistance|저항|지속/i.test(line)&&/Damage|피해/i.test(line))for(const[t,words]of Object.entries(typeWords))if(words.some(w=>new RegExp(w,'i').test(line))){key=t==='elemental'?(pct?'incElemental':'flat_elemental'):(pct?'inc_'+t:'flat_'+t);break;}
+  if(key){stats[key]=n(stats[key])+value;recognized.push({line,key,value});}else unknown.push(line);
+ }
+ return {stats,recognized,unknown};
+}
+const api={TYPES,LABELS,n,clamp,vec,copy,sumStats,flat,add,scale,pth,critProfile,convert,rrValue,aggregate,pool,calculate,simulate,analyzeEvents,flatten,parseCSV,findArrays,mapEvents,parseTooltip};
+if(typeof module!=='undefined'&&module.exports)module.exports=api;root.GD=api;
+})(typeof globalThis!=='undefined'?globalThis:this);
+</script>
+<script>(function(root){
+const SLOTS=[['main','주무기','신화적인 서약운반자','Mythical Oathbearer'],['off','보조 무기','신화적인 서약운반자','Mythical Oathbearer'],['head','머리','풀려버린 운명의 시선','Gaze of Fates Unwound'],['chest','가슴','신화적인 코르보란의 흉갑',"Mythical Korvoran’s Chestguard"],['shoulders','어깨','빈의 견갑','Vinn’s Pauldrons'],['gloves','장갑','역병보호 장갑','Plagueguard Grips'],['pants','바지','솔라엘 교파 다리보호대','Solael-Sect Legguards'],['boots','신발','용기의 전쟁부츠','Intrepid Warboots'],['belt','허리','신화적인 의심스러운 수단의 꾸러미','Mythical Pack of Treacherous Means'],['amulet','목걸이','실바리아의 뿌리','Sylvarria’s Root'],['ring1','반지 1','칼날 비트는 자의 인장','Bladetwister Signet'],['ring2','반지 2','신화적인 돌의 테인의 인장','Mythical Sigil of the Stone Thane'],['medal','메달','신화적인 무서운 늑대의 문장','Mythical Direwolf Crest'],['relic','유물','평온','Serenity']];
+const PARTS=[['item','본체'],['prefix','접두사'],['suffix','접미사'],['component','컴포넌트'],['augment','증강제'],['ascension','승천 옵션']];
+const FIELDS=[
+ ['공격 기반', [['flat_physical','물리 기본 피해'],['flat_pierce','관통 기본 피해'],['flat_fire','화염 기본 피해'],['flat_cold','냉기 기본 피해'],['flat_lightning','번개 기본 피해'],['flat_elemental','원소 기본 피해 (3등분)'],['flat_acid','산성 기본 피해'],['flat_vitality','생명력 기본 피해'],['flat_aether','에테르 기본 피해'],['flat_chaos','카오스 기본 피해']]],
+ ['피해 증가 · 능력', [['inc_pierce','관통 피해 +%'],['incAll','모든 피해 +%'],['incElemental','원소 피해 +%'],['oa','공격 능력 +'],['oaPct','공격 능력 +%'],['crit','치명타 피해 +%p'],['attackSpeed','공격 속도 +%p'],['da','방어 능력 +'],['daPct','방어 능력 +%'],['hp','체력 +'],['hpPct','체력 +%']]],
+ ['관통 전환 · 스킬 계수', [['conv_elemental','원소 → 관통 %'],['conv_cold','냉기 → 관통 %'],['conv_lightning','번개 → 관통 %'],['conv_fire','화염 → 관통 %'],['conv_physical','물리 → 관통 %'],['armorPiercing','무기 자체 Armor Piercing %'],['armorPiercingPct','Armor Piercing 증가 +%'],['darWD','맹공격 무기 피해 +%p'],['wd_storm','폭풍 분사 무기 피해 +%p'],['wd_cold','냉각성 탄환 무기 피해 +%p'],['wd_fang','피의 송곳니 무기 피해 +%p'],['wd_burst','폭발성 탄환 무기 피해 +%p'],['chance_storm','폭풍 분사 발동률 +%p'],['chance_cold','냉각성 탄환 발동률 +%p'],['chance_fang','피의 송곳니 발동률 +%p'],['chance_burst','폭발성 탄환 발동률 +%p']]],
+ ['그 외 피해 증가', [['inc_physical','물리 피해 +%'],['inc_fire','화염 피해 +%'],['inc_cold','냉기 피해 +%'],['inc_lightning','번개 피해 +%'],['inc_acid','산성 피해 +%'],['inc_vitality','생명력 피해 +%'],['inc_aether','에테르 피해 +%'],['inc_chaos','카오스 피해 +%'],['conv_acid','산성 → 관통 %'],['conv_vitality','생명력 → 관통 %'],['conv_aether','에테르 → 관통 %'],['conv_chaos','카오스 → 관통 %']]]
+];
+const FIELD_LABELS=Object.fromEntries(FIELDS.flatMap(g=>g[1]));
+const SOURCES=[
+ ['아이템 공개 추출 DB','첫 실행에 내려받는 장비·접사·부품·증강제·유물 데이터','https://github.com/tednaleid/grimdawn-devotions'],
+ ['아이템 데이터 스키마','원본 옵션, 적용 부위, 피해 전환, 스킬 보너스 테이블 설명','https://github.com/tednaleid/grimdawn-devotions/blob/main/docs/item-schema.md'],
+ ['Crate 공식 전투 가이드','OA·DA, 치명타 구간, 무기별 고정 피해, 전환, 흡수 처리 순서','https://www.grimdawn.com/guide/gameplay/combat/'],
+ ['DPYes 제작자 설명 · 17k','누적 피해, JSON 기록, 약 5초 평균에 대한 설명','https://forums.crateentertainment.com/t/tool-dpyes-player-pet-dps-meter-misc-util/133378/571'],
+ ['DPYes 제작자 · 경감 전/후','Track damage after mitigation 설정의 의미','https://forums.crateentertainment.com/t/tool-dpyes-player-pet-dps-meter-misc-util/133378?page=27'],
+ ['발동 사격 계산 · 커뮤니티 실험','기본 공격 대체기와 발동 사격의 계수·발동 비중 모델','https://forums.crateentertainment.com/t/turbo-charge-your-auto-attacks-with-default-attack-replacers-and-wps/49376'],
+ ['전투 동작 검증 · 1.3.0.8','공격별 동작 시간은 같지 않습니다. 실제 시간으로 보정하세요.','https://forums.crateentertainment.com/t/1-3-0-8-fangs-of-asterkarn-in-depth-mechanics-testing/159559'],
+ ['GrimTools','실제 장비 옵션과 패치별 수치의 수동 확인','https://www.grimtools.com/db/ko/']
+];
+function blankPart(name=''){return {name,enabled:true,stats:{}};}
+function equipment(){const out={};for(const [id,,name]of SLOTS)out[id]={enabled:true,reviewed:false,notes:'',parts:Object.fromEntries(PARTS.map(([p])=>[p,blankPart(p==='item'?name:'')]))};return out;}
+function state(demo=true){
+ const s={schema:'grim-dps-lab/v1',meta:{name:demo?'서약운반자 실험 · 데모':'서약운반자 · 내 장비',demo,gameVersion:'직접 확인 필요',note:''},base:{},equipment:equipment(),buffs:[],combat:{dual:true,darName:'맹공격',darWD:220,darFlat:{flat_cold:188},skillConversion:{conv_cold:100},totalDamageModifier:0,basicCycleMs:333,referenceSpeed:200,speedCap:200,timingMode:'cycles',measuredAPS:2.5,uptime:85},target:{name:'사용자 지정 단일 대상',da:3000,daReduction:0,resistMode:'final',resists:{physical:20,pierce:-70,fire:50,cold:50,lightning:50,acid:50,vitality:50,aether:50,chaos:50,bleed:30},rr:[],armor:0,armorAbsorption:70,absorption:0,flatAbsorption:0,avoidance:0},wps:[
+ {id:'fang',name:'피의 송곳니',enabled:true,chance:26,wd:90,hitsMain:2,hitsOff:2,cycleMs:390,flat:{flat_pierce:100},conversion:{}},
+ {id:'cold',name:'냉각성 탄환',enabled:true,chance:21,wd:75,hitsMain:2,hitsOff:2,cycleMs:460,flat:{flat_cold:110},conversion:{}},
+ {id:'storm',name:'폭풍 분사',enabled:true,chance:23,wd:43,hitsMain:3,hitsOff:3,cycleMs:410,flat:{flat_lightning:120},conversion:{}},
+ {id:'burst',name:'폭발성 탄환',enabled:true,chance:22,wd:125,hitsMain:1,hitsOff:1,cycleMs:370,flat:{flat_fire:170},conversion:{}}
+ ],extras:[],duration:60,seed:37};
+ if(demo){
+  s.base={flat_pierce:300,inc_pierce:2200,oa:3400,crit:71,attackSpeed:100,conv_elemental:100,da:3200,hp:20000};
+  for(const [id]of SLOTS){s.equipment[id].parts.item.name='';s.equipment[id].reviewed=true;}
+  for(const h of ['main','off']){s.equipment[h].parts.item={name:'예제 권총 '+(h==='main'?'A':'B'),enabled:true,stats:{flat_physical:110,armorPiercing:100}};}
+  s.meta.note='기초 피해 410, 관통 증가 2200%, 공격 능력 3400을 가정한 작동 예제. 실제 서약운반자 아이템 데이터가 아닙니다.';
+ }else{
+  s.base={oa:1};s.combat.darWD=210;s.combat.skillConversion={};
+  const comp=['칼날의 문장','칼날의 문장','무지개빛 다이아몬드','살아있는 갑옷','신성한 판금','봉헌된 천','비늘달린 통가죽','모그드로젠의 표식','우그덴늪 가죽','섬멸의 문장','피에 물든 크리스탈','피에 물든 크리스탈','룬새겨진 토파즈',''];
+  SLOTS.forEach(([id],i)=>{s.equipment[id].parts.component.name=comp[i];});
+  for(const h of ['main','off'])s.equipment[h].parts.augment.name='래비저의 눈동자';
+  for(const h of ['amulet','ring1','ring2'])s.equipment[h].parts.augment.name='제련 부산물 가루';
+  const aff={shoulders:['무자비한','드란구울의'],gloves:['무자비한','아마라스타의 날렵함의'],pants:['가공할','생명력의'],boots:['벼락맞은','왕의'],amulet:['잔인성의','완비의']};
+  for(const[h,v]of Object.entries(aff)){s.equipment[h].parts.prefix.name=v[0];s.equipment[h].parts.suffix.name=v[1];}
+  s.meta.note='이름만 채워진 입력 템플릿입니다. 장비·버프·스킬의 실제 수치를 확인해야 합니다. 아래 공격 계수도 예제 참조값입니다.';
+ }
+ return s;
+}
+const LIBRARY=SLOTS.map(([slot,,name,en],i)=>({id:'template-'+i,name,en,part:'item',slots:slot.startsWith('ring')?['ring1','ring2']:slot==='main'||slot==='off'?['main','off']:[slot],stats:{},status:'이름 템플릿 · 수치 미입력',note:'실제 롤·스킬 변경을 확인해 직접 입력하세요. 전체 게임 DB 자동 연동이 아닙니다.'}));
+for(const [name,part]of [['칼날의 문장','component'],['평온','item'],['아마라스타의 날렵함의','suffix'],['왕의','suffix'],['생명력의','suffix'],['완비의','suffix'],['무자비한','prefix'],['가공할','prefix'],['벼락맞은','prefix'],['잔인성의','prefix'],['래비저의 눈동자','augment']])LIBRARY.push({id:'named-'+LIBRARY.length,name,en:'',part,slots:[],stats:{},status:'이름 템플릿 · 수치 미입력',note:'패치별 실제 수치를 입력하여 개인 라이브러리에 저장하세요.'});
+LIBRARY.push({id:'powder-ref',name:'제련 부산물 가루',en:'Steelbloom Powder',part:'augment',slots:['amulet','ring1','ring2'],stats:{flat_pierce:10,inc_pierce:50,da:70},status:'공격 관련 참조값 · 현재 롤 확인',note:'관통 10 / 관통 증가 50% / 방어 능력 70. 일부 지원 수치만 포함한 참조 항목입니다. 다른 효과·현재 패치는 직접 확인하세요.',url:'https://forums.crateentertainment.com/t/grim-dawn-version-1-1-3-0/82956'});
+root.DATA={SLOTS,PARTS,FIELDS,FIELD_LABELS,SOURCES,LIBRARY,state,blankPart};
+if(typeof module!=='undefined'&&module.exports)module.exports=root.DATA;
+})(typeof globalThis!=='undefined'?globalThis:this);
+</script>
+<script>/* Item data adapter. Values from a pinned public game-data snapshot, not a fake item template. */
+(function(root){'use strict';
+const clean=x=>String(x??'').normalize('NFKC').toLowerCase().replace(/신화적인|강화된|mythical|empowered/g,'').replace(/[\s\-_'’·:()]/g,'');
+const TYPES={physical:'physical',pierce:'pierce',piercing:'pierce',fire:'fire',cold:'cold',lightning:'lightning',poison:'acid',acid:'acid',life:'vitality',vitality:'vitality',aether:'aether',chaos:'chaos',elemental:'elemental'};
+const dtype=x=>TYPES[String(x||'').replace(/^Damage/i,'').toLowerCase()]||null;
+const SINGLE={characterOffensiveAbility:'oa',characterOffensiveAbilityModifier:'oaPct',characterDefensiveAbility:'da',characterDefensiveAbilityModifier:'daPct',characterLife:'hp',characterLifeModifier:'hpPct',offensiveCritDamageModifier:'crit',characterAttackSpeedModifier:'attackSpeed',characterTotalSpeedModifier:'attackSpeed',offensiveTotalDamageModifier:'incAll',offensiveDamageModifier:'incAll',offensiveElementalModifier:'incElemental',offensivePierceRatio:'armorPiercing',offensivePierceRatioModifier:'armorPiercingPct',defensiveProtection:'armor',defensiveProtectionModifier:'armorPct',characterHealIncreasePercent:'healingPct',characterStrength:'physique',characterDexterity:'cunning',characterIntelligence:'spirit',characterStrengthModifier:'physiquePct',characterDexterityModifier:'cunningPct',characterIntelligenceModifier:'spiritPct'};
+function statKey(s){if(SINGLE[s])return SINGLE[s];for(const [raw,t] of Object.entries({Physical:'physical',Pierce:'pierce',Fire:'fire',Cold:'cold',Lightning:'lightning',Poison:'acid',Life:'vitality',Aether:'aether',Chaos:'chaos',Elemental:'elemental'})){if(s==='offensive'+raw||s==='offensive'+raw+'Min')return 'flat_'+t;if(s==='offensive'+raw+'Modifier')return t==='elemental'?'incElemental':'inc_'+t;if(s==='defensive'+raw)return 'res_'+t;}
+ return null;}
+const ACTIVE={dar:['onslaught','맹공격'],storm:['stormspread','폭풍분사'],cold:['chillingrounds','냉각성탄환'],fang:['bloodfangs','피의송곳니'],burst:['burstinground','폭발성탄환']};
+function scope(m){const text=clean((m.en||'')+' '+(m.name||'')+' '+(m.skill||''));for(const[k,words]of Object.entries(ACTIVE))if(words.some(w=>text.includes(clean(w))))return k;return null;}
+function value(r,roll='mean'){
+ const mean=(Number(r.min)||0)/2+(Number(r.max??r.min)||0)/2;
+ if(roll==='low'&&Number.isFinite(r.low))return r.low;
+ if(roll==='high'&&Number.isFinite(r.high))return r.high;
+ return mean;
+}
+const METADATA=/^(augment|item|skillLevel|loot|characterLevel|defensiveBlock|characterMana|characterLight|characterExperience)/;
+function mapped(item,roll='mean'){
+ const stats={},unapplied=[],display=[],modifiers=[];
+ const add=(k,v)=>{if(Number.isFinite(v)&&v!==0)stats[k]=(stats[k]||0)+v;};
+ for(const r of item.raw||[]){if(r.source!=='self'){unapplied.push({reason:'발동/펫 효과 · 유지율 자동 계산 제외',...r});continue;}
+  const v=value(r,roll),key=statKey(r.stat);
+  if(key){add(key,v);display.push({key,value:v,raw:r.stat});}
+  else if(!METADATA.test(r.stat)&&v!==0)unapplied.push({...r,reason:'현재 DPS 엔진 미지원'});
+ }
+ for(const c of item.conversions||[]){const f=dtype(c.from),t=dtype(c.to);if(t==='pierce'&&f&&f!=='pierce')add('conv_'+f,Number(c.percent));else unapplied.push({reason:'관통 이외 전환 미지원',stat:`${c.from} → ${c.to}`,min:c.percent,max:c.percent});}
+ for(const m of item.modifiers||[]){const s=scope(m);if(!s){unapplied.push({...m,reason:'해당 스킬 조건부 변경 · 기본 합계에 미포함'});continue;}
+  if(m.stat==='weaponDamagePct'){add(s==='dar'?'darWD':'wd_'+s,m.value);continue;}
+  if(/^(chanceToUse|chanceToUseSkill|skillChanceToUse)$/.test(m.stat)&&s!=='dar'){add('chance_'+s,m.value);continue;}
+  const k=statKey(m.stat);
+  if(k?.startsWith('flat_')){modifiers.push({scope:s,kind:'flat',key:k,value:m.value});continue;}
+  if(/^conversionPercentage/.test(m.stat)&&dtype(m.to)==='pierce'&&dtype(m.from)){modifiers.push({scope:s,kind:'conversion',key:'conv_'+dtype(m.from),value:m.value});continue;}
+  unapplied.push({...m,reason:'스킬 변경 수치 표시 · 자동 계산 미지원'});
+ }
+ return {stats,unapplied,display,modifiers};
+}
+function tagType(t){return String(t||'').replace(/[^a-z0-9]/gi,'').toLowerCase().replace('gun1h','ranged1h').replace('gun2h','ranged2h');}
+function compatible(x,slot,part,base){
+ if(part==='ascension')return false;
+ if(part!==x.part&&!(x.part==='affix'&&['prefix','suffix'].includes(part)))return false;
+ if(part==='item'){
+  if(slot==='relic')return x.domain==='relic';
+  if(x.domain==='relic')return false;
+  if(x.slots?.length)return x.slots.includes(slot)||((slot==='ring1'||slot==='ring2')&&x.slots.includes('ring'));
+  const rec=x.id.toLowerCase();const check={main:/gearweapons/,off:/gearweapons|offhand|shield/,head:/head/,chest:/chest|torso/,shoulders:/shoulder/,gloves:/hands|glove/,pants:/legs|pants/,boots:/feet|boot/,belt:/waist|belt/,amulet:/neck|amulet/,ring1:/ring/,ring2:/ring/,medal:/medal/};return check[slot]?.test(rec)||false;
+ }
+ if(['prefix','suffix'].includes(part)){
+  if(base&&/legendary|epic/i.test(base.rarity||''))return false;
+  // Source deposit does not carry full loot-table affix compatibility. Do not invent it.
+  return !x.slots?.length||x.slots.includes(slot);
+ }
+ if(slot==='relic')return false;
+ if(x.applies?.length&&base?.type){const b=tagType(base.type);return x.applies.some(a=>{const t=tagType(a);return t===b||t==='all'||(t==='weapon'&&['main','off'].includes(slot))||(t==='armor'&&!['main','off','amulet','ring1','ring2','medal'].includes(slot))||(t==='ring'&&slot.startsWith('ring'));});}
+ return !x.slots?.length||x.slots.includes(slot);
+}
+const DB={data:null,phase:'loading',message:'검색 DB 연결 중',progress:0,subscribers:[],error:'',
+ on(fn){this.subscribers.push(fn);},emit(){this.subscribers.forEach(fn=>fn(this));},
+ get(id){return this.data?.items.find(x=>x.id===id);},
+ search(q,slot,part,base,{rarity='',maxLevel=100,offset=0,limit=60}={}){const words=String(q||'').split(/\s+/).map(clean).filter(Boolean);const all=(this.data?.items||[]).filter(x=>compatible(x,slot,part,base)&&(!rarity||x.rarity.toLowerCase()===rarity.toLowerCase())&&x.level<=maxLevel&&words.every(w=>x._search.includes(w)));all.sort((a,b)=>{const qa=clean(a.name)===clean(q)||clean(a.en)===clean(q),qb=clean(b.name)===clean(q)||clean(b.en)===clean(q);return Number(qb)-Number(qa)||b.level-a.level||a.name.localeCompare(b.name,'ko');});return {total:all.length,rows:all.slice(offset,offset+limit)};},
+ accept(data){if(data?.schema!=='grim-catalog/v2'||!Array.isArray(data.items))throw new Error('지원하지 않는 DB 형식');this.data=data;for(const x of data.items)x._search=clean([x.name,x.en,x.id,x.level,x.rarity,...(x.boosts||[]).map(y=>y.name)].join(' '));this.phase='ready';this.message=`${data.items.length.toLocaleString('ko-KR')}개 레코드 · ${data.meta.gameVersion}`;this.progress=100;this.emit();},
+ async load(){try{const embedded=document.getElementById('embedded-catalog');if(embedded){this.accept(JSON.parse(embedded.textContent));return;}
+   if(location.protocol==='file:'){throw new Error('전체 검색 DB를 준비하려면 ZIP을 풀고 START_WINDOWS.cmd를 실행하세요. 첫 실행 후에는 앱의 ‘DB 포함 HTML 저장’으로 완전 오프라인 파일을 만들 수 있습니다.');}
+   const started=Date.now();while(Date.now()-started<600000){const r=await fetch('/api/status',{cache:'no-store'});if(!r.ok)throw new Error('DB 서버에 연결할 수 없습니다. START_WINDOWS.cmd로 실행하세요.');const s=await r.json();this.phase=s.phase;this.message=s.message;this.progress=s.progress||0;this.emit();if(s.phase==='error')throw new Error(s.message);if(s.phase==='ready'){const cr=await fetch('/api/catalog',{cache:'no-store'});if(!cr.ok)throw new Error('DB 다운로드 실패');this.accept(await cr.json());return;}await new Promise(ok=>setTimeout(ok,1100));}throw new Error('DB 준비 시간이 초과되었습니다. 실행 창의 오류를 확인하세요.');
+ }catch(e){this.phase='error';this.error=e.message;this.message=e.message;this.emit();}}
+};
+root.CATALOG={DB,statKey,mapped,value,compatible,clean,dtype,scope};if(typeof module!=='undefined')module.exports=root.CATALOG;
+})(typeof globalThis!=='undefined'?globalThis:this);
+</script>
+<script>/* Grim DPS Lab v3. Build compiler + explicit expected-value model.
+ * No eval, interpolation of sampled ranks, fabricated item values, or silent
+ * success for missing skills. A prediction is not a replay of Grim Dawn / DPYes.
+ */
+(function(root){'use strict';
+const N=x=>Number.isFinite(Number(x))?Number(x):0, C=(x,a,b)=>Math.max(a,Math.min(b,N(x)));
+const cp=x=>JSON.parse(JSON.stringify(x)), plus=(a,k,v)=>{if(Number.isFinite(v)&&v)a[k]=N(a[k])+v;};
+const DIRECT=['physical','pierce','fire','cold','lightning','acid','vitality','aether','chaos'];
+const DOT=['trauma','bleed','burn','frostburn','electrocute','poison','decay'];
+const ALL=[...DIRECT,...DOT]; const zero=()=>Object.fromEntries(ALL.map(t=>[t,0]));
+const TYPE={Physical:'physical',Pierce:'pierce',Piercing:'pierce',Fire:'fire',Cold:'cold',Lightning:'lightning',Poison:'acid',Acid:'acid',Life:'vitality',Vitality:'vitality',Aether:'aether',Chaos:'chaos',Elemental:'elemental',SlowPhysical:'trauma',SlowBleeding:'bleed',Bleeding:'bleed',SlowFire:'burn',SlowCold:'frostburn',SlowLightning:'electrocute',SlowPoison:'poison',SlowLife:'decay'};
+const TO_DOT={physical:'trauma',fire:'burn',cold:'frostburn',lightning:'electrocute',acid:'poison',vitality:'decay'};
+const DOT_RES={trauma:'physical',burn:'fire',frostburn:'cold',electrocute:'lightning',poison:'acid',decay:'vitality',bleed:'bleed'};
+const SIMPLE={characterStrength:'physique',characterDexterity:'cunning',characterIntelligence:'spirit',characterStrengthModifier:'physiquePct',characterDexterityModifier:'cunningPct',characterIntelligenceModifier:'spiritPct',characterOffensiveAbility:'oa',characterOffensiveAbilityModifier:'oaPct',characterDefensiveAbility:'da',characterDefensiveAbilityModifier:'daPct',characterLife:'hp',characterLifeModifier:'hpPct',characterMana:'energy',characterManaModifier:'energyPct',characterLifeRegen:'regen',characterLifeRegenModifier:'regenPct',characterManaRegen:'energyRegen',characterManaRegenModifier:'energyRegenPct',characterAttackSpeedModifier:'attackSpeed',characterSpellCastSpeedModifier:'castSpeed',characterRunSpeedModifier:'moveSpeed',characterTotalSpeedModifier:'totalSpeed',offensiveCritDamageModifier:'crit',offensiveTotalDamageModifier:'incAll',offensiveDamageModifier:'incAll',offensiveElementalModifier:'incElemental',defensiveProtection:'armor',defensiveProtectionModifier:'armorPct',defensiveArmorAbsorptionModifier:'armorAbsorbPct',defensiveAbsorptionPercent:'armorAbsorbPct',defensiveArmorAbsorption:'armorAbsorbPct',characterHealIncreasePercent:'healingPct',offensiveLifeLeechMin:'leech',offensiveLifeLeech:'leech',offensivePierceRatio:'armorPiercing',offensivePierceRatioModifier:'armorPiercingPct',defensiveDamageAbsorption:'absorbPct',defensiveDamageAbsorptionModifier:'absorbPct',defensiveAbsorption:'flatAbsorb',defensiveAbsorptionProtection:'flatAbsorb',skillCooldownReduction:'cdr',augmentAllLevel:'allSkills',characterDodgePercent:'dodge',characterDeflectProjectile:'deflect',defensiveTotalSpeedResistance:'cc_slow',defensiveStun:'cc_stun',defensiveFreeze:'cc_freeze',defensivePetrify:'cc_petrify',defensiveTrap:'cc_trap',defensiveSleep:'cc_sleep',defensiveKnockdown:'cc_knockdown',defensiveDisruption:'cc_disruption',characterRangedDexterityReqReduction:'reqRangedCunning',characterJewelryIntelligenceReqReduction:'reqJewelrySpirit',characterArmorStrengthReqReduction:'reqArmorPhysique',characterWeaponsStrengthReqReduction:'reqWeaponPhysique'};
+const CONTROL=/^(?:Class|skill(?:MaxLevel|UltimateLevel|MasteryLevel|Tier|Display|BaseDescription|Mana|Use|Target|Radius|Range|Angle|Time|Delay|Cooldown|Life|Energy|Name|Connection|Charge|Projectile|Chance|Requirement|Dependency|Dependanc)|weaponDamagePct|chanceToUse|cooldownTime|duration|buff|projectile|spawn|modSpawn|pet|conversion|onHit|onCrit|onAttack|trigger|attack|num|template|augment|item|loot|racial|Sword|Axe|Mace|Scepter|Dagger|Ranged|Shield|Offhand|Unarmed|sword|axe|mace|ranged|shield|offhand|unarmed|twoHand|dualWield|requires|defensiveBlock|character(?:Light|Experience|Level|Constitution))/;
+const AFF=['ascendant','chaos','eldritch','order','primordial'];
+const clean=s=>String(s||'').toLowerCase().replace(/[\s_'’:\-]/g,'');
+function type(x){const k=String(x||'').replace(/^Damage/i,'');return TYPE[k]||Object.entries(TYPE).find(([a])=>a.toLowerCase()===k.toLowerCase())?.[1]||ALL.find(t=>t===k.toLowerCase())||null;}
+function rank(v,r){if(r<=0)return 0;if(Array.isArray(v)){if(!v.length)return 0;return N(v[Math.min(Math.max(0,Math.floor(r)-1),v.length-1)]);}return typeof v==='number'?v:0;}
+function atRank(stats,r){const out={};if(r<=0)return out;for(const[k,v]of Object.entries(stats||{}))if(typeof v==='number'||Array.isArray(v))out[k]=rank(v,r);if(out.skillCooldownTime!=null&&out.cooldownTime==null)out.cooldownTime=out.skillCooldownTime;if(out.projectileLaunchNumber!=null&&out.projectileNumber==null)out.projectileNumber=out.projectileLaunchNumber;return out;}
+function issue(list,code,source,message,severity='warning'){if(!list.some(x=>x.code===code&&x.source===source&&x.message===message))list.push({code,source,message,severity});}
+function defaults(){return {enabled:true,level:100,skillBudget:250,attributeBudget:109,attributes:{physique:60,cunning:44,spirit:5},masteries:{},points:{},disabled:{},primary:'',devotions:{},bindings:{},powerLevels:{},conditions:{inSeal:true,lowHealth:false,onHit:false},rotation:{},profile:{},offhandMode:'auto',timing:{mode:'estimated',measuredAPS:2.5,uptime:90,projectileHitFraction:.75},target:{da:3000,resists:{physical:30,pierce:40,fire:40,cold:40,lightning:40,acid:40,vitality:40,aether:40,chaos:40,bleed:30},armor:1800,armorAbsorption:70,absorption:0,flatAbsorption:0,avoidance:0,leechResist:80},difficulty:'ultimate'};}
+function config(s){return {...defaults(),...(s.auto||{}),attributes:{...defaults().attributes,...s.auto?.attributes},timing:{...defaults().timing,...s.auto?.timing},conditions:{...defaults().conditions,...s.auto?.conditions},target:{...defaults().target,...s.auto?.target,resists:{...defaults().target.resists,...s.auto?.target?.resists}}};}
+function mappedKey(k){if(SIMPLE[k])return SIMPLE[k];let m;
+ if((m=/^offensive(.+?)(Modifier|DurationModifier|DurationMin|DurationMax|Min|Max)?$/.exec(k))){const t=TYPE[m[1]];if(t){const end=m[2]||'';return end==='Modifier'?'inc_'+t:end==='DurationModifier'?'dotDuration_'+t:end.startsWith('Duration')?'duration_'+t:'flat_'+t;}}
+ if((m=/^defensive(.+?)(Resistance|MaxResist|MaxResistance)?$/.exec(k))){const t=TYPE[m[1]];if(t)return (m[2]?.startsWith('Max')?'maxRes_':'res_')+t;}
+ return null;
+}
+function mapRaw(raw,{source='',issues=[],allowFlat=true,scalar=1}={}){
+ const o={};for(const[k,v0]of Object.entries(raw||{})){
+  if(typeof v0!=='number'||!v0)continue;if(/Max$/.test(k)&&raw[k.replace(/Max$/,'Min')]!=null)continue;
+  let v=v0;if(/Min$/.test(k)&&Number.isFinite(raw[k.replace(/Min$/,'Max')]))v=(v+raw[k.replace(/Min$/,'Max')])/2;
+  let key=mappedKey(k);
+  if(key){if(!allowFlat&&key.startsWith('flat_'))continue;
+   const chance=raw[k.replace(/Min$/,'')+'Chance']??raw[k+'Chance'];if(chance!=null)v*=C(chance,0,100)/100;
+   plus(o,key,v*scalar);
+  } else if(!CONTROL.test(k)&&!/^offensive.*(?:Chance|Resistance|Ability|Reduced|Reduction|DamageMult|TotalDamageReduction)/.test(k)&&!/^retaliation/.test(k))issue(issues,'unmapped-stat',source,k+' 수치 자동 적용 미지원');
+  else if(/^offensive.*(?:Resistance|Ability|Reduced|Reduction)/.test(k)&&!rr({[k]:v},'check').length&&!/Duration|offensiveSlowDefensiveAbilityMin/.test(k))issue(issues,'unmapped-combat',source,k+' 전투 효과는 소계에 미반영');
+  else if(/^racial/.test(k))issue(issues,'racial',source,'종족별 피해/방어 보너스는 특정 종족 선택 모델 미지원으로 미반영');
+  else if(/^retaliation/.test(k))issue(issues,'retaliation',source,'반격 피해는 공격 횟수/피격 종류가 필요하여 총 DPS에 미포함');
+ }
+ // raw elementalResistance vocabulary used by devotion JSON
+ if(raw.defensiveElementalResistance){o.res_elemental=N(raw.defensiveElementalResistance)*scalar;}
+ return o;
+}
+function sum(...rows){const out={};for(const row of rows)for(const[k,v]of Object.entries(row||{}))plus(out,k,N(v));return out;}
+function flat(stats){const out=zero();for(const t of ALL)out[t]=N(stats['flat_'+t]);for(const t of ['fire','cold','lightning'])out[t]+=N(stats.flat_elemental)/3;return out;}
+function convRows(stats,meta){const out=[];for(const[k,v]of Object.entries(stats||{})){let m=/^conversionPercentage(\d*)$/.exec(k);if(!m||!v)continue;const i=m[1],a=type(meta?.['conversionInType'+i]),b=type(meta?.['conversionOutType'+i]);if(a&&b)out.push({from:a,to:b,percent:v});}return out;}
+function conversion(packet,phases,armorPiercing=0){let left={...packet},done=zero();
+ for(const phase of phases){const next={...left};for(const from of ALL){let rows=(phase||[]).flatMap(c=>c.from==='elemental'?['fire','cold','lightning'].map(t=>({...c,from:t})):c).filter(c=>c.from===from&&ALL.includes(c.to)&&c.to!==from&&c.percent>0);const total=rows.reduce((s,c)=>s+c.percent,0);if(!total||!left[from])continue;const used=Math.min(total,100),unit=left[from]*used/100;next[from]-=unit;for(const c of rows)done[c.to]+=unit*c.percent/total;}
+  // DoT analogues convert with their parent damage. Never physical trauma -> pierce (there is no pierce DoT).
+  for(const [parent,dt]of Object.entries(TO_DOT)){let rows=(phase||[]).flatMap(c=>c.from==='elemental'?['fire','cold','lightning'].map(t=>({...c,from:t})):c).filter(c=>c.from===parent&&TO_DOT[c.to]&&c.from!==c.to&&c.percent>0);const total=rows.reduce((s,c)=>s+c.percent,0);if(total&&left[dt]){const q=left[dt]*Math.min(total,100)/100;next[dt]-=q;for(const c of rows)done[TO_DOT[c.to]]+=q*c.percent/total;}}
+  left=next;
+ }
+ const ap=C(armorPiercing,0,100)/100;done.pierce+=N(left.physical)*ap;left.physical=N(left.physical)*(1-ap);
+ return Object.fromEntries(ALL.map(t=>[t,N(left[t])+N(done[t])]));
+}
+function isRanged(w){return /ranged|gun|pistol|crossbow/i.test(w?.type||w?.id||'');}
+function weaponAllowed(rule,weapons){if(!rule)return true;const requested=rule.weapons||rule;if(!Array.isArray(requested))return true;return requested.some(r=>weapons.some(w=>{const a=clean(r),b=clean(w?.type);return a===b||a==='weapon'||a==='ranged1h'&&/ranged1h|gun1h/.test(b)||a==='ranged2h'&&/ranged2h|gun2h/.test(b)||a.includes('2h')&&b===a;}));}
+function effectiveLevel(skill,points,boosts,all){const p=C(points,0,skill.max);if(!p)return {hard:0,bonus:0,level:0};if(skill.kind==='transmuter')return {hard:p,bonus:0,level:p};const b=N(all)+N(boosts[skill.id])+N(boosts[skill.mastery]);return {hard:p,bonus:b,level:Math.min(skill.ultimate||skill.max,p+b)};}
+function classify(s,raw,override){if(override)return override;const text=clean(s.en+' '+s.name),cl=s.class+' '+s.effectClass;
+ if(/cadence|cadans|칼날박자/.test(text))return 'special';
+ if(/werewolf|wereraven|늑대인간|까마귀인간/.test(text))return 'pet';
+ if(/inquisitorseal|인퀴지터의표식/.test(text))return 'area';
+ if(/onslaught|savagery|righteousfervor|firestrike|beronathsfury|trollrage|맹공격/.test(text))return 'dar';
+ if(/WeaponPool|WeaponProc/i.test(cl)||raw.chanceToUse>0)return 'wps';
+ if(/Summon|SpawnPet|PetModifier/i.test(cl)||s.meta?.spawnObjects)return 'pet';
+ if(/auraofcensure|veilofshadow|nightschill/i.test(text))return 'aura';
+ if(/BuffDebuff|Debuff/.test(cl))return 'attack';
+ if(/Passive|Toggle|BuffRadius|BuffSelf|BuffOther/i.test(cl))return 'buff';
+ if(/Attack|Projectile|Wave|Beam|BuffDebuff|Debuff|Ground|Ray|Area|Radius/i.test(cl))return 'attack';
+ if(s.kind==='modifier'||s.kind==='transmuter')return 'modifier';
+ const hasDamage=Object.entries(raw).some(([k,v])=>/^offensive.*(?:Min|Max)$/.test(k)&&v&&mappedKey(k)?.startsWith('flat_'));
+ if(hasDamage||raw.weaponDamagePct)return 'attack';if(Object.keys(mapRaw(raw)).length)return 'buff';return 'unknown';
+}
+function procTrigger(raw,def){if(def?.proc?.trigger_key)return def.proc.trigger_key;
+ for(const k of ['onCritActivationChance','onHitActivationChance','onAttackActivationChance','onLowLifeActivationChance','onEnemyDeathActivationChance','onBlockActivationChance'])if(raw[k])return k;return null;}
+function renewal(rate,chance,cooldown){const lambda=Math.max(0,N(rate))*C(chance,0,100)/100;return lambda?lambda/(1+lambda*Math.max(0,N(cooldown))):0;}
+function buffUptime(rate,duration){return 1-Math.exp(-Math.max(0,rate)*Math.max(0,duration));}
+function readMods(mods,id,issues){const out={},conversions=[];for(const m of mods.filter(m=>m.skill===id)){
+ if(m.refreshSkill||m.refreshTrigger||/refresh|reset/i.test(m.stat)){issue(issues,'cooldown-reset',id,'확률형 재사용 초기화는 회전 빈도에 미반영');continue;}
+ if(m.from&&m.to){if(type(m.from)&&type(m.to))conversions.push({from:type(m.from),to:type(m.to),percent:m.value});}
+ else plus(out,m.stat,N(m.value));
+ }return {raw:out,conversions};}
+function rr(raw,source){const out=[];const add=(t,kind,v)=>{for(const x of t==='elemental'?['fire','cold','lightning']:[DOT_RES[t]||t])out.push({source,type:x,kind,value:Math.abs(v)});};
+ for(const[k,v]of Object.entries(raw||{})){
+  if(!v||typeof v!=='number'||/Duration/.test(k))continue;
+  if(/Max$/.test(k)&&raw[k.replace(/Max$/,'Min')]!=null)continue;
+  let m=/^defensive(.+?)(?:Resistance)?$/.exec(k);if(m&&v<0){const t=type(m[1]);if(t){add(t,'add',v);continue;}}
+  m=/^offensive(?:Slow)?(.+?)Resistance(?:Min|Max|Modifier)?$/.exec(k);
+  if(m){const t=type(m[1]);if(t){add(t,'add',v);continue;}}
+  m=/^offensive(.*?)ResistanceReduction(Absolute|Percent)(?:Min|Max)?$/.exec(k);
+  if(m){const t=!m[1]||m[1]==='Total'?'all':type(m[1]);if(t)add(t,m[2]==='Absolute'?'flat':'percent',v);}
+ }
+ return out;
+}
+function rrDuration(raw){return Math.max(0,...Object.entries(raw||{}).filter(([k])=>/Resistance.*DurationMin|skillActiveDuration/.test(k)).map(([,v])=>N(v)))||5;}
+function enemyDA(raw){return Math.max(0,-N(raw.characterDefensiveAbility),N(raw.offensiveSlowDefensiveAbilityMin));}
+function resistance(target,t,rrs){const typ=DOT_RES[t]||t;let r=N(target.resists?.[typ]);const relevant=rrs.filter(x=>x.type==='all'||x.type===typ),add={};let flat=0,pct=0;for(const x of relevant){if(x.kind==='add')add[x.source]=Math.max(N(add[x.source]),x.value);else if(x.kind==='flat')flat=Math.max(flat,x.value);else pct=Math.max(pct,x.value);}
+ r-=Object.values(add).reduce((a,b)=>a+b,0);
+ // Measured order: distinct -Y -> strongest Z% (signed) -> strongest flat X.
+ r*=1-Math.sign(r)*C(pct,0,100)/100;return r-flat;
+}
+function negate(n){return Object.fromEntries(Object.entries(n).map(([k,v])=>[k,-v]));}
+function devotionState(auto,data,weapons,issues){let aff=Object.fromEntries(AFF.map(a=>[a,0])),points=0,stats={},powers=[],selected=[],weaponRR=[];
+ for(const c of data.devotions||[]){const pick=new Set((auto.devotions[c.id]||[]).map(Number));const real=c.stars.filter(s=>pick.has(s.index));points+=real.length;if(pick.size!==real.length)issue(issues,'unknown-star',c.name,'알 수 없는 별 인덱스','error');if(real.length===c.stars.length){for(const a of AFF)aff[a]+=N(c.affinity_bonus?.[a]);}selected.push({c,real,pick});}
+ if(points>55)issue(issues,'devotion-budget','별자리',`55포인트 초과: ${points}`,'error');
+ for(const {c,real,pick}of selected){if(!real.length)continue;for(const a of AFF)if(N(c.affinity_required?.[a])>aff[a])issue(issues,'affinity',c.name,`${a} 친화도 부족 (${aff[a]}/${c.affinity_required[a]})`,'error');
+  for(const st of real){if((st.predecessors||[]).length&&!st.predecessors.some(p=>pick.has(p)))issue(issues,'star-path',c.name,`${st.index+1}번 별의 선행 별이 없습니다.`,'error');
+   if(weaponAllowed(st.weapon_requirement,weapons)){stats=sum(stats,mapRaw(st.bonuses,{source:c.name,issues}));weaponRR.push(...rr(st.bonuses,c.id));}
+   else issue(issues,'weapon-gate',c.name,`${st.index+1}번 별: 장착 무기 조건 불충족, 옵션 제외`);
+   if(st.pet_bonuses)issue(issues,'pet-bonus',c.name,'펫 전용 능력치는 플레이어에게 합산하지 않습니다.');
+   if(st.celestial_power){const p=st.celestial_power,r=C(auto.powerLevels[p.dbr]??p.level,1,p.level||25);powers.push({id:p.dbr,name:p.name||c.name,level:r,raw:atRank(p.rankStats,r),meta:p.rawMeta||{},def:p,class:p.skill_class,kind:'power',binding:auto.bindings[p.dbr]||'',rankSource:p.rankSource});}
+  }
+ }
+ return {aff,points,stats,powers,weaponRR};
+}
+function gather(state,catalog,auto,issues){const data=catalog.automation,byItem=new Map(catalog.items.map(x=>[x.id,x]));let global={},local={main:{},off:{}},slotArmor={},boosts={},mods=[],conversions=[],sources=[],weapons=[],sets={},grants=[],requirements=[],weaponRR=[];
+ for(const[slot,eq]of Object.entries(state.equipment||{})){if(eq.enabled===false)continue;let body=null;
+  for(const[part,p]of Object.entries(eq.parts||{})){if(!p||p.enabled===false)continue;const id=p.db?.id||p.db?.record;const item=id?byItem.get(id):null;
+   if(!item){if(p.name||Object.values(p.stats||{}).some(Boolean)){if(auto.allowLegacyManual){global=sum(global,p.stats||{});issue(issues,'manual',slot+':'+part,'수동 보정값 사용');}else issue(issues,'unresolved-item',slot+':'+part,`${p.name||'수동 옵션'}: DB 미연결, 계산 제외`);}continue;}
+   if(part==='item'){body=item;requirements.push({slot,item});if(['main','off'].includes(slot))weapons.push({...item,slot});if(item.set){sets[item.set]??=new Set();sets[item.set].add(item.id);}}
+   const raw={};for(const row of item.raw||[]){if(row.source!=='self')continue;raw[row.stat]=root.CATALOG.value(row,p.db?.roll||'mean');}
+   weaponRR.push(...rr(raw,item.id).map(x=>({...x,hand:['main','off'].includes(slot)?slot:''})));let stats=mapRaw(raw,{source:item.name,issues});if(['main','off'].includes(slot)){const loc={};for(const[k,v]of Object.entries(stats))if(k.startsWith('flat_')||k.startsWith('duration_')||k==='armorPiercing'||k==='leech'){loc[k]=v;delete stats[k];}local[slot]=sum(local[slot],loc);}
+   if(['head','chest','shoulders','gloves','pants','boots'].includes(slot)&&stats.armor){plus(slotArmor,slot,stats.armor);delete stats.armor;}
+   global=sum(global,stats);sources.push({name:item.name,source:'equipment',slot,part,stats});
+   for(const b of item.boosts||[])plus(boosts,b.target,b.level);
+   mods.push(...(item.modifiers||[]));for(const c of item.conversions||[]){if(type(c.from)&&type(c.to))conversions.push({from:type(c.from),to:type(c.to),percent:N(c.percent)});else issue(issues,'conversion-type',item.name,`${c.from} → ${c.to} 전환 미지원`);}
+   if(item.grantedSkill){const def=data.grantedSkills?.[item.grantedSkill];if(def){const level=N(data.itemGrantLevels?.[item.id])||1;grants.push({...def,level,item:item.id,sourceName:item.name});}else issue(issues,'missing-grant',item.name,'아이템 발동 스킬 원시 데이터가 없습니다.');}
+  }
+  for(const part of ['component','augment','prefix','suffix']){const p=eq.parts?.[part],it=p?.db?.id&&byItem.get(p.db.id);if(it&&body&&!root.CATALOG.compatible(it,slot,part,body))issue(issues,'item-slot',body.name,`${part} ${it.name} 부위 조건 불일치`,'error');}
+ }
+ const setDetails=[];for(const[id,pieces]of Object.entries(sets)){const s=data.sets.find(x=>x.id===id);if(!s){issue(issues,'missing-set',id,'세트 데이터 미확보');continue;}const count=pieces.size,raw=atRank(s.stats,count),stats=mapRaw(raw,{source:s.name,issues});global=sum(global,stats);sources.push({name:s.name+' '+count+'세트',source:'set',stats});setDetails.push({id,name:s.name,count,members:s.members});
+  for(const b of s.boosts||[])if(b.pieces<=count)plus(boosts,b.target,N(b.level));
+  for(const m of s.modifiers||[])if(m.pieces<=count)mods.push({skill:m.modified_skill,stat:m.stat_id,value:N(m.value),from:m.from_type,to:m.to_type});
+  conversions.push(...convRows(raw,s.stats));
+ }
+ return {global,local,slotArmor,boosts,mods,conversions,sources,weapons,grants,requirements,setDetails,weaponRR};
+}
+/* Safe arithmetic parser used only for retained literal game equations.
+   Case-insensitive variables/functions; no member access, strings, assignment. */
+function equation(text,vars){const tokens=String(text).match(/(?:\d*\.\d+|\d+\.?\d*)(?:[eE][+-]?\d+)?|[A-Za-z_][\w]*|[+\-*/^(),]/g)||[];if(tokens.join('').toLowerCase()!==String(text).replace(/\s/g,'').toLowerCase())throw Error('Unsupported equation token');let i=0;const env=Object.fromEntries(Object.entries(vars).map(([k,v])=>[k.toLowerCase(),v]));
+ const funcs={floor:Math.floor,ceil:Math.ceil,round:Math.round,min:Math.min,max:Math.max,abs:Math.abs,pow:Math.pow,sqrt:Math.sqrt};
+ function primary(){const t=tokens[i++];if(t==='+')return primary();if(t==='-')return -primary();if(t==='('){const v=addExpr();if(tokens[i++]!==')')throw Error('Missing )');return v;}if(/^\d|^\./.test(t))return Number(t);if(!t)throw Error('Missing value');const key=t.toLowerCase();if(tokens[i]==='('){if(!funcs[key])throw Error('Unsupported function');i++;const args=[addExpr()];while(tokens[i]===','){i++;args.push(addExpr());}if(tokens[i++]!==')')throw Error('Missing )');return funcs[key](...args);}if(!(key in env))throw Error('Missing equation variable: '+t);return N(env[key]);}
+ function power(){const a=primary();if(tokens[i]==='^'){i++;return a**power();}return a;}function mul(){let a=power();while(['*','/'].includes(tokens[i])){const op=tokens[i++],b=power();a=op==='*'?a*b:a/b;}return a;}function addExpr(){let a=mul();while(['+','-'].includes(tokens[i])){const op=tokens[i++],b=mul();a=op==='+'?a+b:a-b;}return a;}const val=addExpr();if(i!==tokens.length||!Number.isFinite(val))throw Error('Invalid equation');return val;}
+function attributes(auto,g,data,issues){const raw=data.player?.raw||{},lv=C(auto.level,1,100);const profile=auto.profile||{};
+ // Explicit reference fallback rather than presenting guessed base constants as verified game data.
+ const base={physique:raw.characterStrength??50,cunning:raw.characterDexterity??50,spirit:raw.characterIntelligence??50,oa:raw.characterOffensiveAbility??50,da:raw.characterDefensiveAbility??50,hp:raw.characterLife??50};
+ const verified=!!data.player?.record;
+ if(!verified)issue(issues,'reference-base','능력치','플레이어 기본 레코드 없음: 공개 가이드 기준 프로필 사용. 총 능력치는 게임 대조 전 근사값');
+ const attrs={};for(const k of ['physique','cunning','spirit'])attrs[k]=(N(base[k])+N(auto.attributes[k])*8+N(g[k]))*(1+N(g[k+'Pct'])/100);
+ // Formula bindings must be explicit record/key matches rather than selecting any equation with a similar word.
+ const bindings=data.player?.formulaBindings||{},equations=data.player?.formulas||{};
+ const vars={charLevel:lv,playerLevel:lv,level:lv,characterLevelDV:lv,strength:attrs.physique,dexterity:attrs.cunning,intelligence:attrs.spirit,strengthDV:attrs.physique,dexterityDV:attrs.cunning,intelligenceDV:attrs.spirit,bonusDV:0,offensiveAbilityDV:N(base.oa)+N(g.oa),defensiveAbilityDV:N(base.da)+N(g.da),offensiveAbilityModifierDV:N(g.oaPct),defensiveAbilityModifierDV:N(g.daPct)};
+ const growth={oa:lv*10,da:lv*10,hp:lv*20},formulaValues={},formulasUsed=[];
+ for(const k of ['oa','da','hp']){const b=bindings[k];if(b&&equations[b.record]?.[b.key]){try{const v=equation(equations[b.record][b.key],vars);if(b.scope==='final')formulaValues[k]=v;else growth[k]=v;formulasUsed.push(k);}catch(e){issue(issues,'formula',k,e.message);}}}
+ if(formulasUsed.length<3)issue(issues,'reference-growth','능력치','DB의 정확한 전체식을 연결하지 못한 항목은 참고 프로필로 계산합니다. OA/DA 레벨당 10·속성당 0.4, 체력 레벨당 20 등은 원시 게임식 대조 전 근사입니다. 정확한 최종 수치를 보증하지 않습니다.');
+ const out={...g,...attrs};out.oa=profile.baseOA==null&&formulaValues.oa!=null?formulaValues.oa:(N(profile.baseOA??(N(base.oa)+growth.oa))+.4*attrs.cunning+N(g.oa))*(1+N(g.oaPct)/100);
+ out.da=profile.baseDA==null&&formulaValues.da!=null?formulaValues.da:(N(profile.baseDA??(N(base.da)+growth.da))+.4*attrs.physique+N(g.da))*(1+N(g.daPct)/100);
+ out.hp=profile.baseHP==null&&formulaValues.hp!=null?formulaValues.hp:(N(profile.baseHP??(N(base.hp)+growth.hp))+2.5*attrs.physique+attrs.cunning+1.5*attrs.spirit+N(g.hp))*(1+N(g.hpPct)/100);
+ if(formulasUsed.length)issue(issues,'formula-provenance','능력치','원시 게임식 적용: '+formulasUsed.join(', ')+'. 식의 변수는 장비/속성/레벨에서 공급하며 bonusDV=0 기준입니다. 실제 캐릭터 대조 필요.');
+ plus(out,'inc_physical',.41*attrs.cunning);plus(out,'inc_pierce',.41*attrs.cunning);plus(out,'inc_trauma',.46*attrs.cunning);plus(out,'inc_bleed',.46*attrs.cunning);
+ for(const t of ['fire','cold','lightning','acid','vitality','aether','chaos'])plus(out,'inc_'+t,.47*attrs.spirit);for(const t of ['burn','frostburn','electrocute','poison','decay'])plus(out,'inc_'+t,.5*attrs.spirit);
+ out.speed=C(100+N(g.attackSpeed)+N(g.totalSpeed),10,200);out.castSpeed=C(100+N(g.castSpeed)+N(g.totalSpeed),10,200);out.armor=N(g.armor)*(1+N(g.armorPct)/100);out.armorAbsorption=Math.min(100,70*(1+N(g.armorAbsorbPct)/100));return out;
+}
+function checkRequirements(items,a,auto,issues){for(const {slot,item}of items){const req=item.requirements||{};if(req.level>auto.level)issue(issues,'requirement',item.name,`요구 레벨 ${req.level}`,'error');for(const k of ['physique','cunning','spirit']){let red=0;if(k==='cunning'&&isRanged(item))red=N(a.reqRangedCunning);if(k==='spirit'&&['ring1','ring2','amulet','medal'].includes(slot))red=N(a.reqJewelrySpirit);if(k==='physique')red=['main','off'].includes(slot)?N(a.reqWeaponPhysique):N(a.reqArmorPhysique);const need=Math.ceil(N(req[k])*(1-C(red,0,100)/100));if(need>N(a[k]))issue(issues,'requirement',item.name,`${k} ${need} 필요 / ${N(a[k]).toFixed(0)}. 미충족 장비의 옵션은 계획 비교를 위해 남겼지만 유효 빌드가 아닙니다.`,'error');}}}
+function compile(state,catalog){const issues=[];if(!catalog?.automation) return {ready:false,issues:[{code:'database',source:'DB',message:'정확한 레벨 배열을 포함한 v3 DB가 필요합니다.',severity:'error'}]};const data=catalog.automation,auto=config(state),gear=gather(state,catalog,auto,issues);let stats={...gear.global};const sources=[...gear.sources];
+ if(catalog.meta.fixture)issue(issues,'fixture','DB','검사 표본입니다. 실제 게임 빌드 성능이 아닙니다.');
+ let spent=0;const masters=Object.entries(auto.masteries).filter(([,r])=>N(r)>0);if(masters.length>2)issue(issues,'mastery-count','직업','숙련도는 최대 두 개입니다.','error');
+ for(const[id,p]of masters){const m=data.masteries.find(x=>x.id===id);if(!m){issue(issues,'missing-mastery',id,'알 수 없는 직업','error');continue;}spent+=N(p);if(p>m.max)issue(issues,'mastery-cap',m.name,'숙련도 상한 초과','error');const r=atRank(m.stats,Math.min(p,m.max)),add=mapRaw(r,{source:m.name,issues});stats=sum(stats,add);sources.push({name:m.name,source:'mastery',stats:add});}
+ const dev=devotionState(auto,data,gear.weapons,issues);stats=sum(stats,dev.stats);sources.push({name:'별자리',source:'devotion',stats:dev.stats});
+ const skillMap=new Map(data.skills.map(s=>[s.id,s])),skills=[];for(const s of data.skills){const p=N(auto.points[s.id]);if(!p)continue;spent+=p;
+  if(!auto.masteries[s.mastery]){issue(issues,'wrong-mastery',s.name,'선택하지 않은 직업의 스킬','error');continue;}if(p>s.max)issue(issues,'skill-cap',s.name,'직접 투자 상한 초과','error');
+  const levels=effectiveLevel(s,p,gear.boosts,stats.allSkills);if(s.masteryRequired&&auto.masteries[s.mastery]<s.masteryRequired)issue(issues,'mastery-tier',s.name,`숙련도 ${s.masteryRequired} 필요`,'error');
+  if(s.group!==s.id&&!(auto.points[s.group]>0))issue(issues,'prerequisite',s.name,'기본 스킬에 먼저 투자해야 합니다.','error');
+  for(const dep of s.prerequisites||[])if(!auto.points[dep])issue(issues,'prerequisite',s.name,'선행 스킬 미투자','error');
+  if(!s.masteryRequired)issue(issues,'tier-unverified',s.name,'숙련도 해금 단계는 원본 UI 메타데이터 미확인. 포인트·선행 그룹만 검사');
+  if(s.rankSource!=='raw-arrays')issue(issues,'missing-ranks',s.name,'정확한 레벨 배열 없음. 피해 추정에서 제외','error');
+  const m=readMods(gear.mods,s.id,issues),raw=sum(atRank(s.stats,levels.level),m.raw);const meta={...s.meta};const role=classify(s,raw,auto.rotation[s.id]?.role);
+  skills.push({...s,...levels,raw,meta,conversions:[...convRows(raw,meta),...m.conversions],role,enabled:auto.disabled[s.id]!==true});
+ }
+ if(spent>auto.skillBudget)issue(issues,'skill-budget','스킬',`${auto.skillBudget}포인트 초과: ${spent}`,'error');let attrSpent=Object.values(auto.attributes).reduce((a,b)=>a+N(b),0);if(attrSpent>auto.attributeBudget)issue(issues,'attribute-budget','능력치',`${auto.attributeBudget}포인트 초과: ${attrSpent}`,'error');
+ // Modifiers and transmuters affect their group only; do not become independent buffs.
+ const bases=skills.filter(s=>s.kind==='base');for(const s of skills.filter(s=>s.kind!=='base'&&s.enabled)){const b=bases.find(x=>x.id===s.group);if(!b)continue;
+  if(s.kind==='pet_modifier'){issue(issues,'pet-modifier',s.name,'펫 전용 효과: 플레이어 피해에 합산하지 않음');continue;}
+  if((/Secondary|AutoCast|Projectile|Nova/.test(s.class)||/brimstone|explosivestrike/.test(clean(s.en)))&&Object.keys(s.raw).some(k=>/^offensive.*Min$/.test(k))){issue(issues,'secondary-behavior',s.name,'추가 폭발/파편의 별도 타격 패턴 미지원: 이 강화 노드의 효과는 소계에서 제외');continue;}
+  b.raw=sum(b.raw,s.raw);b.conversions.push(...s.conversions);
+ }
+ let exclusives=bases.filter(s=>s.enabled&&(s.exclusive||/AuraofConviction|AuraofCensure|Bloodborne|Possession|Menhir.sBulwark|Oleron.sRage|StarPact|RecklessPower|Stormcaller.sPact|PrimalBond|DivineMandate|PathoftheThree|MasterofDeath|HarbingerofSouls/i.test(clean(s.en))));if(exclusives.length>1)issue(issues,'exclusive','독점 스킬','독점 스킬 두 개 이상 활성화. 하나만 켜세요.','error');
+ const attacks=[],buffs=[],procs=[],rrs=[];const globalConv=[...gear.conversions];
+ for(const b of bases.filter(s=>s.enabled)){
+  if(b.role==='pet'||b.role==='special'||b.role==='unknown'){issue(issues,'unsupported-skill',b.name,b.role==='pet'?'소환·변신 AI/공격 패턴은 자동 DPS에 미포함':b.role==='special'?'카덴스 등 특수 타격 순서 모델 미지원':'스킬 실행 형태를 확인하지 못하여 총 DPS에서 제외');continue;}
+  if(b.role==='buff'||b.role==='area'){if(b.role==='area'&&!auto.conditions.inSeal)continue;const trigger=procTrigger(b.raw);if(trigger){procs.push({...b,trigger,isBuff:true});continue;}
+   gear.weaponRR.push(...rr(b.raw,b.id));const st=mapRaw(b.raw,{source:b.name,issues});stats=sum(stats,st);sources.push({name:b.name,source:'skill',stats:st});globalConv.push(...b.conversions);buffs.push(b);
+   if(N(b.raw.offensiveTotalDamageReduction)||N(b.raw.offensiveTotalDamageReductionMin))plus(stats,'enemyDamageReduction',Math.max(N(b.raw.offensiveTotalDamageReduction),N(b.raw.offensiveTotalDamageReductionMin)));
+  } else {attacks.push(b);if(auto.rotation[b.id]?.enabled!==false){rrs.push(...rr(b.raw,b.id));stats.enemyDA=Math.max(N(stats.enemyDA),enemyDA(b.raw));}}
+ }
+ for(const g of gear.grants){const raw=atRank(g.stats,g.level),role=classify(g,raw,auto.rotation[g.id]?.role),trigger=procTrigger(raw),entry={...g,id:g.id+'@'+g.item,skillId:g.id,raw,conversions:convRows(raw,g.meta),role,name:g.sourceName+' · '+g.name,trigger};if(auto.disabled[entry.id])continue;
+  if(g.rankSource!=='raw-arrays'){issue(issues,'missing-grant-rank',entry.name,'아이템 스킬 정확한 레벨 데이터 누락');continue;}
+  if(role==='pet'){issue(issues,'pet-grant',entry.name,'아이템 소환수 피해 미포함');continue;}
+  if(trigger)procs.push({...entry,isBuff:role==='buff'});else if(role==='buff'){stats=sum(stats,mapRaw(raw,{source:entry.name,issues}));globalConv.push(...entry.conversions);buffs.push(entry);}else if(auto.rotation[g.id]?.enabled)attacks.push(entry);else issue(issues,'item-active',entry.name,'수동 사용 아이템 스킬은 회전에 켜야 피해에 포함됩니다.');
+ }
+ for(const b of bases){if(/savagery|righteousfervor/.test(clean(b.en)))issue(issues,'charge-model',b.name,'충전 단계별 런타임 배율/축적 상태는 원시 레벨 값 외에 자동 재현하지 못합니다.');if(/channel|beam|ray/i.test(b.class))issue(issues,'channel-model',b.name,'집중형 스킬의 틱 간격·에너지 제한은 실행시간 근사입니다.');}
+ const learned=new Set([...bases.map(x=>x.id),...gear.grants.map(x=>x.id)]),bindingUsed=new Set();for(const p of dev.powers){if(!p.binding){issue(issues,'unbound-power',p.name,'연결 스킬 미선택: 별자리 발동 효과 제외');continue;}if(!learned.has(p.binding)){issue(issues,'invalid-binding',p.name,'배우지 않은 스킬에 연결됨','error');continue;}if(bindingUsed.has(p.binding)){issue(issues,'duplicate-binding',p.name,'하나의 스킬에 두 별자리 효과 연결','error');continue;}bindingUsed.add(p.binding);
+  if(p.rankSource!=='raw-arrays'){issue(issues,'missing-power-rank',p.name,'정확한 별자리 발동 레벨 배열 누락');continue;}if(p.def.pet){issue(issues,'pet-power',p.name,'별자리 소환수 AI/피해 미포함');continue;}
+  const trigger=procTrigger(p.raw,p.def)||'onAttackActivationChance';procs.push({...p,trigger,isBuff:!DIRECT.some(t=>flat(mapRaw(p.raw))[t])&&!rr(p.raw,p.id).length,conversions:convRows(p.raw,p.meta)});
+ }
+ const a=attributes(auto,stats,data,issues);const weights={head:.15,chest:.26,shoulders:.15,gloves:.12,pants:.20,boots:.12};a.armorBySlot=Object.fromEntries(Object.keys(weights).map(k=>[k,(N(gear.slotArmor[k])+N(stats.armor))*(1+N(stats.armorPct)/100)]));a.armor=Object.entries(weights).reduce((v,[k,w])=>v+a.armorBySlot[k]*w,0);checkRequirements(gear.requirements,a,auto,issues);let primary=attacks.find(s=>s.id===auto.primary);if(!primary){primary=attacks.find(s=>s.role==='dar')||attacks.find(s=>s.role==='attack');}
+ if(!primary)issue(issues,'primary','주력 스킬','피해를 계산할 주력 공격 스킬을 선택하세요.','error');
+ gear.weaponRR.push(...dev.weaponRR);
+ const planned=true;return {ready:!!primary&&(primary.role!=='dar'||!!gear.weapons.find(w=>w.slot==='main')),valid:!issues.some(x=>x.severity==='error'),auto,data,a,stats,skills,bases,attacks,buffs,procs,primary,gear,dev,spent,attrSpent,sources,conversions:globalConv,rrs,issues,planned};
+}
+function skillWD(s,fallback=0){return s?.raw?.weaponDamagePct==null?fallback:N(s.raw.weaponDamagePct);}
+function packet(state,a,base,proc,hand,globalConv,issues){const w=state.gear.local[hand]||{},weapon=flat(w),globalFlat=flat(a),bd=mapRaw(base?.raw||{}, {source:base?.name,issues}),pd=mapRaw(proc?.raw||{}, {source:proc?.name,issues}),wd=skillWD(base,base?.role==='dar'?100:0)/100*(proc?skillWD(proc,100)/100:1);let raw=zero();const bf=flat(bd),pf=flat(pd);for(const t of ALL)raw[t]=(weapon[t]+globalFlat[t])*wd+bf[t]+pf[t];
+ // Carry additive skill-tree bonuses through conversion without multiplying
+ // them by global % damage a second time. Skill bonuses follow original type.
+ const skillBonus=zero();for(const t of ALL){skillBonus[t]=raw[t]*(N(bd['inc_'+t])+N(pd['inc_'+t])+N(bd.incAll)+N(pd.incAll)+(['fire','cold','lightning'].includes(t)?N(bd.incElemental)+N(pd.incElemental):0))/100;}
+ const phases=[ [...(base?.conversions||[]),...(proc?.conversions||[])],globalConv],ap=wd>0?C(w.armorPiercing*(1+N(a.armorPiercingPct)/100),0,100):0;
+ const converted=conversion(raw,phases,ap),bonusConverted=conversion(skillBonus,phases,ap);
+ for(const t of ALL){const elemental=['fire','cold','lightning'].includes(t)?N(a.incElemental):0;converted[t]=converted[t]*Math.max(0,1+(N(a['inc_'+t])+N(a.incAll)+elemental)/100)+bonusConverted[t];
+  converted[t]*=Math.max(0,1+(N(base?.raw.skillTotalDamageModifier)+N(proc?.raw.skillTotalDamageModifier))/100);
+ }
+
+ return converted;
+}
+function mitigated(packet,target,profile,rrs,spell=false){const result=zero(),bins=spell?(root.GD.critProfile(Math.max(profile.oa||1,target.da),target.da,profile.bonusCrit||0).bins):profile.bins;
+ for(const b of bins){if(!b.m)continue;const vals={};for(const t of DIRECT){let d=N(packet[t])*b.m*Math.max(0,1-resistance(target,t,rrs)/100);if(t==='physical')d-=Math.min(d,N(target.armor))*C(target.armorAbsorption,0,100)/100;d*=1-C(target.absorption,0,100)/100;vals[t]=d;}
+  const pre=Object.values(vals).reduce((x,y)=>x+y,0),post=Math.max(0,pre-N(target.flatAbsorption)),ratio=pre?post/pre:0;for(const t of DIRECT)result[t]+=vals[t]*ratio*b.p*(1-C(target.avoidance,0,100)/100);
+ }
+ for(const t of DOT)result[t]=N(packet[t])*profile.mean*Math.max(0,1-resistance(target,t,rrs)/100)*(1-C(target.absorption,0,100)/100);return result;
+}
+function hits(s,dual,auto){const name=clean(s.en+' '+s.name),p=auto.rotation[s.id]||{};if(p.hitsMain!=null)return {main:N(p.hitsMain),off:dual?N(p.hitsOff):0};
+ if(/stormspread|폭풍분사/.test(name)){const count=N(s.raw.projectileNumber)||N(s.raw.projectileNumberMax)||4;return {main:count*C(auto.timing.projectileHitFraction,0,1),off:dual?count*C(auto.timing.projectileHitFraction,0,1):0};}
+ if(/chillinground|bloodfang|냉각성탄환|피의송곳니/.test(name))return {main:2,off:dual?2:0};
+ const pnum=Math.max(1,N(s.raw.projectileNumber)||1);return {main:pnum,off:dual?1:0};
+}
+function duration(s,auto,weaponAPS,speed){const p=auto.rotation[s?.id]||{};if(p.cycleMs>0)return p.cycleMs/1000*200/speed;const name=clean(s?.en+' '+s?.name);let factor=1;if(/chillinground|stormspread|냉각성탄환|폭풍분사/.test(name))factor=1.2;if(/bloodfang|피의송곳니/.test(name))factor=.95;return factor/(Math.max(.1,weaponAPS)*speed/100);}
+function expected(state,catalog){const c=compile(state,catalog);if(!c.primary||!c.a)return empty(c);const {auto}=c;const issues=c.issues;const main=c.gear.weapons.find(w=>w.slot==='main'),off=c.gear.weapons.find(w=>w.slot==='off');const dual=!!off&&!/shield|offhand/i.test(off.type)&&auto.offhandMode!=='single';let a=c.a,stats=c.stats;const target=auto.target,extraRows=[],rrs=[...c.rrs],procStats={};let computed;
+ const wdScale=C(skillWD(c.primary,c.primary.role==='dar'?100:0)/100,0,1);if(wdScale){rrs.push(...c.gear.weaponRR.filter(x=>!x.hand||x.hand==='main'||dual).map(x=>({...x,value:x.value*wdScale})));if(c.gear.weaponRR.length)issue(issues,'weapon-rr','무기/별자리','무기 전달 저항 감소: 주력 무기 피해 계수(상한 100%) 기준. 다중 사격별 전달·시간 유지율은 근사');}
+ const weaponAPS=N(main?.aps)||1.5;if(!main?.aps)issue(issues,'attack-speed','무기','기본 공격 속도 데이터 누락: 초당 1.5회 참고값 사용');
+ issue(issues,'animation','공격 동작','공격별 애니메이션 길이는 추정 배율입니다. 측정 APS 모드로 전환 가능');
+ // A single-pass mean-uptime model approximates on-attack buffs; not a fixed-point game simulation.
+ const calculateRows=()=>{
+  const profile=root.GD.critProfile(a.oa,Math.max(1,N(target.da)-N(a.enemyDA)),N(a.crit));profile.oa=a.oa;profile.bonusCrit=N(a.crit);
+  let choices=c.attacks.filter(s=>s.role==='wps'&&s.enabled&&c.primary.role==='dar').map(s=>({...s,chance:C(s.raw.chanceToUse||s.raw.chanceToUseSkill,0,100)}));
+  const pool=root.GD.pool(choices),rows=[];let mean=0,seconds=0;
+  const addRow=(s,p,basic=false)=>{const h=basic?{main:dual?.75:1,off:dual?.75:0}:hits(s,dual,auto);const pm=packet(c,a,c.primary,basic?null:s,'main',c.conversions,issues),po=packet(c,a,c.primary,basic?null:s,'off',c.conversions,issues),em=mitigated(pm,target,profile,rrs),eo=mitigated(po,target,profile,rrs);let types=zero();for(const t of ALL)types[t]=em[t]*h.main+eo[t]*h.off;const damage=DIRECT.reduce((x,t)=>x+types[t],0);const time=duration(basic?c.primary:s,auto,weaponAPS,a.speed);mean+=p*damage;seconds+=p*time;rows.push({id:basic?'basic':s.id,name:basic?c.primary.name:s.name,p,chance:s?.chance,wd:basic?100:skillWD(s,100),hitsMain:h.main,hitsOff:h.off,damage,seconds:time,types,rawMain:pm,rawOff:po,skill:basic?c.primary:s});};
+  if(c.primary.role==='dar'){for(const row of pool.rows)addRow(row,row.p);if(pool.basic)addRow(c.primary,pool.basic,true);}else{const p=packet(c,a,c.primary,null,'main',c.conversions,issues),em=mitigated(p,target,profile,rrs),hit=hits(c.primary,false,auto).main;for(const t of ALL)em[t]*=hit;const damage=DIRECT.reduce((x,t)=>x+em[t],0),cd=Math.max(0,N(c.primary.raw.cooldownTime))*(1-C(a.cdr,0,80)/100),time=Math.max(cd,N(c.primary.raw.skillChargeDuration),1/(Math.max(.1,weaponAPS)*a.castSpeed/100));mean=damage;seconds=time;rows.push({id:c.primary.id,name:c.primary.name,p:1,hitsMain:hit,hitsOff:0,wd:skillWD(c.primary),damage,seconds:time,types:em,rawMain:p,rawOff:zero(),skill:c.primary});}
+  let aps=auto.timing.mode==='measured'?C(auto.timing.measuredAPS,.01,20):1/Math.max(.03,seconds);return {profile,pool,rows,aps,mean,seconds};
+ };
+ computed=calculateRows();
+ const sourceRate=id=>{const r=computed.rows.find(x=>x.id===id);if(r)return computed.aps*r.p*Math.max(1,r.hitsMain+r.hitsOff);if(id===c.primary.id)return computed.aps;const attack=c.attacks.find(x=>x.id===id);if(attack){const interval=Math.max(.2,N(auto.rotation[id]?.interval)||N(attack.raw.cooldownTime)||N(attack.raw.skillActiveDuration)||3);return 1/interval;}return 0;};
+ const rates={};for(const p of c.procs){const raw=p.raw,trigger=p.trigger||'',key=trigger,percent=N(raw[key])||N(p.def?.proc?.chance)||100;let rate;
+  if(/LowLife|lowLife|lowHealth|LifeMonitor/i.test(key)){if(!auto.conditions.lowHealth){issue(issues,'conditional',p.name,'저체력 미발동 상태. 효과 제외');continue;}rate=1/Math.max(1,N(raw.cooldownTime));}
+  else if(/onHit|HitBy|Block|Death|Kill/i.test(key)){if(!auto.conditions.onHit){issue(issues,'conditional',p.name,'피격·처치 조건 미선택. 효과 제외');continue;}rate=N(auto.profile.incomingHitsPerSecond)||1;}
+  else {rate=p.binding?sourceRate(p.binding):computed.aps;if(/Crit/i.test(key))rate*=computed.profile.crit;}
+  if(!rate){issue(issues,'proc-rate',p.name,'연결 스킬의 발동 기회가 없어 효과 제외');continue;}const hz=renewal(rate,percent,N(raw.cooldownTime)*(1-C(a.cdr,0,80)/100));rates[p.id]=hz;
+  const effects=rr(raw,p.skillId||p.id);if(effects.length){const dur=rrDuration(raw);const up=buffUptime(hz,dur);rrs.push(...effects.map(x=>({...x,value:x.value*up})));issue(issues,'average-rr',p.name,'확률형 저항 감소는 평균 유지율 근사. 실측 적 저항은 시간에 따라 변합니다.');}
+  if(enemyDA(raw))a.enemyDA=Math.max(N(a.enemyDA),enemyDA(raw)*buffUptime(hz,rrDuration(raw)));
+  if(p.isBuff){const dur=N(raw.skillActiveDuration)||N(raw.duration)||N(raw.buffDuration)||5,up=buffUptime(hz,dur);const st=mapRaw(raw,{source:p.name,issues,scalar:up});Object.assign(procStats,sum(procStats,st));extraRows.push({id:p.id,name:p.name,kind:'buff',dps:0,rate:hz,uptime:up});}
+ }
+ if(Object.keys(procStats).length){stats=sum(stats,procStats);a=attributes(auto,stats,c.data,issues);issue(issues,'average-buffs','발동 버프','확률형 버프를 평균 유지율로 반영한 근사. 치명타·공속의 시간별 상관은 미재현');}
+ computed=calculateRows();const uptime=C(auto.timing.uptime,0,100)/100;let castFraction=0;const castRows=[];
+ for(const sk of c.attacks.filter(x=>x.id!==c.primary.id&&x.role!=='wps')){if(auto.rotation[sk.id]?.enabled===false)continue;const raw=sk.raw,p=auto.rotation[sk.id]||{},dur=N(raw.skillActiveDuration)||N(raw.offensiveSlowPierceResistanceDurationMin),interval=Math.max(.2,N(p.interval)||Math.max(N(raw.cooldownTime)*(1-C(a.cdr,0,80)/100),dur>0?dur:3)),hz=1/interval,castTime=sk.role==='aura'?0:(N(p.castTime)||.35);castFraction+=hz*castTime;
+  const pkt=packet(c,a,sk,null,'main',c.conversions,issues),v=mitigated(pkt,target,computed.profile,rrs),dps=DIRECT.reduce((x,t)=>x+v[t],0)*hz*uptime;castRows.push({id:sk.id,name:sk.name,kind:'spell',dps,rate:hz,types:v,raw,uptime:1});}
+ castFraction=C(castFraction,0,.9);if(castFraction)issue(issues,'rotation','회전','보조 공격 기본 재시전 간격과 시전시간은 근사값. 회전 설정에서 조정 가능');
+ const effectiveAPS=computed.aps*(1-castFraction),direct=computed.mean*effectiveAPS*uptime,types=zero(),dots={};
+ for(const r of computed.rows){r.dps=r.p*r.damage*effectiveAPS*uptime;for(const t of DIRECT)types[t]+=r.p*r.types[t]*effectiveAPS*uptime;
+  for(const t of DOT){if(!r.types[t])continue;const duration=N(mapRaw(r.skill.raw)['duration_'+t])||N(mapRaw(c.primary.raw)['duration_'+t])||3,hz=r.p*effectiveAPS*uptime*computed.profile.hit,perTargetRate=r.types[t]/Math.max(1,r.hitsMain+r.hitsOff);const value=perTargetRate*buffUptime(hz,duration*(1+N(a['dotDuration_'+t])/100));const group=t+':weapon-shared';if(!dots[group]||value>dots[group].dps)dots[group]={id:group,name:'무기 공격 '+t,kind:'dot',dps:value,type:t,rate:hz,uptime:buffUptime(hz,duration)};}
+ }
+ for(const p of c.procs.filter(x=>!x.isBuff&&rates[x.id])){const hz=rates[p.id],v=mitigated(packet(c,a,p,null,'main',c.conversions,issues),target,computed.profile,rrs),hit=Math.max(1,N(auto.rotation[p.id]?.hitsMain)||1);let dps=DIRECT.reduce((x,t)=>x+v[t],0)*hz*hit*uptime;extraRows.push({id:p.id,name:p.name,kind:'proc',dps,rate:hz,uptime});for(const t of DIRECT)types[t]+=v[t]*hz*hit*uptime;
+  for(const t of DOT)if(v[t]){const dur=N(mapRaw(p.raw)['duration_'+t])||3,dps=v[t]*buffUptime(hz*uptime,dur);dots[t+':'+p.id]={id:p.id+':'+t,name:p.name+' '+t,kind:'dot',dps,type:t};}
+ }
+ for(const sk of castRows){for(const t of DIRECT)types[t]+=sk.types[t]*sk.rate*uptime;for(const t of DOT)if(sk.types[t]){const dur=N(mapRaw(sk.raw)['duration_'+t])||3;dots[t+':'+sk.id]={id:sk.id+':'+t,name:sk.name+' '+t,kind:'dot',dps:sk.types[t]*buffUptime(sk.rate*uptime,dur),type:t};}}
+ const dotRows=Object.values(dots);if(dotRows.length)issue(issues,'dot-model','지속 피해','같은 무기 출처는 가장 큰 평균값만 유지. 별도 스킬 출처는 합산. 치명타 스냅샷 경쟁/정확한 재적용 틱은 미재현');
+ for(const d of dotRows)types[d.type]+=d.dps;const extras=[...castRows,...extraRows,...dotRows],extra=extras.reduce((x,r)=>x+r.dps,0);
+ const armorWeights={head:.15,chest:.26,shoulders:.15,gloves:.12,pants:.20,boots:.12};a.armorBySlot=Object.fromEntries(Object.keys(armorWeights).map(k=>[k,(N(c.gear.slotArmor[k])+N(stats.armor))*(1+N(stats.armorPct)/100)]));a.armor=Object.entries(armorWeights).reduce((v,[k,w])=>v+a.armorBySlot[k]*w,0);c.a=a;c.stats=stats;c.issues=issues;c.valid=!issues.some(x=>x.severity==='error');c.rrs=rrs;c.rates=rates;c.castFraction=castFraction;
+ const fallback=issues.some(x=>x.code.startsWith('reference-')),excluded=issues.filter(x=>/unsupported|pet-|missing-|unmapped|retaliation|secondary|racial|charge-model|channel-model/.test(x.code));
+ return {a:{g:a,oa:a.oa,da:a.da,hp:a.hp,speed:a.speed,hands:{main:flat(sum(a,c.gear.local.main)),off:flat(sum(a,c.gear.local.off))},warnings:[]},profile:computed.profile,pool:computed.pool,rows:computed.rows,aps:effectiveAPS,meanCycle:computed.seconds,meanDamage:computed.mean,direct,extra,total:direct+extra,types,extras,warnings:issues.map(x=>`${x.source}: ${x.message}`),uptime,autoReport:c,coverage:{excluded:excluded.length,reference:fallback,valid:c.valid,scope:'지원된 효과의 기대값 · 게임 엔진/DPYes 실측 아님'}};
+}
+function empty(c){return {a:{g:{},oa:0,da:0,hp:0,speed:100,hands:{main:zero(),off:zero()},warnings:[]},profile:{mean:0,crit:0,hit:0,bins:[]},pool:{sum:0,basic:1,rows:[]},rows:[],aps:0,meanCycle:0,meanDamage:0,direct:0,extra:0,total:0,types:zero(),extras:[],warnings:c.issues.map(x=>x.message),uptime:0,autoReport:c,coverage:{excluded:0,reference:false,valid:false,scope:'계산 준비 전'}};}
+const api={DIRECT,DOT,ALL,AFF,TYPE,N,C,rank,atRank,mappedKey,mapRaw,sum,flat,type,conversion,equation,effectiveLevel,classify,renewal,buffUptime,resistance,rr,rrDuration,readMods,devotionState,defaults,config,gather,compile,expected,empty};
+root.AUTO=api;if(typeof module!=='undefined')module.exports=api;
+if(root.GD){const manual=root.GD.calculate;root.GD.calculate=s=>s.auto?.enabled?expected(s,root.CATALOG?.DB?.data):manual(s);}
+})(typeof globalThis!=='undefined'?globalThis:this);
+</script>
+<script>/* Automatic skill/devotion editor. All imported content is escaped; only JSON
+ * records are read. Missing raw data is displayed, never patched with a fake DB. */
+(function(root){'use strict';
+const e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const f=(v,d=0)=>Number.isFinite(v)?v.toLocaleString('ko-KR',{maximumFractionDigits:d}):'—';
+const kind={dar:'기본 공격 대체',wps:'발동 공격',attack:'사용 공격 / 약화',buff:'버프 / 지속 효과',area:'장판 버프',aura:'공격 오라',pet:'소환·변신 — 피해 제외',special:'특수 순서 — 피해 제외',unknown:'실행 형태 미확인',modifier:'연결 강화'};
+const labels={physique:'체격',cunning:'교활',spirit:'정신',oa:'공격 능력',da:'방어 능력',hp:'체력',oaPct:'공격 능력 +%',daPct:'방어 능력 +%',hpPct:'체력 +%',crit:'치명타 피해 +%p',attackSpeed:'공격 속도 +%p',castSpeed:'시전 속도 +%p',moveSpeed:'이동 속도 +%p',armor:'방어구',armorPct:'방어구 +%',armorAbsorbPct:'방어구 흡수 증가',incAll:'모든 피해 +%',incElemental:'원소 피해 +%',allSkills:'모든 스킬 +',leech:'공격 피해 체력 전환',healingPct:'회복 효과 +%',enemyDamageReduction:'적 피해 감소'};
+const types={physical:'물리',pierce:'관통',fire:'화염',cold:'냉기',lightning:'번개',acid:'산성',vitality:'생명력',aether:'에테르',chaos:'카오스',elemental:'원소',trauma:'내부 출혈',bleed:'출혈',burn:'화상',frostburn:'동상',electrocute:'감전',poison:'중독',decay:'생명력 부패'};
+function statName(k){if(labels[k])return labels[k];const m=/^(flat|inc|duration|res|maxRes)_(.+)$/.exec(k);if(m)return (types[m[2]]||m[2])+({flat:' 추가 피해',inc:' 피해 +%',duration:' 지속시간',res:' 저항',maxRes:' 최대 저항 +%p'}[m[1]]);return k;}
+const panel=(title,sub,body)=>`<section class="panel auto-panel"><div class="panel-head"><div><h2>${e(title)}</h2><p class="panel-sub">${e(sub)}</p></div></div><div class="panel-body">${body}</div></section>`;
+const input=(label,op,key,value,step=1,min=0,max=100)=>`<label class="field">${e(label)}<input type="number" data-a-op="${op}" data-a-key="${e(key)}" value="${e(value)}" step="${step}" min="${min}" max="${max}"></label>`;
+const btn=(text,op,key='',cls='')=>`<button class="btn ${cls}" data-a-op="${op}" data-a-key="${e(key)}">${e(text)}</button>`;
+function tableStats(raw){return `<dl class="auto-stat-grid">${Object.entries(raw).filter(([,v])=>typeof v==='number'&&v!==0).map(([k,v])=>`<div><dt>${e(statName(root.AUTO.mappedKey(k)||k))}</dt><dd>${f(v,3)}</dd></div>`).join('')}</dl>`;}
+function getDB(){return root.CATALOG.DB.data?.automation;}
+function wait(){return panel('자동 계산 데이터 연결','아이템 DB + 정확한 스킬 레벨 배열 + 별자리 그래프',`<div class="notice info"><div><strong>v3 DB를 준비하고 있습니다.</strong><p>START_WINDOWS.cmd로 실행하면 공개 DB를 내려받습니다. 레벨 1·최대·최종 최대만 있는 표를 중간 레벨로 보간하지 않습니다.</p><p>다운로드 실패나 데이터 버전 불일치 시 임의의 데이터로 대신하지 않습니다.</p></div></div>`);}
+function toolbar(state){return `<div class="auto-toolbar"><div><b>BUILD COMPILER</b><span>장비 → 스킬 레벨 → 별자리 → 피해 기대값</span></div>${btn('서약운반자 스킬·별자리 적용','preset','','primary')}${btn('자동 배분 초기화','reset-auto')}</div><div class="auto-legend">전체 DB 항목을 탐색합니다. 수치가 연결되어도 펫 AI·특수 공격 패턴 등 미지원 효과는 포함되지 않습니다. <b>‘검증·출처’ 탭의 제외 항목을 확인하세요.</b></div>`;}
+function character(state,r){const d=getDB();if(!d)return wait();const a=root.AUTO.config(state),c=r.autoReport;return toolbar(state)+panel('캐릭터와 직업','배분 포인트를 바꾸면 장비 요구치와 파생 능력치도 다시 계산합니다.',`<div class="field-grid">${input('캐릭터 레벨','top','level',a.level,1,1,100)}${input('사용 가능한 스킬 포인트','top','skillBudget',a.skillBudget,1,0,300)}${input('사용 가능한 능력치 포인트','top','attributeBudget',a.attributeBudget,1,0,200)}</div><div class="auto-masteries">${d.masteries.map(m=>`<article class="mastery-box ${a.masteries[m.id]?'selected':''}"><h3>${e(m.name)}</h3><small>${e(m.en)}</small>${input('숙련도','mastery',m.id,a.masteries[m.id]||0,1,0,m.max)}</article>`).join('')}</div><div class="notice info">두 직업까지 선택 가능합니다. 캐릭터 레벨과 퀘스트 완료 상황은 사용자 선택이며, 스킬·능력치 예산을 초과하면 경고합니다.</div>`)+panel('체격 · 교활 · 정신','장비 수치, 숙련도, 별자리, 스킬의 능력치 보너스를 자동 합산합니다.',`<div class="field-grid">${['physique','cunning','spirit'].map(k=>input(labels[k]+' 투자 포인트','attr',k,a.attributes[k],1,0,200)).join('')}</div><div class="auto-numbers">${['physique','cunning','spirit','oa','da','hp'].map(k=>`<div><small>${e(labels[k])}</small><strong>${f(c?.a?.[k],1)}</strong></div>`).join('')}</div><div class="notice">플레이어 성장식이 원본에서 확정되지 않은 부분은 <b>공개 가이드의 참고 프로필</b>을 사용합니다. 인게임 정밀 능력치 검증은 아직 이루어지지 않았습니다.</div><details><summary>고급 · 검증된 기초 성장값으로 보정</summary><p class="hint">장비·능력치 투자·스킬을 제외한 레벨 기본값입니다. 캐릭터 창 최종 OA/DA를 넣으면 중복 계산됩니다. 빈 값은 참고 프로필을 사용합니다.</p><div class="field-grid">${['baseOA','baseDA','baseHP'].map(k=>input(k,'profile',k,a.profile[k]??'',.1,0,20000)).join('')}</div></details>`);}
+function skillView(state,r){const d=getDB();if(!d)return wait();const a=root.AUTO.config(state),c=r.autoReport,chosen=d.masteries.filter(m=>a.masteries[m.id]>0),all=c?.skills||[];return toolbar(state)+panel('스킬 배분과 장비 보너스',`${c?.spent||0} / ${a.skillBudget} 포인트 · ${d.skills.length}개 DB 스킬 · 중간 레벨도 원시 배열에서 계산`,`${chosen.length?'':`<div class="notice">먼저 ‘캐릭터’에서 두 직업을 선택하거나 서약운반자 배분을 적용하세요.</div>`}<div class="row"><label class="field grow">스킬 검색<input type="search" id="auto-skill-search" placeholder="한글 / 영어 / 레코드 검색"></label><label class="check"><input type="checkbox" data-a-op="condition" data-a-key="inSeal" ${a.conditions.inSeal?'checked':''}>표식 등 장판 버프 위</label><label class="check"><input type="checkbox" data-a-op="condition" data-a-key="lowHealth" ${a.conditions.lowHealth?'checked':''}>저체력 조건</label><label class="check"><input type="checkbox" data-a-op="condition" data-a-key="onHit" ${a.conditions.onHit?'checked':''}>피격·처치 발동 근사</label></div>${chosen.map(m=>`<div class="auto-mastery-title"><h3>${e(m.name)}</h3><span>숙련도 ${a.masteries[m.id]}</span></div><div class="auto-skill-list">${d.skills.filter(s=>s.mastery===m.id).sort((x,y)=>(x.y||0)-(y.y||0)||(x.x||0)-(y.x||0)).map(s=>{const info=all.find(x=>x.id===s.id),lev=info?.level||0,p=N(a.points[s.id]);return `<article class="auto-skill ${p?'learned':''} ${s.kind==='base'?'':'child'}" data-search="${e((s.name+' '+s.en+' '+s.id).toLowerCase())}"><div class="skill-top"><div><strong>${e(s.name)}</strong><small>${e(s.en)} · ${e(kind[info?.role]||s.kind)}</small></div><span class="rank-pill">${lev}<small> / ${s.ultimate}</small></span></div><div class="skill-controls">${input('직접 투자','point',s.id,p,1,0,s.max)}<div class="level-detail">장비 보너스 <b>+${info?.bonus||0}</b><span>기본 상한 ${s.max} · 최종 ${s.ultimate}</span></div>${s.kind==='base'?`<label class="check"><input type="checkbox" data-a-op="enabled" data-a-key="${e(s.id)}" ${a.disabled[s.id]!==true?'checked':''}>사용</label>`:''}${s.kind==='base'?btn(a.primary===s.id?'주력 선택됨':'주력 공격','primary',s.id,a.primary===s.id?'primary small':'small'):''}</div>${p?`<details><summary>레벨 ${lev}의 실제 데이터 · 적용 범위</summary>${tableStats(info?.raw||{})}<p class="tiny muted">${e(s.id)} · ${e(s.rankSource)}</p><div class="field-grid"><label class="field">실행 형태 (자동 분류 재검토용)<select data-a-op="role" data-a-key="${e(s.id)}"><option value="">자동 분류</option>${Object.entries(kind).filter(([k])=>k!=='modifier').map(([k,v])=>`<option value="${k}" ${a.rotation[s.id]?.role===k?'selected':''}>${e(v)}</option>`).join('')}</select></label>${input('보조 공격 재시전 간격, 초 (0=자동)','interval',s.id,a.rotation[s.id]?.interval||0,.1,0,180)}${input('200% 속도 동작 길이, ms (0=추정)','cycleMs',s.id,a.rotation[s.id]?.cycleMs||0,1,0,3000)}</div><p class="hint">실행 형태를 강제 변경해도 미지원 펫 AI나 특수 스킬 규칙이 구현되는 것은 아닙니다.</p></details>`:''}</article>`;}).join('')}</div>`).join('')}`);}
+function N(v){return root.AUTO.N(v);}
+function starMap(c,pick){const xs=c.stars.map(s=>N(s.position?.x)),ys=c.stars.map(s=>N(s.position?.y));const minX=Math.min(...xs),minY=Math.min(...ys),w=Math.max(1,Math.max(...xs)-minX),h=Math.max(1,Math.max(...ys)-minY);const pt=s=>({x:25+(N(s.position?.x)-minX)/w*220,y:22+(N(s.position?.y)-minY)/h*150});return `<svg class="constellation" viewBox="0 0 270 195" role="group" aria-label="${e(c.name)} 별 선택">${c.stars.flatMap(s=>(s.predecessors||[]).map(p=>{const prev=c.stars.find(x=>x.index===p);if(!prev)return '';const a=pt(prev),b=pt(s);return `<path class="star-edge ${pick.includes(p)&&pick.includes(s.index)?'on':''}" d="M${a.x} ${a.y}L${b.x} ${b.y}"/>`;})).join('')}${c.stars.map(s=>{const a=pt(s);return `<g class="star-node ${pick.includes(s.index)?'on':''} ${s.celestial_power?'power':''}" role="button" tabindex="0" aria-label="${e(c.name)} ${s.index+1}번 별" aria-pressed="${pick.includes(s.index)}" data-a-op="star" data-a-key="${e(c.id)}" data-a-index="${s.index}"><circle cx="${a.x}" cy="${a.y}" r="${s.celestial_power?12:9}"/><text x="${a.x}" y="${a.y+4}" text-anchor="middle">${s.index+1}</text><title>${e(JSON.stringify(s.bonuses))}</title></g>`;}).join('')}</svg>`;}
+function devotionView(state,r){const d=getDB();if(!d)return wait();const a=root.AUTO.config(state),c=r.autoReport,learned=c?.bases?.filter(s=>s.enabled)||[];return panel('별자리와 발동 효과',`${c?.dev?.points||0} / 55 포인트 · ${d.devotions.length}개 별자리`, `<div class="affinity-strip">${root.AUTO.AFF.map((x,i)=>`<span class="aff affinity-${i}">${['보라','빨강','초록','노랑','파랑'][i]} <b>${c?.dev?.aff?.[x]||0}</b></span>`).join('')}</div><div class="row"><label class="field grow">별자리 검색<input id="auto-dev-search" type="search" placeholder="한글 / 영어 이름"></label><label class="check"><input id="auto-dev-selected" type="checkbox">투자한 별자리만</label></div><p class="hint">각 별을 눌러 선택합니다. 잘못된 친화도·선행 별·중복 연결은 검증 탭에서 표시합니다. 완성 시 친화도가 지급됩니다. 시작 경로의 실현 가능성까지 보증하지는 않습니다.</p><div class="devotion-grid">${d.devotions.map(c=>{const pick=a.devotions[c.id]||[];return `<article class="dev-card ${pick.length?'selected':''}" data-search="${e((c.name+' '+c.en+' '+c.id).toLowerCase())}" data-picked="${pick.length}"><div class="row between"><h3>${e(c.name)}</h3><b>${pick.length}/${c.stars.length}</b></div><p class="tiny muted">${e(c.en)} · 필요 ${Object.entries(c.affinity_required||{}).map(([k,v])=>`${k} ${v}`).join(' / ')||'없음'}</p>${starMap(c,pick)}<div class="row">${btn('완성','dev-all',c.id,'small')}${btn('해제','dev-clear',c.id,'small ghost')}</div>${c.stars.filter(s=>s.celestial_power).map(s=>{const p=s.celestial_power;return `<div class="power-card"><b>${e(p.name||c.name)}</b>${input('발동 스킬 레벨','power-level',p.dbr,a.powerLevels[p.dbr]??p.level,1,1,p.level)}<label class="field">연결 스킬<select data-a-op="binding" data-a-key="${e(p.dbr)}"><option value="">연결 안 함</option>${learned.map(k=>`<option value="${e(k.id)}" ${a.bindings[p.dbr]===k.id?'selected':''}>${e(k.name)}</option>`).join('')}</select></label><small>${p.rankSource==='raw-arrays'?'정확한 레벨 배열':'원시 레벨 배열 누락'} · ${e(p.proc?.trigger_key||'조건 미확인')}</small></div>`;}).join('')}<details><summary>선택한 별의 옵션</summary>${c.stars.filter(s=>pick.includes(s.index)).map(s=>`<b>별 ${s.index+1}</b>${tableStats(s.bonuses)}`).join('')||'<p class="hint">아직 선택하지 않았습니다.</p>'}</details></article>`;}).join('')}</div>`);}
+function targetView(state,r){const a=root.AUTO.config(state);return panel('단일 대상과 전투 조건','적의 기본 저항을 입력합니다. 투자한 스킬·별자리·아이템의 저항 감소는 자동으로 계산합니다.',`<div class="notice info">장비만으로 적의 크기, 실제 명중 탄환 수, 이동 시간을 알 수는 없습니다. 아래 값은 측정 조건이며, ‘장비 옵션’ 입력이 아닙니다.</div><div class="field-grid">${input('적 방어 능력','target','da',a.target.da,1,0,10000)}${input('적 방어구','target','armor',a.target.armor,1,0,50000)}${input('적 방어구 흡수율 %','target','armorAbsorption',a.target.armorAbsorption,1,0,100)}${input('피해 흡수 %','target','absorption',a.target.absorption,1,0,100)}${input('타격당 고정 흡수','target','flatAbsorption',a.target.flatAbsorption,1,0,50000)}${input('회피율 %','target','avoidance',a.target.avoidance,1,0,100)}</div><details open><summary>적 기본 저항</summary><div class="field-grid">${[...root.AUTO.DIRECT,'bleed'].map(t=>input(types[t]+' %','target-res',t,a.target.resists[t]||0,1,-300,300)).join('')}</div></details><h3>공격 실행 조건</h3><div class="field-grid"><label class="field">동작 시간 모델<select data-a-op="timing" data-a-key="mode"><option value="estimated" ${a.timing.mode==='estimated'?'selected':''}>무기 속도 + 스킬별 추정 동작</option><option value="measured" ${a.timing.mode==='measured'?'selected':''}>실측 공격 실행 횟수</option></select></label>${input('실측 공격 실행 횟수 / 초','timing','measuredAPS',a.timing.measuredAPS,.01,.01,20)}${input('전투 중 공격 유지율 %','timing','uptime',a.timing.uptime,1,0,100)}${input('산탄 명중 비율 (1=전부)','timing','projectileHitFraction',a.timing.projectileHitFraction,.05,0,1)}</div><p class="hint">투사체 수는 DB에서 읽되 산탄은 명중 비율을 곱합니다. 애니메이션 추정은 DPYes 실측과 동일하다고 보장하지 않습니다.</p>`);}
+function audit(state,r){const d=getDB(),c=r.autoReport;if(!d||!c)return wait();const issues=c.issues||[],sev={error:'수정 필요',warning:'근사 / 제외'};return panel('계산 검증과 적용 범위','자동으로 채워졌다는 것과 게임 엔진을 완전히 재현했다는 것은 다릅니다.',`<div class="auto-numbers"><div><small>포인트</small><strong>${c.spent||0}/${c.auto?.skillBudget||250}</strong></div><div><small>별자리</small><strong>${c.dev?.points||0}/55</strong></div><div><small>유효성</small><strong>${c.valid?'검사 통과':'수정 필요'}</strong></div><div><small>표시된 진단</small><strong>${issues.length}</strong></div></div><div class="notice"><b>${e(r.coverage?.scope||'')}</b><br>Windows 실제 실행 검증: 이 배포의 테스트 보고서를 확인하세요. 미실행 테스트를 통과로 표기하지 않습니다.</div><div class="row">${btn('계산 진단 JSON 저장','export-audit','','primary')}${btn('DB JSON 가져오기','import-db')}${btn('DB 포함 HTML 저장','offline')}</div><div class="audit-list">${issues.map(i=>`<article class="audit-item ${i.severity}"><span class="badge ${i.severity==='error'?'':'gold'}">${sev[i.severity]||i.severity}</span><div><b>${e(i.source)}</b><p>${e(i.message)}</p><small>${e(i.code)}</small></div></article>`).join('')||'<p>표시할 진단이 없습니다.</p>'}</div>`)+panel('합산 경로','장비 / 세트 / 숙련도 / 별자리 / 스킬 효과를 추적합니다.',(c.sources||[]).map(s=>`<details><summary>${e(s.name)} <small>${e(s.source)} ${e(s.slot||'')}</small></summary>${tableStats(Object.fromEntries(Object.entries(s.stats||{})))}</details>`).join(''))+panel('세트와 저항 감소','동일 세트 조각 중복 / 동일 이름 디버프 중복을 구분합니다.',`<pre class="code code-wrap">${e(JSON.stringify({sets:c.gear?.setDetails||[],resistanceReductions:c.rrs||[],metadata:root.CATALOG.DB.data.meta},null,2))}</pre>`);}
+function analysis(state,r){const c=r.autoReport;if(!c?.a)return wait();return panel('예상 피해의 구성','소환·특수 스킬 제외 여부는 검증·출처 탭에서 확인하세요.',`<div class="auto-numbers"><div><small>주력 직접 피해</small><strong>${f(r.direct)}</strong></div><div><small>지속·발동·보조 공격</small><strong>${f(r.extra)}</strong></div><div><small>지원분 합계</small><strong>${f(r.total)}</strong></div></div><div class="auto-keyline">${e(r.coverage.scope)} · 유효성 ${r.coverage.valid?'검사 통과':'수정 필요'} · 제외 진단 ${r.coverage.excluded}개</div><div class="scroll-table"><table><thead><tr><th>공격</th><th>선택 비중</th><th>실행당 피해</th><th>동작(초)</th><th>DPS 기여</th></tr></thead><tbody>${r.rows.map(x=>`<tr><td>${e(x.name)}</td><td>${f(x.p*100,1)}%</td><td>${f(x.damage)}</td><td>${f(x.seconds,3)}</td><td>${f(x.dps)}</td></tr>`).join('')}</tbody></table></div><div class="scroll-table" style="margin-top:18px"><table><thead><tr><th>별도 효과</th><th>분류</th><th>실행 빈도 / 초</th><th>DPS</th></tr></thead><tbody>${r.extras.map(x=>`<tr><td>${e(x.name)}</td><td>${e(x.kind)}</td><td>${f(x.rate,3)}</td><td>${f(x.dps)}</td></tr>`).join('')||'<tr><td colspan="4">계산된 별도 효과 없음</td></tr>'}</tbody></table></div>`)+panel('계산에 사용된 전투 계수','장비 변화가 어느 단계에 반영되는지 확인합니다.',`<div class="auto-numbers"><div><small>공격 실행 / 초</small><strong>${f(r.aps,3)}</strong></div><div><small>명중률</small><strong>${f(r.profile.hit*100,2)}%</strong></div><div><small>치명타 확률</small><strong>${f(r.profile.crit*100,2)}%</strong></div></div><div class="scroll-table"><table><thead><tr><th>피해 유형</th><th>피해 증가</th><th>적 최종 저항(평균)</th><th>기여 DPS</th></tr></thead><tbody>${root.AUTO.ALL.filter(t=>r.types[t]||c.a['inc_'+t]).map(t=>`<tr><td>${e(types[t])}</td><td>+${f(N(c.a['inc_'+t])+N(c.a.incAll),1)}%</td><td>${f(root.AUTO.resistance(c.auto.target,t,c.rrs),1)}%</td><td>${f(r.types[t])}</td></tr>`).join('')}</tbody></table></div><pre class="code">DPS = Σ(공격 선택 확률 × 경감 후 피해) / Σ(확률 × 동작 시간)
+      × 사격 유지율 × 보조스킬 시전으로 남은 시간
+      + 서로 다른 지속 피해 + 발동 피해
+발동 빈도 ≈ λ / (1 + λ × 재사용 대기시간)
+유지율 ≈ 1 − exp(−발동 빈도 × 지속시간)</pre><p class="hint">재시전·발동·DoT 유지율은 평균 모델입니다. 전투 이벤트나 DPYes 기록을 예측값으로 맞추는 자동 보정은 하지 않습니다. A/B 비교는 동일한 대상과 조건을 사용하세요.</p>`);}
+
+function help(){return panel('자동 계산 흐름','수치 입력 대신 장비 선택과 포인트 배분을 연결한 베타입니다.',`<p>장비 선택 → 기본/접사/부품 옵션 → 전체·직업·개별 스킬 레벨 → 원시 레벨 배열 → 스킬 강화·변환 → 숙련도·능력치·별자리 → 피해 기대값 순서로 재계산합니다. 같은 옵션을 수동 합계와 중복 적용하지 않습니다.</p><p>데이터에 있는 전체 직업 스킬과 별자리를 탐색하지만, 모든 스킬 동작을 완전히 구현한 게임 엔진은 아닙니다. <b>화면의 DPS는 지원한 효과의 소계</b>입니다. 누락 진단이 있으면 전체 빌드의 정확한 DPS로 취급하면 안 됩니다.</p><div class="scroll-table"><table><thead><tr><th>항목</th><th>처리</th></tr></thead><tbody><tr><td>스킬 레벨</td><td>장비 보너스·상한·선행 그룹, 중간 레벨도 원시 배열</td></tr><tr><td>별자리</td><td>선택 별·친화도·선행 별·발동 레벨·연결, 무기 조건</td></tr><tr><td>세트</td><td>서로 다른 조각 수에 따른 능력치/스킬 변경</td></tr><tr><td>피해</td><td>직접 피해, 기본 공격 대체+발동 사격, 변환, 명중/치명타, 저항·방어구</td></tr><tr><td>근사</td><td>발동 유지율·DoT·시전시간·탄환 명중 수·기초 성장식 일부</td></tr><tr><td>제외/별도 진단</td><td>펫/변신 AI, 특수 주기 공격, 반격, 추가 폭발/파편, 일부 조건부 효과</td></tr></tbody></table></div>`)+panel('전투 계산식','DPYes는 기록계이며 아래는 독립 예측 모델입니다.',`<pre class="code code-wrap">스킬 유효 레벨 = min(최종 상한, 직접 투자 + 전체/직업/개별 장비 보너스)
+발동 사격 합계 >100%: 실제 비중 = 해당 확률 / 전체 확률
+직접 DPS = Σ(확률 × 경감 후 피해) / Σ(확률 × 동작 시간)
+저항: R=(기본저항−서로 다른 -Y% 합)
+최종저항=R×(1−sign(R)×max(Z% reduced)/100)−max(X reduced)
+발동 빈도 ≈ λ/(1+λ×재사용 대기시간)
+평균 유지율 ≈ 1−exp(−발동빈도×지속시간)</pre><p>지속 피해는 공격 횟수마다 무한 누적하지 않습니다. 같은 무기 출처의 경쟁, 별도 스킬 출처와 치명타 스냅샷을 단순화한 모델입니다. 실제 5초 DPYes 최고값과 동일한 결과를 보장하지 않습니다.</p><p>카덴스·충전형·집중형·소환물·추가 폭발과 원시 데이터가 불완전한 효과는 별도 진단을 확인하세요. 장비 시드·승천의 모든 규칙과 스킬 트리의 실제 UI 배치까지 복제하지 않습니다.</p>`)+panel('검증 환경과 데이터','Linux 테스트 결과를 Windows 결과로 표시하지 않습니다.',`<p>이 배포에서 수행한 테스트는 Node/Python 및 Linux Chromium의 합성 표본 검사입니다. 실제 전체 DB 다운로드와 네이티브 Windows 실행은 <b>미검증</b>이며, tests/windows_e2e.py와 GitHub Actions 워크플로를 포함했습니다. Windows 보고서가 not_run이면 성공한 것이 아닙니다.</p><p>공개 데이터: <a href="https://github.com/tednaleid/grimdawn-devotions" target="_blank" rel="noopener">grimdawn-devotions</a> · <a href="https://www.grimdawn.com/guide/gameplay/combat/" target="_blank" rel="noopener">공식 전투 가이드</a> · <a href="https://forums.crateentertainment.com/t/actual-resist-reduction-formula/47174" target="_blank" rel="noopener">저항 감소 실험</a></p><p>출처·상세 처리 범위·검사 기록은 README_KO.md, CALCULATION_SCOPE_KO.md, TEST_REPORT_KO.md에도 포함되어 있습니다.</p>`);}
+function preset(state){const d=getDB();if(!d)throw Error('v3 DB가 준비되어야 합니다.');state.auto=root.AUTO.defaults();const a=state.auto,notes=[];
+ const findSkill=name=>d.skills.find(s=>clean(s.en)===clean(name)||clean(s.name)===clean(name));
+ const plan={'Onslaught':16,'Open Wounds':10,"Amatok's Pact":12,'Bloodfrenzy':8,'Bloodfangs':7,'Bonechilling Cry':12,'Untamed Rage':9,'Battle Surge':1,'Rallying Cry':9,'Frenzied Cry':1,'Impetus':2,'Ranged Expertise':1,'Bursting Round':6,'Chilling Rounds':1,'Storm Spread':10,'Deadly Aim':1,'Word of Renewal':8,'Vigor':6,'Steel Resolve':6,'Inquisitor Seal':12,'Arcane Empowerment':8,'Word of Pain':1,'Word of Agony':1,'Death Sentence':12,'Aura of Conviction':8};
+ for(const[name,p]of Object.entries(plan)){const s=findSkill(name);if(!s){notes.push('스킬 미검색: '+name);continue;}a.points[s.id]=Math.min(p,s.max);a.masteries[s.mastery]=/playerclass10/.test(s.mastery)?32:50;if(name==='Onslaught')a.primary=s.id;}
+ const names=['Assassin\'s Blade','Toad','Ghoul','Hawk','Hydra','Manticore',"Sailor's Guide",'Empty Throne','Tortoise','Solemn Watcher','Azrakaa, the Eternal Sands'];
+ for(const name of names){const c=d.devotions.find(c=>clean(c.en)===clean(name)||clean(c.name)===clean(name));if(c)a.devotions[c.id]=c.stars.map(s=>s.index);else notes.push('별자리 미검색: '+name);}
+ for(const color of ['order','ascendant']){const c=d.devotions.find(c=>/crossroad/i.test(c.id+' '+c.en)&&N(c.affinity_bonus?.[color])>0);if(c)a.devotions[c.id]=c.stars.map(s=>s.index);else notes.push('갈림길 미검색: '+color);}
+ const bindings={'Assassin\'s Mark':'Onslaught','Acid Spray':'Word of Pain','Shifting Sands':'Storm Spread','Ghoulish Hunger':'Aura of Conviction','Turtle Shell':"Amatok's Pact"};for(const c of d.devotions)for(const s of c.stars)if(s.celestial_power){const p=s.celestial_power,name=bindings[p.en];if(name&&findSkill(name))a.bindings[p.dbr]=findSkill(name).id;}
+ state.meta.demo=false;state.meta.name='서약운반자 · 자동 계산';state.meta.note='아이템 DB 스냅샷 '+root.CATALOG.DB.data.meta.gameVersion+' / 미검색 스킬·별자리는 진단 확인';return notes;
+}
+function clean(s){return String(s||'').toLowerCase().replace(/[^a-z0-9가-힣]/g,'');}
+function download(name,text,type='application/json'){const u=URL.createObjectURL(new Blob([text],{type}));const el=document.createElement('a');el.href=u;el.download=name;el.click();setTimeout(()=>URL.revokeObjectURL(u),3000);}
+async function offline(){
+ const catalog=root.CATALOG.DB.data;if(!catalog?.automation)throw Error('v3 DB를 준비한 뒤 저장하세요.');
+ const clone=document.documentElement.cloneNode(true);
+ clone.querySelectorAll('#embedded-build,#embedded-catalog').forEach(x=>x.remove());
+ const first=clone.querySelector('script:not([type="application/json"])');if(!first)throw Error('실행 스크립트를 찾지 못했습니다.');
+ for(const[id,value]of [['embedded-catalog',catalog],['embedded-build',root.LAB.getState()]]){
+  const node=document.createElement('script');node.id=id;node.type='application/json';node.textContent=JSON.stringify(value).replace(/</g,'\\u003c');first.parentNode.insertBefore(node,first);
+ }
+ clone.querySelector('#modal-root')?.replaceChildren();
+ download('Grim_DPS_Lab_v3_Offline.html','<!doctype html>\n'+clone.outerHTML,'text/html;charset=utf-8');
+}
+function mutate(op,key,value,el){const state=root.LAB.getState();state.auto=root.AUTO.config(state);const a=state.auto;if(['preset','reset-auto'].includes(op)){if(op==='preset'){const notes=preset(state);if(notes.length)alert('DB에서 찾지 못한 항목:\n'+notes.join('\n'));}else state.auto=root.AUTO.defaults();}
+ else if(op==='mastery')a.masteries[key]=Math.max(0,Math.floor(N(value)));
+ else if(op==='point')a.points[key]=Math.max(0,Math.floor(N(value)));
+ else if(op==='primary')a.primary=key;
+ else if(op==='attr')a.attributes[key]=Math.max(0,Math.floor(N(value)));
+ else if(op==='top')a[key]=N(value);
+ else if(op==='condition')a.conditions[key]=!!value;
+ else if(op==='enabled')a.disabled[key]=!value;
+ else if(op==='timing')a.timing[key]=key==='mode'?value:N(value);
+ else if(op==='target')a.target[key]=N(value);
+ else if(op==='target-res')a.target.resists[key]=N(value);
+ else if(op==='profile'){if(value==='')delete a.profile[key];else a.profile[key]=N(value);}
+ else if(['role','interval','cycleMs'].includes(op)){a.rotation[key]??={};a.rotation[key][op]=op==='role'?value:N(value);}
+ else if(op==='power-level')a.powerLevels[key]=N(value);
+ else if(op==='binding')a.bindings[key]=value;
+ else if(op==='star'){const idx=Number(el.dataset.aIndex);const set=new Set(a.devotions[key]||[]);set.has(idx)?set.delete(idx):set.add(idx);a.devotions[key]=[...set];}
+ else if(op==='dev-all'){const c=getDB().devotions.find(c=>c.id===key);a.devotions[key]=c.stars.map(s=>s.index);}
+ else if(op==='dev-clear')a.devotions[key]=[];
+ else if(op==='offline'){offline().catch(e=>alert(e.message));return;}
+ else if(op==='export-audit'){const r=root.LAB.getResult();download('grim-dps-v3-diagnostic.json',JSON.stringify({generatedAt:new Date().toISOString(),db:root.CATALOG.DB.data?.meta,total:r.total,direct:r.direct,extra:r.extra,coverage:r.coverage,issues:r.autoReport?.issues,skills:r.autoReport?.skills.map(x=>({id:x.id,hard:x.hard,bonus:x.bonus,level:x.level,role:x.role})),stats:r.a.g},null,2));return;}
+ else if(op==='import-db'){const input=document.createElement('input');input.type='file';input.accept='.json';input.onchange=async()=>{try{if(input.files[0].size>150e6)throw Error('DB 파일은 150MB 이하');root.CATALOG.DB.accept(JSON.parse(await input.files[0].text()));root.LAB.render();}catch(e){alert(e.message);}};input.click();return;}
+ else return;root.LAB.setState(state);
+}
+function install(){document.addEventListener('change',ev=>{const el=ev.target;if(!el.dataset.aOp)return;try{mutate(el.dataset.aOp,el.dataset.aKey,el.type==='checkbox'?el.checked:el.value,el);}catch(e){alert(e.message);console.error(e);}});document.addEventListener('click',ev=>{const el=ev.target.closest('[data-a-op]');if(!el||el.matches('input,select'))return;try{mutate(el.dataset.aOp,el.dataset.aKey,null,el);}catch(e){alert(e.message);console.error(e);}});document.addEventListener('keydown',ev=>{if(['Enter',' '].includes(ev.key)&&ev.target.matches('.star-node')){ev.preventDefault();ev.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));}});document.addEventListener('input',ev=>{if(ev.target.id==='auto-skill-search'){const q=ev.target.value.toLowerCase();document.querySelectorAll('.auto-skill').forEach(x=>x.hidden=!x.dataset.search.includes(q));}if(ev.target.id==='auto-dev-search'){const q=ev.target.value.toLowerCase();document.querySelectorAll('.dev-card').forEach(x=>x.hidden=!x.dataset.search.includes(q));}});document.addEventListener('change',ev=>{if(ev.target.id==='auto-dev-selected')document.querySelectorAll('.dev-card').forEach(x=>x.hidden=ev.target.checked&&!Number(x.dataset.picked));});}
+root.AUTOUI={help,view:(tab,s,r)=>({character,skills:skillView,devotions:devotionView,target:targetView,audit,analysis}[tab]||(()=>''))(s,r),preset,install,offline,statName};
+})(globalThis);
+</script>
+<script>/* Local item database UI. User builds and logs never leave this browser. */
+(function(){
+'use strict';
+const {SLOTS,PARTS,FIELDS,FIELD_LABELS,SOURCES}=DATA;
+const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=(x,d=0)=>Number.isFinite(x)?x.toLocaleString('ko-KR',{maximumFractionDigits:d,minimumFractionDigits:d}):'—';
+const short=x=>x>=10000?fmt(x/10000,1)+'만':fmt(x);
+const icon=(id,cls='svg-icon')=>`<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${{
+ gem:'<path d="M12 2 21 8 18 18 12 22 6 18 3 8Z"/><path d="m3 8 9 5 9-5M12 13v9M7 5l5 8 5-8"/>',
+ gear:'<path d="M7 3 3 7l3 3v10h12V10l3-3-4-4-5 3Z"/><path d="M9 6h6M9 12h6M9 15h6"/>',
+ gun:'<path d="M3 6h16l2 3-2 3h-7l-2 7H5l2-8H3Z"/><path d="M12 12v3h3l1-3M5 6V4h3"/>',
+ chart:'<path d="M4 3v17h17M7 15l4-5 4 2 5-7"/>',target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 1v4m0 14v4M1 12h4m14 0h4"/>',
+ log:'<path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h4"/>',book:'<path d="M3 4h7l2 2 2-2h7v16h-7l-2 2-2-2H3Z"/><path d="M12 6v16"/>',
+ upload:'<path d="M12 16V3m-4 4 4-4 4 4M4 15v6h16v-6"/>',download:'<path d="M12 3v13m-4-4 4 4 4-4M4 17v4h16v-4"/>',save:'<path d="M4 3h13l4 4v14H3V3h1Z"/><path d="M7 3v6h10V3M7 21v-8h10v8"/>',
+ compare:'<path d="M3 7h16l-4-4M21 17H5l4 4M7 10v5m10-5v5"/>',plus:'<path d="M12 5v14M5 12h14"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.1"/>',
+ bolt:'<path d="m14 2-10 12h7l-1 8L20 9h-7Z"/>',ring:'<circle cx="12" cy="14" r="7"/><path d="m8 5 4-3 4 3-4 4Z"/>',helmet:'<path d="M4 15V9a8 8 0 0 1 16 0v6l-5 6h-6Z"/><path d="M5 11h5v5m9-5h-5v5"/>',boots:'<path d="M7 3h10v12l4 3v3H3v-5l4-3Z"/><path d="M7 8h10M7 12h10"/>',shield:'<path d="m12 2 8 4v7c0 5-8 9-8 9s-8-4-8-9V6Z"/><path d="m8 12 3 3 5-6"/>',search:'<circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/>',check:'<path d="m5 12 4 4L20 5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>'
+ }[id]||'<circle cx="12" cy="12" r="7"/>'}</svg>`;
+const KEY='grim-dps-lab-v3';
+let state=DATA.state(false),savedA=null,customLibrary=[],tab='gear',slot='main',part='item',result=null;
+state.auto=AUTO.defaults();
+let logData={arrays:[],rows:[],events:[],fileName:'',map:{unit:'s',relative:true},filterSource:'all',filterTarget:'all',start:0,end:60,window:5,mitigation:'unknown',sample:false,skipped:0};
+let timer=null,libraryTarget=null,tooltipPreview=null,lastFocus=null;
+function loadLocal(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x?.state)state=validateState(x.state);if(x?.savedA)savedA=validateState(x.savedA);if(Array.isArray(x?.library))customLibrary=x.library.slice(0,500);}catch(e){console.warn('Saved state not restored:',e.message);}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({state,savedA,library:customLibrary}));$('#save-status')&&( $('#save-status').textContent='이 브라우저에 저장됨');}catch{ $('#save-status')&&($('#save-status').textContent='자동 저장 제한 · JSON 저장 권장');}}
+function toast(msg){$('.toast')?.remove();const d=document.createElement('div');d.className='toast';d.setAttribute('role','status');d.textContent=msg;document.body.append(d);setTimeout(()=>d.remove(),4000);}
+function set(path,value,obj=state){const keys=path.split('.');if(keys.some(k=>['__proto__','constructor','prototype'].includes(k)))return;let p=obj;for(const k of keys.slice(0,-1)){if(!p[k]||typeof p[k]!=='object')p[k]={};p=p[k];}p[keys.at(-1)]=value;}
+function get(path,obj=state){return path.split('.').reduce((p,k)=>p?.[k],obj);}
+function validateState(x){
+ if(!x||x.schema!=='grim-dps-lab/v1')throw new Error('이 앱의 빌드 JSON이 아닙니다. 기존 앱의 빌드 JSON만 가져올 수 있습니다. 그림툴 링크는 아이템 검색과 별개입니다.');
+ const s=GD.copy(x);if(!s.base||!s.equipment||!s.combat||!s.target||!Array.isArray(s.wps)||s.wps.length>20)throw new Error('필수 항목 또는 발동 사격 개수를 확인하세요.');
+ const encoded=JSON.stringify(s);if(encoded.length>1500000)throw new Error('빌드 파일이 너무 큽니다.');
+ function walk(v,depth=0){if(depth>20)throw new Error('중첩 구조가 너무 깊습니다.');if(typeof v==='number'&&(!Number.isFinite(v)||Math.abs(v)>1e10))throw new Error('숫자 범위를 확인하세요.');if(v&&typeof v==='object')for(const[k,t]of Object.entries(v)){if(['__proto__','constructor','prototype'].includes(k))throw new Error('허용되지 않는 키입니다.');walk(t,depth+1);}}
+ walk(s);
+ const obj=v=>v&&typeof v==='object'&&!Array.isArray(v);
+ if(!obj(s.base)||!obj(s.equipment)||!obj(s.combat)||!obj(s.target))throw new Error('빌드의 기본 구조가 올바르지 않습니다.');
+ for(const w of s.wps){if(!obj(w)||typeof w.id!=='string'||w.id.length>80)throw new Error('발동 사격 ID를 확인하세요.');for(const k of ['hitsMain','hitsOff'])if(GD.n(w[k])<0||GD.n(w[k])>50)throw new Error('사격당 타격 수는 0~50 범위입니다.');}
+ s.meta=obj(s.meta)?s.meta:{name:'가져온 빌드',demo:false};
+ if(s.buffs&&!Array.isArray(s.buffs)||s.extras&&!Array.isArray(s.extras)||s.target.rr&&!Array.isArray(s.target.rr))throw new Error('버프·추가 피해·저항 감소는 배열이어야 합니다.');
+ s.buffs=(s.buffs||[]).slice(0,40);s.extras=(s.extras||[]).slice(0,100);s.target.resists=s.target.resists||{};s.target.rr=(s.target.rr||[]).slice(0,100);
+ if([...s.buffs,...s.extras,...s.target.rr].some(v=>!obj(v)))throw new Error('목록에 잘못된 항목이 있습니다.');
+ for(const e of Object.values(s.equipment)){if(!obj(e)||e.parts&&!obj(e.parts))throw new Error('장비 옵션 구조를 확인하세요.');for(const p of Object.values(e.parts||{}))if(!obj(p)||p.stats&&!obj(p.stats))throw new Error('장비 수치는 객체로 입력해야 합니다.');}
+ 
+ for(const[id]of SLOTS){if(!s.equipment[id])s.equipment[id]={enabled:true,reviewed:false,parts:{}};s.equipment[id].parts=s.equipment[id].parts||{};for(const[p]of PARTS)s.equipment[id].parts[p]=s.equipment[id].parts[p]||DATA.blankPart();}
+ s.duration=GD.clamp(s.duration||60,5,300);return s;
+}
+function field(label,path,{step=1,min,max,type='number',hint='',cls='',placeholder='',value}={}){const v=value!==undefined?value:get(path);return `<label class="field ${cls}">${esc(label)}<input type="${type}" data-bind="${esc(path)}" value="${esc(v??(type==='number'?0:''))}" ${type==='number'?`step="${step}" ${min!==undefined?`min="${min}"`:''} ${max!==undefined?`max="${max}"`:''}`:''} placeholder="${esc(placeholder)}">${hint?`<em>${esc(hint)}</em>`:''}</label>`;}
+function check(label,path){return `<label class="check"><input type="checkbox" data-bind="${path}" ${get(path)?'checked':''}>${esc(label)}</label>`;}
+function select(label,path,options){return `<label class="field">${esc(label)}<select data-bind="${path}">${options.map(([v,l])=>`<option value="${esc(v)}" ${get(path)===v?'selected':''}>${esc(l)}</option>`).join('')}</select></label>`;}
+function statsFields(path,{all=true}={}){return FIELDS.slice(0,all?4:2).map(([group,fields],i)=>`<details ${i<2?'open':''}><summary>${group}</summary><div class="field-grid">${fields.map(([k,l])=>field(l,`${path}.${k}`,{step:.1})).join('')}</div></details>`).join('');}
+function panel(title,sub,body,action=''){return `<section class="panel"><div class="panel-head"><div><h2>${title}</h2>${sub?`<div class="panel-sub">${sub}</div>`:''}</div>${action}</div><div class="panel-body">${body}</div></section>`;}
+function snapshotDelta(v,k){if(!savedA)return'';const old=GD.calculate(savedA)[k];if(!old)return'';const d=(v/old-1)*100;return `<span class="delta ${d<0?'negative':''}">${d>=0?'+':''}${fmt(d,1)}% vs A</span>`;}
+function header(){return `<div class="topbar"><div class="breadcrumb">워크스페이스 <span style="margin:0 8px">/</span> <b>빌드 실험실</b></div><div class="toolbar"><span id="save-status" class="tiny muted">이 브라우저에 저장됨</span><button class="btn" data-action="import-build">${icon('upload')} 불러오기</button><button class="btn" data-action="export-build">${icon('download')} JSON 저장</button><button class="btn primary" data-action="snapshot">${icon('compare')} A 기준 저장</button></div></div>
+ <div class="hero"><div><div class="eyebrow">GRIM DAWN · DAMAGE WORKBENCH</div><h1>DPS 워크벤치 <span class="version-tag">3.0 · BETA</span></h1><div class="subtitle">장비를 고르고, 스킬과 별자리를 찍으면 계산이 연결됩니다.</div></div><div class="row"><span class="badge ${state.meta.demo?'':'good'}">${state.meta.demo?'작동 예제 · 가정값':(state.meta.dbImported?'DB 기반 · 부분 예측':'아이템 선택 대기')}</span><button class="btn small" data-action="template">서약운반자 DB 자동 장착</button></div></div>
+ <div id="db-status">${dbStatus()}</div><div class="notice">${icon('info')}<div>${state.meta.demo?'<strong>현재는 작동 예제입니다.</strong> 검색 DB에서 실제 아이템을 장착하면 예제 장비·기초 능력치를 제거합니다.':'<strong>장비·스킬 레벨·숙련도·별자리를 자동 합산합니다.</strong> 펫 AI·특수 공격 순서·정확한 게임 타이밍은 미지원이며, 계산값은 지원 효과의 근사 소계입니다.'} DPS는 독립 예측 모델이며, 미지원 효과는 자동 합산하지 않습니다.</div></div>
+ <div id="metrics" class="stats"></div>${savedA?`<div class="compare-strip">${icon('compare')} <span><strong>A: ${esc(savedA.meta.name)}</strong> · 저장 시점의 장비·대상·전투 조건 전체</span><button class="btn small" data-action="restore-a">A 복원</button><button class="btn small ghost" data-action="clear-a">비교 해제</button></div>`:''}
+ <div class="tabbar" role="tablist">${[['gear','장비'],['character','캐릭터'],['skills','스킬'],['devotions','별자리'],['target','대상·회전'],['analysis','피해 분석'],['audit','검증·출처'],['logs','DPYes 로그'],['help','도움말']].map(([id,l])=>`<button role="tab" aria-selected="${tab===id}" class="${tab===id?'active':''}" data-action="tab" data-tab="${id}">${l}</button>`).join('')}</div>`;}
+function render(){
+ result=GD.calculate(state);
+ $('#app').innerHTML=`<div class="shell"><aside class="sidebar"><div class="brand">${icon('gem')}<div><strong>GRIM / LAB</strong><small>DAMAGE ANALYTICS</small></div></div><div class="side-label">WORKSPACE</div><nav class="nav" aria-label="주 메뉴">${[['gear','gear','장비 워크벤치'],['character','shield','캐릭터 능력치'],['skills','bolt','스킬 자동 계산'],['devotions','gem','별자리'],['analysis','chart','피해 분석'],['audit','check','검증·출처'],['logs','log','DPYes 로그'],['help','book','계산식과 출처']].map(([id,i,l])=>`<button title="${l}" class="${tab===id?'active':''}" data-action="tab" data-tab="${id}">${icon(i)}${l}</button>`).join('')}</nav><div class="side-label">BUILD TOOLS</div><nav class="nav"><button data-action="demo" title="작동 예제">${icon('target')}작동 예제</button><button data-action="edit-meta" title="빌드 정보">${icon('save')}빌드 정보</button></nav><div class="side-bottom"><strong><span class="dot"></span>LOCAL DATABASE</strong>설정과 로그는 이 기기에서만 처리됩니다.<br><br>비공식 도구 · v3.0 BETA<br>DPYes / GrimTools와 별개</div></aside><main class="main">${header()}<div class="workspace"><div id="tab-content">${state.auto?.enabled&&['character','skills','devotions','target','audit','analysis'].includes(tab)?AUTOUI.view(tab,state,result):({gear:gearView,skills:skillsView,target:targetView,analysis:analysisView,logs:logsView,help:helpView,character:()=>AUTOUI.view('character',state,result),devotions:()=>AUTOUI.view('devotions',state,result),audit:()=>AUTOUI.view('audit',state,result)}[tab])()}</div><aside class="result-aside" id="aside"></aside></div><div class="footnote">Grim Dawn 및 아이템 명칭은 Crate Entertainment의 자산입니다. 이 도구는 비공식·독립 구현이며 게임 엔진, GrimTools 또는 DPYes의 복제본이 아닙니다.</div></main></div>`;
+ updateMetrics();renderAside();if(tab==='analysis'&&!state.auto?.enabled)renderAnalysisDynamic();if(tab==='logs'&&logData.events.length)renderLogAnalysis();persist();
+}
+function updateMetrics(){
+ result=GD.calculate(state);const r=result,confidence=!state.meta.demo&&r.a.named>r.a.confirmed,needsBase=state.auto?.enabled?!r.autoReport?.ready:!state.meta.demo&&GD.n(state.base.oa)<=1;
+ $('#metrics').innerHTML=`<div class="stat primary"><div class="stat-label">지원분 예상 DPS <span class="scope-pill">${state.auto?.enabled?(r.coverage?.valid?'자동 합산 · 근사':'입력 검증 필요'):state.meta.dbImported?'장비 자동 · 부분 모델':confidence?'미입력 포함 소계':'독립 모델'}</span></div><div class="stat-value">${needsBase?'—':fmt(r.total)}<span class="stat-unit">DPS</span></div><div class="stat-foot">${needsBase?'DB와 직업·주력 스킬을 선택하세요':'사격 유지율 '+fmt(r.uptime*100)+'% 반영'} ${snapshotDelta(r.total,'total')}</div></div><div class="stat"><div class="stat-label">정지 사격 · 직접 피해</div><div class="stat-value">${needsBase?'—':fmt(r.aps*r.meanDamage)}<span class="stat-unit">/ s</span></div><div class="stat-foot">지속 피해·추가 발동 제외</div></div><div class="stat"><div class="stat-label">치명타 확률</div><div class="stat-value">${needsBase?'—':fmt(r.profile.crit*100,1)}<span class="stat-unit">%</span></div><div class="stat-foot">명중 ${fmt(r.profile.hit*100,1)}% · OA ${fmt(r.a.oa)}</div></div><div class="stat"><div class="stat-label">발동 사격 합계</div><div class="stat-value">${fmt(r.pool.sum,1)}<span class="stat-unit">%</span></div><div class="stat-foot">기본 공격 비중 ${fmt(r.pool.basic*100,1)}% · ${fmt(r.aps,2)} 회/s</div></div>`;
+}
+function chart(points,height=135,average=null){
+ if(!points?.length)return'<div class="empty">피해 기록이 없습니다.</div>';
+ const w=610,h=height,L=49,R=12,T=12,B=24,mx=Math.max(1,...points.map(p=>p.dps)),mt=Math.max(1,...points.map(p=>p.time));
+ const x=t=>L+t/mt*(w-L-R),y=v=>h-B-v/mx*(h-T-B);
+ const path=points.map((p,i)=>`${i?'L':'M'}${x(p.time).toFixed(2)},${y(p.dps).toFixed(2)}`).join(' ');
+ return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="시간에 따른 최근 구간 DPS 그래프"><defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#b9ed86" stop-opacity=".18"/><stop offset="100%" stop-color="#b9ed86" stop-opacity="0"/></linearGradient></defs>${[0,.5,1].map(q=>`<path d="M${L} ${y(mx*q)}H${w-R}" class="chart-grid"/><text x="${L-8}" y="${y(mx*q)+3}" text-anchor="end" class="chart-label">${esc(short(mx*q))}</text>`).join('')}<path class="chart-fill" d="${path} L${x(mt)},${h-B} L${x(points[0].time)},${h-B}Z"/><path d="${path}" class="chart-line"/>${average!==null?`<path d="M${L} ${y(average)}H${w-R}" stroke="#e5bc75" stroke-width="1" stroke-dasharray="5 5"/>`:''}${[0,.5,1].map(q=>`<text x="${x(mt*q)}" y="${h-5}" text-anchor="middle" class="chart-label">${fmt(mt*q)}s</text>`).join('')}</svg>`;
+}
+function renderAside(){
+ const r=result||GD.calculate(state);const dist=r.rows.filter(x=>x.p>0).sort((a,b)=>b.dps-a.dps);
+ $('#aside').innerHTML=panel('계산 상태','입력된 조건을 그대로 사용합니다.',`<div class="mini-row"><span class="muted">주무기 기초 피해¹</span><b>${fmt(Object.values(r.a.hands.main).reduce((a,b)=>a+b,0),1)}</b></div><div class="mini-row"><span class="muted">관통 피해 증가</span><b>+${fmt(GD.n(r.a.g.inc_pierce)+GD.n(r.a.g.incAll),1)}%</b></div><div class="mini-row"><span class="muted">유효 공격 속도</span><b>${fmt(r.a.speed,1)}%</b></div><div class="mini-row"><span class="muted">적의 최종 관통 저항</span><b>${fmt(state.auto?.enabled?AUTO.resistance(AUTO.config(state).target,'pierce',r.autoReport?.rrs||[]):GD.rrValue(state.target,'pierce'),1)}%</b></div><div class="mini-row"><span class="muted">기준 공속 / 모드</span><b>${fmt(state.combat.referenceSpeed)}% / ${(state.auto?.enabled?state.auto.timing.mode==='measured':state.combat.timingMode==='measured')?'실측 빈도 고정':'동작 시간 추정'}</b></div><div class="track"><i style="width:${r.uptime*100}%"></i></div><div class="tiny muted">¹ 피해 증가·스킬 계수 적용 전, 모든 직접 피해 유형 합계입니다.</div>`)+panel('직접 피해 구성','공격 1회가 아닌 초당 기여도',dist.map((x,i)=>`<div class="mini-row"><span>${esc(x.name)}</span><b>${short(x.dps)}</b></div><div class="track ${i%3===1?'gold':i%3===2?'blue':''}"><i style="width:${r.direct?100*x.dps/r.direct:0}%"></i></div>`).join('')+(r.extra?`<div class="mini-row"><span class="muted">지속·별자리·보조 공격</span><b>${short(r.extra)}</b></div>`:''))+panel('주의할 가정','게임 내 실측으로 확인할 항목',`<ul class="warning-list">${r.warnings.slice(0,5).map(w=>`<li>${esc(w)}</li>`).join('')}<li>동작 시간·명중 탄환 수·버프 상태는 사용자 입력입니다.</li><li>전투 전체 DPS는 이동·재시전·대상에 따라 달라집니다.</li><li>차원 30·40단 클리어 여부를 판정하지 않습니다.</li></ul>`);
+}
+function gearView(){
+ const e=state.equipment[slot],p=e.parts[part],title=SLOTS.find(x=>x[0]===slot)?.[1];
+ const validParts=PARTS.filter(([k])=>slot!=='relic'||['item','ascension'].includes(k));
+ return `<section class="panel"><div class="panel-head"><div><h2>장비 구성</h2><div class="panel-sub">부위 → 아이템 검색 → 장착. 옵션을 하나씩 입력할 필요가 없습니다.</div></div><button class="btn primary" data-action="library">${icon('search')} 아이템 검색</button></div><div class="equipment-layout"><div class="slot-list">${SLOTS.map(([id,label])=>{const a=state.equipment[id];return `<button class="slot ${slot===id?'active':''}" data-action="slot" data-slot="${id}" aria-label="${label} 편집"><span class="slot-icon">${icon(id==='main'||id==='off'?'gun':id==='head'?'helmet':id.includes('ring')||id==='amulet'?'ring':id==='boots'?'boots':'gear')}</span><span class="slot-copy"><small>${label}</small><strong>${esc(a.parts.item.name||'빈 슬롯')}</strong><span class="slot-status ${a.parts.item.db?'ok':''}">${a.parts.item.db?'DB 옵션 연결':'아이템 선택 대기'}</span></span></button>`;}).join('')}</div><div class="editor"><div class="row between"><h3>${title}</h3>${check('계산에 포함',`equipment.${slot}.enabled`)}</div><div class="part-tabs">${validParts.map(([k,l])=>`<button class="${part===k?'active':''}" data-action="part" data-part="${k}">${l}${e.parts[k].db?' ✓':''}</button>`).join('')}</div>${dbEquipped(p)}<div class="row" style="margin:14px 0"><button class="btn primary" data-action="library">${icon('search')} ${p.db?'다른 아이템 검색':'검색해서 장착'}</button><button class="btn small danger" data-action="clear-part">비우기</button></div>${state.auto?.enabled?'<div class="inline-message">자동 모드는 DB 원본 옵션과 롤 선택을 사용합니다. 수동 장비 숫자는 중복 합산하지 않습니다. 실제 시드를 완전히 재현하지는 않습니다.</div>':`<details class="manual-edit"><summary>구버전 수동 항목</summary>${field('이름',`equipment.${slot}.parts.${part}.name`,{type:'text'})}${statsFields(`equipment.${slot}.parts.${part}.stats`)}</details>`}${field('장비 메모',`equipment.${slot}.notes`,{type:'text'})}</div></div></section>
+ ${state.auto?.enabled?panel('장비 외 효과도 연결됩니다','캐릭터·스킬·별자리 탭에서 포인트를 선택하세요.',`<div class="auto-keyline">숙련도 → 능력치 · 장비의 +스킬 → 최종 레벨 · 선택한 별 → 패시브/발동 자동 합산</div><p class="hint">자동 모드는 구버전 수동 ‘장비 외 합계’를 더하지 않습니다. 중복 계산을 방지하며, 각 기여도는 검증·출처 탭에 표시합니다.</p>`):''} `;
+}
+
+function skillsView(){return panel('기본 공격과 시간','공격 속도만으로 실제 공격 동작 시간을 확정할 수 없습니다.',`<div class="field-grid three">${field('기본 공격 이름','combat.darName',{type:'text'})}${field('기본 공격 무기 피해 %','combat.darWD',{min:0,step:.1,hint:'장비의 +%p는 장비 칸에서 추가'})}${field('별도 총피해 변경 %','combat.totalDamageModifier',{min:-100,step:.1})}${field('기준 공격 속도 %','combat.referenceSpeed',{min:1,max:1000,hint:'아래 동작 시간을 측정한 공속'})}${field('공격 속도 상한 %','combat.speedCap',{min:1,max:1000})}${field('사격 유지율 %','combat.uptime',{min:0,max:100,hint:'이동·회복·디버프 시전 시간 제외'})}${select('공격 빈도 계산','combat.timingMode',[['cycles','공격별 동작 시간 사용'],['measured','실측한 평균 횟수 고정']])}${field('평균 공격 동작 / 초','combat.measuredAPS',{min:0,max:100,step:.01,hint:'빈도 고정 모드에서만 적용'})}${field('일반 공격 동작 시간 ms','combat.basicCycleMs',{min:20,max:20000})}</div><div class="row" style="margin:14px 0">${check('쌍수 무기 사용','combat.dual')}</div><details><summary>기본 공격 자체의 추가 피해 · 전용 관통 전환</summary><div class="field-grid three">${GD.TYPES.map(t=>field(`${GD.LABELS[t]} 추가 피해`,`combat.darFlat.flat_${t}`,{min:0,step:.1})).join('')}${field('냉기 → 관통 % (스킬)','combat.skillConversion.conv_cold',{min:0,max:100})}${field('원소 → 관통 % (스킬)','combat.skillConversion.conv_elemental',{min:0,max:100})}</div></details><div class="hint">맹공격/발동 사격의 숫자는 예제 참조값입니다. 레벨을 입력하면 자동으로 수치를 가져오는 스킬 DB는 포함되지 않습니다. 실제 최종 계수를 직접 확인하세요.</div>`)+
+ panel('발동 사격 풀','탄환 수는 발사 수가 아닌, 한 대상에게 실제로 맞는 기대 타격 수입니다.',`<div class="scroll-table"><table><thead><tr><th>사용</th><th>사격</th><th>발동 %</th><th>무기 피해 %</th><th>주무기 타격</th><th>보조 타격</th><th>시간 ms</th><th></th></tr></thead><tbody>${state.wps.map((r,i)=>`<tr><td><input aria-label="${esc(r.name)} 사용" type="checkbox" data-bind="wps.${i}.enabled" ${r.enabled!==false?'checked':''}></td><td class="cell-name"><input aria-label="사격 이름" data-bind="wps.${i}.name" type="text" value="${esc(r.name)}" style="width:125px"></td>${[['chance',0,1000,.1],['wd',0,5000,.1],['hitsMain',0,50,.1],['hitsOff',0,50,.1],['cycleMs',20,20000,1]].map(([key,min,max,step])=>`<td><input aria-label="${esc(r.name)} ${key}" type="number" min="${min}" max="${max}" step="${step}" data-bind="wps.${i}.${key}" value="${esc(r[key])}"></td>`).join('')}<td><button class="btn small ghost" data-action="delete-wps" data-index="${i}" aria-label="${esc(r.name)} 삭제">×</button></td></tr>`).join('')}</tbody></table></div><div class="tag-legend">시간은 ‘기준 공격 속도’에서 측정한 1회 동작 길이입니다. 초과 발동 확률은 정규화됩니다. 승천 추가 확률은 장비 칸에 입력하세요.</div><button class="btn small" data-action="add-wps">${icon('plus')} 발동 사격 추가</button>${state.wps.map((r,i)=>`<details><summary>${esc(r.name)} · 추가 피해와 전환</summary><div class="field-grid three">${GD.TYPES.map(t=>field(`${GD.LABELS[t]} 추가 피해`,`wps.${i}.flat.flat_${t}`,{min:0,step:.1})).join('')}${field('냉기 → 관통 % (스킬)','wps.'+i+'.conversion.conv_cold',{min:0,max:100})}${field('번개 → 관통 % (스킬)','wps.'+i+'.conversion.conv_lightning',{min:0,max:100})}</div></details>`).join('')}`)+
+ panel('지속 피해 · 별자리 · 추가 발동','주력 사격과 별도로 유지되는 DPS를 입력합니다. 무한 중첩하지 않습니다.',`<div class="note-block">기본 피해와 피해 증가율·치명타를 이미 반영한 <strong>1초당 유지 피해</strong>를 입력하세요. 저항 전/후만 아래에서 구분합니다. 같은 출처 ID의 같은 지속 피해는 가장 높은 값만 반영됩니다. 치명타 스냅샷과 재적용을 자동 계산하지 않습니다.</div>${state.extras.map((x,i)=>`<details open><summary>${esc(x.name||'추가 피해')}</summary><div class="field-grid three">${field('이름',`extras.${i}.name`,{type:'text'})}${select('분류',`extras.${i}.kind`,[['dot','지속 피해'],['proc','별도 발동']])}${select('피해 유형',`extras.${i}.type`,[...GD.TYPES,'bleed'].map(t=>[t,GD.LABELS[t]]))}${field('지속 피해 출처 ID',`extras.${i}.group`,{type:'text'})}${field('유지 DPS',`extras.${i}.rate`,{min:0,step:1})}${field('유지율 %',`extras.${i}.uptime`,{min:0,max:100})}</div><div class="row between" style="margin-top:12px">${check('이미 적의 경감이 적용된 값',`extras.${i}.afterMitigation`)}<button class="btn small danger" data-action="delete-extra" data-index="${i}">삭제</button></div></details>`).join('')}<button class="btn small" style="margin-top:13px" data-action="add-extra">${icon('plus')} 추가 피해 입력</button>`);
+}
+function targetView(){return panel('측정 대상','차원 단계가 아니라, 실제 적의 최종 능력치를 기준으로 비교합니다.',`<div class="field-grid three">${field('대상 이름','target.name',{type:'text'})}${field('적 방어 능력','target.da',{min:0})}${field('적 방어 능력 감소 (환산치)','target.daReduction',{min:0,hint:'여러 종류의 감소를 이미 환산한 값'})}${field('적 방어구 / 물리 피해','target.armor',{min:0})}${field('적 방어구 흡수율 %','target.armorAbsorption',{min:0,max:100})}${field('적 피해 흡수 %','target.absorption',{min:0,max:100})}${field('적의 타격당 고정 흡수','target.flatAbsorption',{min:0})}${field('빗맞힘·회피 통합 확률 %','target.avoidance',{min:0,max:100})}${select('저항 입력 방식','target.resistMode',[['final','최종 저항 직접 입력'],['base','기본 저항 − 등록한 감소']])}</div><div class="hint">대상의 종족 보정, 방어구 파괴, 저항 상한 변화 등은 이미 반영한 값을 입력하세요. SR 30/40단 적 능력치를 임의로 자동 지정하지 않습니다.</div>`)+panel('피해 유형별 저항',state.target.resistMode==='final'?'모든 디버프를 반영한 최종 저항입니다. 음수 입력이 가능합니다.':'디버프 적용 전 저항입니다. 아래 등록한 저항 감소를 적용합니다.',`<div class="field-grid three">${[...GD.TYPES,'bleed'].map(t=>field(`${GD.LABELS[t]} 저항 %`,`target.resists.${t}`,{min:-500,max:1000,step:.1})).join('')}</div>`)+panel('저항 감소 출처','-%p 합산형과 고정 감소 중 최댓값만 지원합니다.',`<div class="notice info">${icon('info')}<div><strong>최종 저항 직접 입력 모드에서는 이 목록을 적용하지 않습니다.</strong> ‘% reduced target resistance’ 같은 곱셈형, 복잡한 유지율은 최종 저항으로 환산해서 입력하세요. 같은 디버프 ID는 중복 합산하지 않습니다.</div></div>${state.target.rr.map((r,i)=>`<div class="field-grid three" style="margin-bottom:16px">${field('출처 이름',`target.rr.${i}.name`,{type:'text'})}${field('같은 디버프 ID',`target.rr.${i}.group`,{type:'text'})}${select('유형',`target.rr.${i}.type`,[['all','모든 저항'],...[...GD.TYPES,'bleed'].map(t=>[t,GD.LABELS[t]])])}${select('방식',`target.rr.${i}.kind`,[['stack','-%p 합산형'],['flat','고정 감소 · 최댓값']])}${field('감소 수치 (양수)',`target.rr.${i}.value`,{min:0,step:.1})}<div class="row">${check('사용',`target.rr.${i}.enabled`)}<button class="btn small danger" data-action="delete-rr" data-index="${i}">삭제</button></div></div>`).join('')}<button class="btn small" data-action="add-rr">${icon('plus')} 저항 감소 추가</button>`);}
+function analysisView(){return `<div id="analysis-dynamic"></div>`;}
+function renderAnalysisDynamic(){
+ const r=result;const duration=GD.clamp(state.duration,5,300);const sim=GD.simulate(state,duration,state.seed),a=GD.analyzeEvents(sim.events,{start:0,end:duration,window:5,step:.5});
+ const changed=fn=>{const s=GD.copy(state);fn(s);return GD.calculate(s).total;};
+ const values=[['공격 능력 +200 (최종)',changed(s=>s.base.oa=GD.n(s.base.oa)+200/Math.max(.01,1+GD.n(r.a.g.oaPct)/100))],['사격 유지율 100%',changed(s=>s.combat.uptime=100)],['관통 저항 20%p 더 감소',changed(s=>s.target.resists.pierce=GD.n(s.target.resists.pierce)-20)],['모든 동작 시간 +20%',changed(s=>{s.combat.timingMode='cycles';s.combat.basicCycleMs*=1.2;s.wps.forEach(w=>w.cycleMs*=1.2);})]];
+ $('#analysis-dynamic').innerHTML=panel('5초 구간 DPS · 모의 기록','같은 시드의 확률적 예시입니다. 실제 DPYes 측정값이나 오차 신뢰구간이 아닙니다.',`<div class="field-grid three">${field('모의 전투 길이 · 초','duration',{min:5,max:300})}${field('재현용 난수 시드','seed',{min:1,max:999999})}<div class="row" style="align-items:end"><button class="btn small" data-action="simulation-log">모의 기록을 로그 탭으로</button></div></div><div style="margin-top:20px">${chart(a.points,210,r.total)}</div><div class="legend"><span><i></i>모의 기록 · 5초 평균</span><span style="color:var(--gold)">- - 이론상 전투 평균</span></div><div class="hint">명중·치명타·발동 사격을 독립 추첨합니다. 이동은 평균 유지율로 늘인 간격으로 단순화합니다. 투사체 도달 시간, 실제 버프·디버프 시작 지연은 재현하지 않습니다.</div>`)+
+ panel('주력 사격 계산 내역','DPS = 기대 피해 / 기대 동작 시간. 각 공격의 DPS를 단순 평균하지 않습니다.',`<div class="scroll-table"><table><thead><tr><th>공격</th><th>실제 비중</th><th>공격당 기대 피해</th><th>동작 시간</th><th>전투 DPS</th></tr></thead><tbody>${r.rows.map(x=>`<tr><td>${esc(x.name)}</td><td>${fmt(x.p*100,2)}%</td><td>${fmt(x.damage)}</td><td>${fmt(x.seconds*1000,1)}ms</td><td style="color:var(--green)">${fmt(x.dps)}</td></tr>`).join('')}</tbody></table></div><div class="split" style="margin-top:16px"><div class="note-block"><strong>평균 피해 / 평균 시간</strong><br>${fmt(r.meanDamage,1)} / ${fmt(r.meanCycle,4)}초<br>고정 빈도 모드: ${state.combat.timingMode==='measured'?'사용':'미사용'}</div><div class="note-block"><strong>명중·치명타 계수</strong><br>PTH ${fmt(r.profile.pth,3)} · 평균 ${fmt(r.profile.mean,4)}배<br>물리 방어구·고정 흡수는 각 치명타 구간에 따로 적용</div></div>`)+
+ panel('어느 변화가 더 큰가요?','한 항목씩만 변경한 입력 민감도입니다. 추가 옵션의 파밍 가능성을 보장하지 않습니다.',`<table><thead><tr><th>변경 조건</th><th>예상 DPS</th><th>현재 대비</th></tr></thead><tbody>${values.map(([l,v])=>{const d=r.total?(v/r.total-1)*100:0;return `<tr><td>${l}</td><td>${fmt(v)}</td><td class="${d>=0?'pos':'danger-text'}">${d>=0?'+':''}${fmt(d,1)}%</td></tr>`;}).join('')}</tbody></table>`)+
+ panel('피해 유형과 산탄 명중','관통으로 전환되지 않은 직접 피해도 각 유형의 저항으로 계산합니다.',`<div class="stats-grid">${Object.entries(r.types).filter(([,v])=>v>.001).map(([t,v])=>`<div class="metric-mini statbreak"><span class="muted">${GD.LABELS[t]}</span><b>${fmt(v)} / s</b></div>`).join('')||'<div class="empty">피해 입력이 없습니다.</div>'}</div>${state.wps.some(w=>w.id==='storm')?`<hr class="sep"><h3>폭풍 분사 · 한 대상 명중 탄환 수</h3><table><thead><tr><th>총 타격 수</th><th>예상 전투 DPS</th></tr></thead><tbody>${[2,4,6,8].map(n=>`<tr><td>${n}발</td><td>${fmt(changed(s=>{const w=s.wps.find(x=>x.id==='storm');w.hitsMain=n/2;w.hitsOff=n/2;}))}</td></tr>`).join('')}</tbody></table>`:''}`);
+}
+function logsView(){
+ const fields=logData.rows.length?Object.keys(GD.flatten(logData.rows[0])):[];
+ const mappingSelect=(key,label,none=false)=>`<label class="field">${label}<select data-logmap="${key}">${none?'<option value="">미지정</option>':'<option value="">필드 선택</option>'}${fields.map(f=>`<option value="${esc(f)}" ${logData.map[key]===f?'selected':''}>${esc(f)}</option>`).join('')}</select></label>`;
+ return panel('DPYes 기록 불러오기','파일은 서버로 전송되지 않습니다. 데이터 배열과 숫자 필드를 직접 확인합니다.',`<div class="upload-zone">${icon('upload')}<h3 style="margin:10px 0 4px">피해 기록 JSON 또는 CSV</h3><div class="small muted">DPYes의 기록 형식은 버전별로 다를 수 있습니다. 필드를 매핑한 뒤 분석합니다.</div><div class="row" style="justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="btn primary" data-action="import-log">파일 선택</button><button class="btn" data-action="sample-log">모의 예제 기록</button><button class="btn ghost" data-action="log-schema">입력 예시 보기</button></div></div>${logData.rows.length?`<div class="inline-message">${esc(logData.fileName)} · ${fmt(logData.rows.length)}행 · ${logData.sample?'모의 기록 (실측 아님)':'사용자 파일'}</div><div class="field-grid three"><label class="field">데이터 배열<select data-log="arrayPath">${logData.arrays.map((a,i)=>`<option value="${i}" ${logData.arrayIndex===i?'selected':''}>${esc(a.path)} (${a.rows.length})</option>`).join('')}</select></label>${mappingSelect('time','시간 필드')}${mappingSelect('damage','피해량 필드')}<label class="field">시간 단위<select data-logmap="unit">${[['s','초'],['ms','밀리초'],['us','마이크로초']].map(([v,l])=>`<option ${logData.map.unit===v?'selected':''} value="${v}">${l}</option>`).join('')}</select></label>${mappingSelect('skill','스킬 필드',true)}${mappingSelect('target','피격 대상 필드',true)}${mappingSelect('source','공격 주체 필드',true)}<label class="field">입력 피해 기준<select data-log="mitigation">${[['unknown','모름 · 비교 주의'],['after','경감 후 피해'],['before','경감 전 피해']].map(([v,l])=>`<option value="${v}" ${logData.mitigation===v?'selected':''}>${l}</option>`).join('')}</select></label></div><div class="row" style="margin:15px 0"><label class="check"><input type="checkbox" data-logmap="relative" ${logData.map.relative!==false?'checked':''}>파일의 첫 이벤트를 0초로 이동 (필터 전)</label></div><details><summary>첫 3행 · 원본 필드 확인</summary><pre class="code">${esc(JSON.stringify(logData.rows.slice(0,3),null,2))}</pre></details><div class="hint">받은 피해·펫·여러 대상을 섞지 않도록 공격 주체와 피격 대상 필드를 지정하세요. 시간 정보가 없는 파일은 DPS로 환산하지 않습니다.</div><button class="btn primary" data-action="apply-log">매핑 확인 · 분석</button>`:''}`)+`<div id="log-analysis"></div>`;
+}
+function renderLogAnalysis(){
+ if(!$('#log-analysis')||!logData.events.length)return;
+ const sources=[...new Set(logData.events.map(e=>e.source))],targets=[...new Set(logData.events.map(e=>e.target))];
+ const filtered=logData.events.filter(e=>(logData.filterSource==='all'||e.source===logData.filterSource)&&(logData.filterTarget==='all'||e.target===logData.filterTarget));
+ let a;try{a=GD.analyzeEvents(filtered,{start:logData.start,end:logData.end,window:logData.window,step:.25});}catch(e){$('#log-analysis').innerHTML=`<div class="notice">${esc(e.message)}</div>`;return;}
+ const filter=(key,label,vals)=>`<label class="field">${label}<select data-log="${key}"><option value="all">전체</option>${vals.map(v=>`<option value="${esc(v)}" ${logData[key]===v?'selected':''}>${esc(v)}</option>`).join('')}</select></label>`;
+ $('#log-analysis').innerHTML=panel(logData.sample?'모의 기록 분석':'사용자 기록 분석','누적 피해 ÷ 지정한 실제 전투 시간. 무피해 시간도 분모에 포함합니다.',`<div class="field-grid three">${filter('filterSource','공격 주체',sources)}${filter('filterTarget','피격 대상',targets)}<label class="field">이동 평균 창 · 초<input type="number" min=".1" max="120" step=".1" data-log="window" value="${logData.window}"></label><label class="field">시작 · 초<input type="number" min="0" step=".1" data-log="start" value="${logData.start}"></label><label class="field">종료 · 초<input type="number" min=".1" step=".1" data-log="end" value="${logData.end}"></label><div class="row" style="align-items:end"><button class="btn small" data-action="export-log">필터 기록 CSV</button></div></div><div class="hint">종료 시간은 초기 제안값입니다. <strong>실제 측정 시간으로 수정</strong>하세요. 마지막 타격 시간만으로 전투 종료를 확정하지 않습니다. 필터를 바꿔도 시간 원점과 전투 길이는 유지됩니다.</div><div class="field-grid three"><div class="metric-mini"><span class="tiny muted">전투 전체 평균</span><div class="big">${fmt(a.average)}</div><span class="tiny muted">${fmt(a.duration,1)}초 · ${fmt(a.count)}개 기록</span></div><div class="metric-mini"><span class="tiny muted">${logData.window}초 창 최고값</span><div class="big">${a.peak===null?'—':fmt(a.peak)}</div><span class="tiny muted">초기 ${logData.window}초 미만 구간 제외</span></div><div class="metric-mini"><span class="tiny muted">누적 피해</span><div class="big">${short(a.total)}</div><span class="tiny muted">${logData.skipped}행 무효/누락 제외</span></div></div><div style="margin-top:22px">${chart(a.points,235,a.average)}</div><div class="legend"><span><i></i>${logData.window}초 이동 평균</span><span style="color:var(--gold)">- - 전투 전체 평균</span></div><div class="notice info" style="margin-top:16px;margin-bottom:0">${icon('info')}<div>${logData.sample?'이 기록은 앱에서 만든 예제이며 실제 DPYes 로그가 아닙니다.':`현재 입력: <strong>${logData.mitigation==='after'?'경감 후':logData.mitigation==='before'?'경감 전':'경감 전/후 미확인'}</strong>. 서로 다른 집계 설정을 비교하지 마세요.`} 이 앱은 최대 ${logData.window}초의 정확한 창으로 재집계합니다. DPYes의 내부 틱·초기화·일시정지 처리와 동일하다고 보장하지 않습니다.</div></div>`)+panel('기록의 피해 출처','로그 필드에 기록된 이름을 기준으로 집계합니다.',`<table><thead><tr><th>스킬 / 출처</th><th>누적 피해</th><th>전투 평균 DPS</th><th>비중</th></tr></thead><tbody>${Object.entries(a.groups).sort((x,y)=>y[1]-x[1]).slice(0,50).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${fmt(v)}</td><td>${fmt(v/a.duration)}</td><td>${fmt(a.total?v/a.total*100:0,1)}%</td></tr>`).join('')}</tbody></table><div class="note-block" style="margin-top:16px"><strong>예측과 비교</strong><br>현재 입력 예측 ${fmt(result.total)} / 기록 평균 ${fmt(a.average)}<br>같은 대상·버프·사격 유지율·경감 설정일 때만 비교 의미가 있습니다. 기록에 맞추기 위해 결과를 자동 배율 보정하지 않습니다.</div>`);
+}
+function legacyHelpView(){return panel('이 사이트가 계산하는 것','장비 기반 예상값과 DPYes의 실측 집계를 분리했습니다.',`<div class="notice info">${icon('info')}<div><strong>DPYes에는 장비 → DPS라는 단일 예측식이 없습니다.</strong> 실제 발생한 피해를 시간으로 나누는 측정 도구입니다. 이 앱의 예측 엔진은 공개된 게임 전투 규칙을 이용한 별도의 모델입니다.</div></div>${[
+ ['옵션 합산','무기의 고정 피해는 해당 손에만, 방어구·장신구의 고정 피해는 두 손에 적용합니다. 피해 증가와 공격 능력은 전역 합산합니다. 최종 OA = 고정 OA 합계 × (1 + OA 증가율/100). 교활·숙련도 등은 환산 후 장비 외 합계에 입력합니다.'],
+ ['관통 전환','스킬 전환 → 전역 전환 → 남은 물리의 Armor Piercing 순서입니다. 이미 변환된 피해를 다시 변환하지 않습니다. 이 버전은 관통으로의 단방향 전환만 지원합니다. 원소 고정 피해는 화염·냉기·번개로 3등분합니다.'],
+ ['무기 공격과 발동 사격','탄환당 피해 = [무기 기반 피해 × 기본 공격 계수 × 발동 사격 계수 + 기본 공격 자체 추가 피해 + 발동 사격 자체 추가 피해] × 유형별 증가율. 고정 피해는 가산, 무기 피해 계수는 곱하는 공개 실험 모델입니다. 개별 스킬의 예외는 최종 계수로 수동 보정해야 합니다.'],
+ ['발동 비중과 동작 시간','합계 100% 이하는 남는 확률을 기본 공격으로, 100% 초과는 각 확률/합계로 정규화합니다. 초당 직접 피해 = Σ(선택 비중 × 공격당 기대 피해) / Σ(선택 비중 × 동작 시간) × 사격 유지율. 100% 속도 자체가 공격 횟수를 뜻하지 않습니다.'],
+ ['명중·치명타·경감','공식 PTH 식과 90/105/120/130/135 구간을 연속 확률 모델로 사용합니다. 100 초과는 PTH 길이에서 표본화합니다. 저항, 남은 물리 피해에 대한 방어구, % 흡수, 타격당 고정 흡수를 각 치명타 구간에 따로 적용합니다.'],
+ ['지속 피해와 별도 발동','주력 공격 속도에 출혈을 단순 곱하지 않습니다. 사용자가 환산한 유지 DPS와 유지율을 별도로 입력합니다. 같은 피해 유형·출처 ID는 최댓값만 적용합니다. 재적용·치명타 스냅샷 경쟁·펫 AI를 정밀 시뮬레이션하지 않습니다.'],
+ ['DPYes 로그 재집계','전체 평균 = 지정한 구간의 실제 피해 합계 / (종료−시작). 이동 평균 = (t−W, t] 구간의 피해 / min(W, t−시작). 시작 순간의 이벤트는 초기 창에 포함합니다. 최고값은 최소 W초가 지난 이벤트 시점에서 찾습니다. 초기 부분 창은 최고값 경쟁에서 제외합니다.']
+ ].map(([t,d],i)=>`<div class="math-step"><span class="num">0${i+1}</span><div><strong>${t}</strong><p>${d}</p></div></div>`).join('')}<pre class="code" style="margin-top:18px">PTH = max(55, 90·OA / (OA + DA/3.5) + 0.02275·(OA−DA) + 20)
+
+DPS_direct = E[damage per action] / E[time per action] × uptime
+DPS_total  = DPS_direct + entered sustained / proc DPS
+
+Rolling_W(t) = Σ damage in (t−W, t] / min(W, t−start)</pre>`)+
+ panel('지원 범위와 제한','숫자가 정밀해 보여도 입력 이상의 정확도를 갖지는 않습니다.',`<table style="white-space:normal"><thead><tr><th style="width:27%">지원</th><th>설명</th></tr></thead><tbody><tr><td>장비 14부위</td><td>본체·접두·접미·컴포넌트·증강제·유물을 공개 DB에서 검색해 자동 입력합니다. 승천은 별도 수동 보정입니다.</td></tr><tr><td>주력 직접 피해 9유형</td><td>관통 중심 변환, 저항별 피해. 다른 방향의 복합 전환은 외부에서 환산해야 합니다.</td></tr><tr><td>일반 쌍수 기본 공격</td><td>기본 공격에 주무기 25%, 보조 25%, 양손 50%의 공개 실험 모델. 다른 예외는 타격 수로 반영.</td></tr><tr><td>예제와 템플릿</td><td>첫 실행에서 공개 게임 추출 DB를 자동 다운로드합니다. 서약운반자 버튼은 이름이 일치하는 본체·부품·증강제를 실제 데이터로 장착합니다. 중복·미검색 항목은 따로 표시합니다.</td></tr><tr><td>게임 저장 파일 / 링크</td><td>GrimTools 빌드 URL, .gdc, 실시간 게임 메모리 직접 연동 미지원.</td></tr><tr><td>생존과 SR 단계</td><td>체력·DA 합산값은 참고용. 모든 방어 효과나 차원 난이도를 시뮬레이션하지 않습니다.</td></tr><tr><td>로그 매핑</td><td>JSON 배열·CSV의 숫자 시간/피해 필드가 필요합니다. 시간 없는 합계 파일로 DPS를 지어내지 않습니다.</td></tr></tbody></table><div class="hint">아이템의 자체 기본 피해를 입력할 때, 이미 캐릭터 창 피해 증가가 적용된 숫자를 넣지 마세요. 툴팁 붙여넣기는 보조 기능이므로 변환 결과를 반드시 확인합니다.</div>`)+
+ panel('근거 자료','아이템 데이터 버전은 상단에 표시됩니다. 예제 전투 조건은 게임 실측치가 아닙니다.',SOURCES.map(([name,desc,url])=>`<div class="source-card"><a href="${url}" target="_blank" rel="noopener noreferrer">${esc(name)} ↗</a><p>${esc(desc)}</p></div>`).join(''))+
+ panel('데이터와 실행','계정 없이 로컬에서 사용합니다.',`<p class="small muted">START_WINDOWS.cmd로 실행하면 공개 DB를 내려받아 127.0.0.1에서 제공합니다. 사용자 빌드·로그는 외부로 전송하지 않습니다. 최초 데이터 준비 후 DB 포함 HTML을 저장하면 서버 없이도 검색할 수 있습니다.</p><p class="small muted">그림툴 공식 API를 사용하거나 접근 제한을 우회하지 않습니다. 데이터는 화면에 표시된 버전의 공개 추출 스냅샷이며, 최종 스킬·세트·발동·승천 효과가 모두 자동 계산되는 것은 아닙니다.</p>`);
+}
+function helpView(){if(state.auto?.enabled)return AUTOUI.help();return panel('v3 자동 계산 사용 순서','아이템 옵션과 스킬 계수를 직접 옮겨 적을 필요를 줄였습니다.',`<div class="math-step"><span class="num">01</span><div><strong>장비 검색 → 장착</strong><p>공개 DB의 본체·접사·부품·증강제를 선택합니다. 없는 데이터는 임의로 채우지 않습니다.</p></div></div><div class="math-step"><span class="num">02</span><div><strong>캐릭터 → 스킬 → 별자리</strong><p>두 직업, 능력치 투자량, 스킬 포인트, 별을 선택합니다. 장비로 오르는 스킬 레벨·계수와 세트 보너스가 자동 적용됩니다.</p></div></div><div class="math-step"><span class="num">03</span><div><strong>대상·회전 → 검증·출처</strong><p>대상 방어 능력·저항과 실제 공격 유지율을 정합니다. 제외 효과와 가정이 많으면 예측을 전체 DPS로 취급하지 마세요.</p></div></div><div class="notice"><b>전체 게임 엔진 재현이 아닙니다.</b> 데이터에 있는 모든 스킬을 탐색하고 레벨 수치를 연결하지만 펫 AI, 변신, 카덴스 특수 순서, 일부 파편/반격/승천 예외는 총피해에서 제외됩니다. 성장 기본값·공격 동작 시간에도 표시된 근사가 있습니다.</div>`)+panel('출처와 재현','데이터 스냅샷 버전과 검증 결과를 함께 확인하세요.',SOURCES.map(([name,desc,url])=>`<div class="source-card"><a href="${url}" target="_blank" rel="noopener noreferrer">${esc(name)} ↗</a><p>${esc(desc)}</p></div>`).join(''))+panel('Windows 실행 검증 상태','테스트 절차를 제공하는 것과 실제 실행 완료는 다릅니다.',`<p>이 배포에는 Windows 최초 실행 → 실제 DB 다운로드 → Chromium 계산 → 오프라인 재실행 → 캐시 재실행을 검사하는 GitHub Actions 작업과 PowerShell 테스트가 포함됩니다. 현재 제작 환경은 Linux이므로 Windows 작업 실행 결과는 아직 없습니다. TEST_REPORT.json에서 실제 수행 여부를 확인하세요.</p><p>DPYes는 실제 피해 로그를 집계합니다. 이 앱의 예측은 별도 근사 모델입니다. 최고 5초 DPS를 전투 전체 평균과 혼동하지 마세요.</p>`);}
+
+function openModal(title,body){lastFocus=document.activeElement;$('#modal-root').innerHTML=`<div class="modal-backdrop"><section class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="panel-head"><h2>${title}</h2><button class="btn small ghost" data-action="close-modal" aria-label="닫기">${icon('close')}</button></div><div class="modal-body">${body}</div></section></div>`;setTimeout(()=>$('.modal input,.modal textarea,.modal button')?.focus(),0);}
+function closeModal(){$('#modal-root').innerHTML='';lastFocus?.focus?.();libraryTarget=null;}
+let dbSelected=null,dbPage=0,dbRarity='',dbMax=100,dbRoll='mean';
+function dbStatus(){const d=CATALOG.DB;return `<div class="db-connection"><div><span class="badge ${d.phase==='ready'?'good':d.phase==='error'?'':'blue'}">${d.phase==='ready'?(d.data.meta.fixture?'검사 표본 · 실제 DB 아님':'DB 연결됨'):d.phase==='error'?'DB 연결 확인':'DB 준비 중'}</span><strong>${esc(d.phase==='ready'?d.message:d.phase==='error'?'검색 데이터를 불러오지 못했습니다':d.message)}</strong><div class="tiny muted">${d.phase==='ready'?`게임 데이터 ${esc(d.data.meta.gameVersion)} · 공개 추출 스냅샷 · 그림툴 공식 연동 아님`:esc(d.message)}</div></div><div class="row"><button class="btn small" data-action="db-help">연결·범위</button><button class="btn small" data-action="portable" ${d.phase!=='ready'?'disabled':''}>DB 포함 HTML 저장</button></div></div>${d.phase==='loading'?`<div class="track"><i style="width:${d.progress}%"></i></div>`:''}`;}
+function dbStatsList(stats){return Object.entries(stats||{}).map(([k,v])=>`<div class="mini-row"><span>${esc(FIELD_LABELS[k]||({armor:'방어구 (표시)',armorPct:'방어구 증가 % (표시)',physique:'체격 (파생 미반영)',cunning:'교활 (파생 미반영)',spirit:'정신 (파생 미반영)',healingPct:'회복 증가 % (표시)'}[k])||k)}</span><b>${fmt(v,2)}</b></div>`).join('')||'<p class="muted">현재 엔진에 직접 적용할 고정 옵션이 없습니다.</p>';}
+function dbEquipped(p){if(!p.db)return '<div class="note-block">이 항목은 아직 검색 DB와 연결되지 않았습니다. <strong>아이템 검색</strong>에서 선택하면 옵션 숫자가 자동으로 채워집니다.</div>';
+ return `<div class="db-equipped"><div class="row between"><span class="badge good">DB 옵션 자동 적용</span><span class="tiny muted">${esc(p.db.gameVersion)} · ${esc(p.db.roll==='low'?'하한':p.db.roll==='high'?'상한':'기준 평균')}</span></div><h3>${esc(p.name)}</h3><div class="small muted">${esc(p.db.en||'')} · 레벨 ${fmt(p.db.level)}</div><div class="auto-stats">${dbStatsList(p.stats)}</div><details><summary>스킬 보너스 · 자동 계산 제외 항목 (${(p.db.unapplied||[]).length})</summary>${(p.db.boosts||[]).map(b=>`<p class="small">${esc(b.name)} +${b.level} <span class="muted">— 최종 스킬 계수에는 별도 반영 필요</span></p>`).join('')} ${(p.db.unapplied||[]).map(u=>`<p class="small muted">${esc(u.name||'')}: ${esc(u.stat||u.reason)} ${fmt(u.value??u.min??0,2)} · ${esc(u.reason)}</p>`).join('')}<div class="hint">자동 가져온 옵션과 최종 스킬 레벨 계산은 별개입니다. 세트·발동 효과·능력치 파생 효과 중 미지원 항목은 총피해에 자동 합산하지 않습니다.</div></details><div class="row" style="margin-top:12px"><button class="btn small" data-action="reroll-db" data-roll="low">하한</button><button class="btn small" data-action="reroll-db" data-roll="mean">기준 평균</button><button class="btn small" data-action="reroll-db" data-roll="high">상한</button><button class="btn small ghost" data-action="source-db">원본 레코드</button></div><div class="tiny muted" style="margin-top:8px">하한·상한은 옵션별 공개 범위의 비교용 극단값입니다. 실제 랜덤 시드의 완벽한 재현이나 동시 획득 보장은 아닙니다.</div></div>`;
+}
+function libraryModal(){libraryTarget={slot,part};dbPage=0;dbSelected=null;dbRarity='';dbRoll='mean';
+ openModal('아이템 검색 · 옵션 자동 입력',`${CATALOG.DB.data?.meta.testOnly?'<div class="hint">UI 검사 표본입니다. 실제 전체 DB 또는 완성 캐릭터의 수치를 나타내지 않습니다.</div>':''}<div class="row"><input class="search-input" id="library-search" placeholder="이름 검색 · 서약운반자 / Oathbearer" aria-label="라이브러리 검색"><select id="db-rarity" aria-label="등급"><option value="">모든 등급</option>${['Legendary','Epic','Rare','Magical','Common'].map(x=>`<option>${x}</option>`).join('')}</select></div><div class="db-search-sub"><span class="badge blue">${esc(SLOTS.find(x=>x[0]===slot)[1])} · ${esc(PARTS.find(x=>x[0]===part)[1])}</span><label class="small">최대 아이템 레벨 <input id="db-level" type="number" value="100" min="1" max="200" style="width:65px"></label><span class="tiny muted">한글·영문 · 부위 필터 · 중간 롤 적용</span></div><div id="library-results"></div>`);renderLibrary('');
+}
+function renderLibrary(q){if(!$('#library-results'))return;const db=CATALOG.DB;if(db.phase!=='ready'){$('#library-results').innerHTML=`<div class="empty">${esc(db.message)}<br><button class="btn small" data-action="db-help">설정 안내</button></div>`;return;}
+ const base=state.equipment[slot].parts.item.db;const res=db.search(q,slot,part,base,{rarity:dbRarity,maxLevel:dbMax,offset:dbPage*40,limit:40});
+ let warn='';if(['prefix','suffix'].includes(part))warn='<div class="hint">접사 데이터는 자동으로 가져옵니다. 동일 이름의 부위별 변형이 있으므로 원본 경로를 확인하세요. 전체 드롭 테이블 기반 접사 조합 적법성은 보장하지 않습니다.</div>';
+ if(part==='ascension')warn='<div class="note-block">승천 옵션 전용 규칙은 이 데이터에 포함되지 않습니다. 이 항목은 수동 보정 탭을 사용하세요.</div>';
+ $('#library-results').innerHTML=warn+`<div class="db-result-head"><span>${fmt(res.total)}개 결과</span><div class="row"><button class="btn small" data-action="db-page" data-dir="-1" ${dbPage===0?'disabled':''}>이전</button><span class="tiny">${dbPage+1}</span><button class="btn small" data-action="db-page" data-dir="1" ${(dbPage+1)*40>=res.total?'disabled':''}>다음</button></div></div><div class="db-browser"><div class="db-results">${res.rows.map(x=>{const m=CATALOG.mapped(x);return `<button class="db-card ${dbSelected===x.id?'selected':''}" data-action="pick-db" data-id="${esc(x.id)}"><span class="db-type ${/legendary/i.test(x.rarity)?'legendary':/rare/i.test(x.rarity)?'rare':''}">${esc(x.rarity||x.domain)} <span>Lv. ${fmt(x.level)}</span></span><strong>${esc(x.name)}</strong><span class="db-en">${esc(x.en)}</span>${['prefix','suffix','affix'].includes(x.part)?`<span class="tiny code-wrap">${esc(x.id.split('/').slice(-2).join('/'))}</span>`:''}<span class="tiny muted">${Object.entries(m.stats).slice(0,3).map(([k,v])=>`${esc(FIELD_LABELS[k]||k)} ${fmt(v,1)}`).join(' · ')||'상세 효과 보기'}</span></button>`;}).join('')||'<div class="empty">이 부위에서 일치하는 결과가 없습니다.<br>짧은 이름 또는 영문 이름으로 검색하세요.</div>'}</div><div id="db-detail" class="db-detail"><div class="empty">아이템을 선택하면<br>실제 옵션과 장착 버튼이 표시됩니다.</div></div></div>`;
+ if(dbSelected&&res.rows.some(x=>x.id===dbSelected))renderDbDetail(dbSelected);
+}
+function renderDbDetail(id){const item=CATALOG.DB.get(id);if(!item||!$('#db-detail'))return;dbSelected=id;const m=CATALOG.mapped(item,dbRoll);const rq=item.requirements||{};$('#db-detail').innerHTML=`<span class="badge ${/legendary/i.test(item.rarity)?'':'good'}">${esc(item.rarity||item.domain)} · Lv. ${item.level}</span><h3>${esc(item.name)}</h3><p class="small muted">${esc(item.en)}</p><div class="tiny muted">요구 레벨 ${rq.level||'—'} · 체격 ${rq.physique||0} · 교활 ${rq.cunning||0} · 정신 ${rq.spirit||0}</div><div class="row" style="margin:12px 0"><label class="field" style="flex:1">옵션 범위<select id="db-roll"><option value="mean" ${dbRoll==='mean'?'selected':''}>기준 평균</option><option value="low" ${dbRoll==='low'?'selected':''}>하한 (비교용)</option><option value="high" ${dbRoll==='high'?'selected':''}>상한 (비교용)</option></select></label><button class="btn primary" data-action="equip-db" data-id="${esc(id)}">장착 · 자동 반영</button></div><div class="auto-stats">${dbStatsList(m.stats)}</div>${item.boosts?.length?`<h4>스킬 보너스</h4>${item.boosts.map(b=>`<div class="small">${esc(b.name)} <b>+${b.level}</b></div>`).join('')}<p class="hint">자동 모드: 최종 스킬 레벨과 계수에 연결</p>`:''}${item.set?'<p class="hint">세트 장비 · 자동 모드에서 조각 수별 보너스 적용</p>':''}<details><summary>기본 파서 외 항목 ${m.unapplied.length}개 · 자동 적용 여부는 검증 탭</summary><p class="tiny code-wrap">${esc(item.id)}</p>${m.unapplied.map(u=>`<p class="tiny muted">${esc(u.name||'')} ${esc(u.stat||'')} ${fmt(u.value??u.min??0,2)} / ${esc(u.reason)}</p>`).join('')}</details><a class="small" href="https://www.grimtools.com/db/ko/search?query=${encodeURIComponent(item.en)}&in_description=1&exact_match=0" target="_blank" rel="noopener noreferrer">그림툴에서 이름 검색 ↗</a>`;
+ document.querySelectorAll('.db-card').forEach(b=>b.classList.toggle('selected',b.dataset.id===id));
+}
+function installDb(item,target,roll='mean'){
+ const m=CATALOG.mapped(item,roll);const p={name:item.name,enabled:true,stats:m.stats,db:{id:item.id,en:item.en,gameVersion:CATALOG.DB.data.meta.gameVersion,type:item.type,rarity:item.rarity,level:item.level,roll,boosts:item.boosts,modifiers:m.modifiers,unapplied:m.unapplied,raw:item.raw,conversions:item.conversions,set:item.set,requirements:item.requirements}};
+ const e=state.equipment[target.slot];e.parts[target.part]=p;e.reviewed=!!e.parts.item.db;
+ if(target.part==='item'){for(const k of ['component','augment']){const old=e.parts[k]?.db&&CATALOG.DB.get(e.parts[k].db.id);if(old&&!CATALOG.compatible(old,target.slot,k,p.db))e.parts[k]=DATA.blankPart();}}
+ if(target.part==='item'&&/legendary|epic/i.test(item.rarity||'')){e.parts.prefix=DATA.blankPart();e.parts.suffix=DATA.blankPart();}
+ state.meta.dbImported=true;state.meta.gameVersion=CATALOG.DB.data.meta.gameVersion;
+}
+function autoTemplate(){if(CATALOG.DB.phase!=='ready'){toast('DB가 준비된 뒤 사용하세요.');return;}if(!confirm('현재 장비를 서약운반자 목록으로 바꿉니다. 실제 DB에서 확인되는 본체·부품·증강제를 자동 장착합니다. 기존 빌드는 먼저 JSON으로 저장하세요.'))return;
+ state=DATA.state(false);state.auto=AUTO.defaults();state.combat.darWD=210;state.combat.skillConversion={};state.meta.note='장비 DB 자동 구성. 스킬 계수·동작 시간은 예제 참조값입니다. 장비 외 능력치와 버프를 별도로 확인하세요.';
+ let found=0,missing=[],ambiguous=[];for(const [sid,,ko,en]of SLOTS){for(const p of ['item','component','augment']){const name=p==='item'?ko:state.equipment[sid].parts[p].name;if(!name)continue;const base=state.equipment[sid].parts.item.db;
+  const needles=[name,p==='item'?en:''].filter(Boolean).map(CATALOG.clean);
+  const rows=CATALOG.DB.search('',sid,p,base,{limit:100000}).rows.filter(x=>needles.some(n=>CATALOG.clean(x.name)===n||CATALOG.clean(x.en)===n));
+  if(!rows.length){missing.push(`${SLOTS.find(x=>x[0]===sid)[1]}: ${name}`);continue;}
+  const top=rows[0];if(rows.some(x=>x.id!==top.id&&x.level===top.level)){ambiguous.push(`${SLOTS.find(x=>x[0]===sid)[1]}: ${name}`);continue;}
+  installDb(top,{slot:sid,part:p});found++;
+ }}if(CATALOG.DB.data.automation){missing.push(...AUTOUI.preset(state));}tab='gear';slot='main';part='item';render();openModal('서약운반자 DB 자동 구성 결과',`<p><b>${found}개 항목</b>의 이름과 실제 옵션을 가져왔습니다.</p><div class="notice info">접두·접미사는 부위별 변형을 직접 선택하세요. 능력치·스킬·적 조건까지 완성된 실측 캐릭터는 아닙니다.</div>${missing.length?`<h3>찾지 못한 항목 ${missing.length}</h3>${missing.map(x=>`<p class="small">${esc(x)}</p>`).join('')}`:''}${ambiguous.length?`<h3>동일 단계 중복 · 선택 필요</h3>${ambiguous.map(x=>`<p class="small">${esc(x)}</p>`).join('')}`:''}<button class="btn primary" data-action="close-modal">확인</button>`);
+}
+async function portable(){if(state.auto?.enabled){await AUTOUI.offline();return;}try{if(CATALOG.DB.phase!=='ready')return;if(location.protocol==='file:'){toast('현재 파일은 이미 DB 포함 오프라인 HTML입니다. 현재 빌드는 JSON으로 저장하세요.');return;}
+ const response=await fetch('/api/portable');if(!response.ok)throw new Error('오프라인 HTML 생성에 실패했습니다.');let text=await response.text();const build=JSON.stringify(state).replace(/</g,'\\u003c');text=text.replace('<!-- EMBEDDED_BUILD -->','<script id="embedded-build" type="application/json">'+build+'</scr'+'ipt>');download('Grim_DPS_Lab_Offline.html',text,'text/html;charset=utf-8');toast('아이템 DB와 현재 빌드가 포함된 HTML을 저장했습니다.');}catch(e){toast(e.message);}}
+function dbHelp(){openModal('v3 데이터 연결과 지원 범위',`<p>ZIP을 모두 풀고 <b>START_WINDOWS.cmd</b>를 실행합니다. 첫 실행에는 공개 원시 데이터와 실행 환경 다운로드가 필요합니다. 실제 Windows 첫 실행은 이 배포를 만든 환경에서 검증하지 못했습니다.</p><p>장비·접사·부품·증강제 숫자, 전체 스킬/숙련도 목록의 원시 레벨 배열, 장비의 스킬 보너스, 별자리 선택 효과, 세트 임계치가 연결됩니다. 데이터 스냅샷은 화면에 표시되며 최신 게임 패치를 자동으로 가정하지 않습니다.</p><p><b>모든 스킬의 실제 동작이 구현된 것은 아닙니다.</b> 소환/변신 AI, 카덴스·충전·추가 폭발·채널링의 특수 규칙, 정확한 애니메이션 및 시드·승천 적법성은 제외 또는 근사입니다. 검증·출처 탭에서 각 누락을 확인하세요.</p><p>그림툴 URL 및 게임 저장 파일은 직접 불러오지 않습니다. 공개 DB 검색으로 구현했으며 사용자 빌드·로그를 외부에 전송하지 않습니다.</p><p>DB 준비 후 <b>DB 포함 HTML 저장</b>을 사용하면 데이터와 빌드를 함께 보관합니다. 전체 DB 실제 다운로드 및 네이티브 Windows 실행 검증은 TEST_REPORT_KO.md에 별도 표기했습니다.</p><pre class="code code-wrap tiny">${esc(CATALOG.DB.error||'현재 연결 오류 없음')}</pre><div class="row"><button class="btn" data-action="db-retry">연결 다시 확인</button><button class="btn primary" data-action="close-modal">닫기</button></div>`);}
+
+function download(name,text,type='application/json'){const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
+async function filePick(kind){const inp=document.createElement('input');inp.type='file';inp.accept=kind==='build'?'.json':'.json,.csv';inp.onchange=async()=>{try{const f=inp.files[0];if(!f)return;if(f.size>(kind==='build'?2000000:20000000))throw new Error('파일이 너무 큽니다. 빌드 2MB / 로그 20MB 이하만 허용합니다.');const text=await f.text();if(kind==='build'){const s=validateState(JSON.parse(text));state=s;slot='main';part='item';render();toast('빌드를 불러왔습니다.');}else{let arrays;if(f.name.toLowerCase().endsWith('.csv'))arrays=[{path:'CSV',rows:GD.parseCSV(text)}];else arrays=GD.findArrays(JSON.parse(text));if(!arrays.length)throw new Error('피해 이벤트 객체 배열이 없습니다. 시간과 피해가 있는 JSON/CSV가 필요합니다.');if(arrays.some(a=>a.rows.length>100000))throw new Error('최대 100,000행까지 지원합니다. 측정 구간을 나누어 주세요.');logData={...logData,arrays,arrayIndex:0,rows:arrays[0].rows,fileName:f.name,events:[],sample:false,mitigation:'unknown'};guessMapping();tab='logs';render();}}catch(e){toast(e.message);}};inp.click();}
+function guessMapping(){const fs=Object.keys(GD.flatten(logData.rows[0]||{}));const find=re=>fs.find(f=>re.test(f))||'';logData.map={...logData.map,time:find(/(^|\.)(time|timestamp|elapsed|t|timeMs|timestampMs)$/i),damage:find(/(^|\.)(damage|amount|value|damageAmount|totalDamage)$/i),skill:find(/(^|\.)(skill|skillName|ability)$/i),source:find(/(^|\.)(source|attacker|sourceName)$/i),target:find(/(^|\.)(target|targetName|defender)$/i)};if(/ms$/i.test(logData.map.time))logData.map.unit='ms';}
+function demoLog(){const d=state.auto?.enabled?{events:Array.from({length:240},(_,i)=>({time:(i+1)/4,damage:GD.calculate(state).total/4,skill:'자동 모델 평균값 시각화',target:'가정 단일 대상',source:'model'}))}:GD.simulate(state,60,73);logData={...logData,arrays:[{path:'events',rows:d.events}],arrayIndex:0,rows:d.events,events:d.events,fileName:'앱에서 생성한 모의 기록',sample:true,mitigation:'after',map:{time:'time',damage:'damage',skill:'skill',target:'target',source:'source',unit:'s',relative:false},start:0,end:60,window:5,filterSource:'all',filterTarget:'all',skipped:0};tab='logs';render();}
+function logMapApply(){try{const m=GD.mapEvents(logData.rows,logData.map);logData.events=m.events;logData.skipped=m.skipped;logData.start=0;logData.end=Math.max(1,Math.ceil(m.events.reduce((x,e)=>Math.max(x,e.time),0)+.5));logData.filterSource='all';logData.filterTarget='all';render();toast('매핑 완료. 실제 전투 종료 시간을 확인하세요.');}catch(e){toast(e.message);}}
+function scheduleUpdate(){clearTimeout(timer);timer=setTimeout(()=>{updateMetrics();renderAside();persist();if(tab==='analysis'&&!state.auto?.enabled)renderAnalysisDynamic();},200);}
+document.addEventListener('input',e=>{
+ const el=e.target;
+ if(el.id==='library-search'){dbPage=0;renderLibrary(el.value);return;}
+ if(el.dataset.bind){const path=el.dataset.bind;if(el.type==='number'){if(el.value===''||!Number.isFinite(Number(el.value)))return;let value=Number(el.value);if(el.min!=='')value=Math.max(Number(el.min),value);if(el.max!=='')value=Math.min(Number(el.max),value);set(path,value);}else if(el.type!=='checkbox'&&el.tagName!=='SELECT')set(path,el.value);scheduleUpdate();}
+});
+document.addEventListener('change',e=>{
+ const el=e.target;
+ if(el.id==='db-rarity'){dbRarity=el.value;dbPage=0;renderLibrary($('#library-search').value);return;}
+ if(el.id==='db-level'){dbMax=GD.clamp(el.value,1,200);dbPage=0;renderLibrary($('#library-search').value);return;}
+ if(el.id==='db-roll'){dbRoll=el.value;renderDbDetail(dbSelected);return;}
+ if(el.dataset.bind){if(el.type==='checkbox')set(el.dataset.bind,el.checked);else if(el.tagName==='SELECT')set(el.dataset.bind,el.value);else if(el.type==='number'){let v=GD.n(el.value);if(el.min!=='')v=Math.max(Number(el.min),v);if(el.max!=='')v=Math.min(Number(el.max),v);set(el.dataset.bind,v);el.value=v;}
+ if(el.type==='checkbox'||el.tagName==='SELECT'){clearTimeout(timer);render();}else scheduleUpdate();}
+ if(el.dataset.logmap){const k=el.dataset.logmap;logData.map[k]=el.type==='checkbox'?el.checked:el.value;}
+ if(el.dataset.log){const k=el.dataset.log;if(k==='arrayPath'){logData.arrayIndex=Number(el.value);logData.rows=logData.arrays[logData.arrayIndex].rows;guessMapping();render();}else{logData[k]=el.type==='number'?Number(el.value):el.value;renderLogAnalysis();}}
+});
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-action]');if(!b)return;const a=b.dataset.action,i=Number(b.dataset.index);try{
+ if(a==='db-help')dbHelp();
+ else if(a==='db-retry'){closeModal();fetch('/api/retry',{method:'POST',headers:{'X-Grim-Lab':'1'}}).then(()=>CATALOG.DB.load()).catch(e=>toast(e.message));}
+ else if(a==='portable')portable();
+ else if(a==='pick-db')renderDbDetail(b.dataset.id);
+ else if(a==='db-page'){dbPage=Math.max(0,dbPage+Number(b.dataset.dir));renderLibrary($('#library-search').value);}
+ else if(a==='source-db'){const p=state.equipment[slot].parts[part];openModal('가져온 원본 레코드',`<pre class="code code-wrap">${esc(JSON.stringify(p.db,null,2))}</pre>`);}
+ else if(a==='reroll-db'){const p=state.equipment[slot].parts[part];const item=CATALOG.DB.get(p.db?.id);if(!item)throw new Error('DB를 준비한 뒤 롤을 변경하세요.');installDb(item,{slot,part},b.dataset.roll);render();}
+ else if(a==='equip-db'){
+  const item=CATALOG.DB.get(b.dataset.id);if(!item)throw new Error('아이템을 찾을 수 없습니다.');const dest=libraryTarget||{slot,part};
+  if(state.meta.demo){if(!confirm('실제 장비를 장착하기 위해 데모 장비와 가정 능력치를 지웁니다. 계속할까요?'))return;state=DATA.state(false);for(const e of Object.values(state.equipment))for(const k of Object.keys(e.parts))e.parts[k]=DATA.blankPart();state.combat.darWD=210;state.combat.skillConversion={};}
+  installDb(item,dest,dbRoll);closeModal();render();toast('DB 옵션을 자동 적용했습니다.');
+ }
+ else if(a==='tab'){tab=b.dataset.tab;render();}
+ else if(a==='slot'){slot=b.dataset.slot;part='item';render();}
+ else if(a==='part'){part=b.dataset.part;render();}
+ else if(a==='close-modal')closeModal();
+ else if(a==='template')autoTemplate();
+ else if(a==='demo'){if(confirm('현재 변경사항을 바꿉니다. 필요한 내용은 JSON으로 저장하셨나요?')){state=DATA.state(a==='demo');tab='gear';slot='main';part='item';render();}}
+ else if(a==='snapshot'){savedA=GD.copy(state);render();toast('현재 장비·전투 조건을 A로 저장했습니다.');}
+ else if(a==='restore-a'&&savedA){state=GD.copy(savedA);render();toast('A 기준을 복원했습니다.');}
+ else if(a==='clear-a'){savedA=null;render();}
+ else if(a==='export-build')download('grim-dps-build.json',JSON.stringify(state,null,2));
+ else if(a==='import-build')filePick('build');
+ else if(a==='library')libraryModal();
+ else if(a==='equip-library'){
+  const item=[...customLibrary,...DATA.LIBRARY].find(x=>x.id===b.dataset.id);if(item){const target=libraryTarget||{slot,part};state.equipment[target.slot].parts[target.part]={name:item.name,enabled:true,stats:GD.copy(item.stats||{})};state.equipment[target.slot].reviewed=false;closeModal();render();toast(Object.keys(item.stats||{}).length?'참조 수치를 적용했습니다. 실제 옵션을 확인하세요.':'이름을 적용했습니다. 장비 수치를 입력하세요.');}
+ }
+ else if(a==='import-library'){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.onchange=async()=>{try{const f=inp.files[0];if(!f)return;if(f.size>2000000)throw new Error('아이템 JSON은 2MB 이하로 준비하세요.');const j=JSON.parse(await f.text());const arr=Array.isArray(j)?j:j.items;if(!Array.isArray(arr)||arr.length>500)throw new Error('items 배열(최대 500개)이 필요합니다.');const allowed=new Set(Object.keys(FIELD_LABELS));let added=0;for(const x of arr){if(!x||typeof x.name!=='string'||!PARTS.some(p=>p[0]===x.part)||!x.stats||typeof x.stats!=='object')throw new Error('name, part, stats가 있는 아이템 목록이 필요합니다.');const stats={};for(const[k,v]of Object.entries(x.stats)){if(!allowed.has(k))throw new Error('지원하지 않는 스탯: '+k);if(!Number.isFinite(Number(v))||Math.abs(Number(v))>1e8)throw new Error('잘못된 수치: '+k);stats[k]=Number(v);}x._clean={name:x.name.slice(0,200),part:x.part,stats,slots:Array.isArray(x.slots)?x.slots.filter(v=>SLOTS.some(s=>s[0]===v)):[],status:'사용자 가져온 수치'};}
+   for(const x of arr){const old=customLibrary.find(v=>v.name===x._clean.name&&v.part===x._clean.part);if(old)Object.assign(old,x._clean);else customLibrary.push({id:'user-'+Date.now()+'-'+added,...x._clean});added++;}customLibrary=customLibrary.slice(-500);persist();renderLibrary($('#library-search')?.value||'');toast(added+'개 항목을 가져왔습니다.');}catch(e){toast(e.message);}};inp.click();
+ }
+ else if(a==='export-library')download('grim-dps-items.json',JSON.stringify({schema:'grim-dps-items/v1',items:customLibrary},null,2));
+ else if(a==='save-item'){
+  const p=state.equipment[slot].parts[part];if(!p.name.trim())throw new Error('이름을 먼저 입력하세요.');
+  const exists=customLibrary.find(x=>x.name===p.name&&x.part===part);const obj={id:exists?.id||'user-'+Date.now(),name:p.name,part,slots:[],stats:GD.copy(p.stats),status:'사용자 저장 수치'};if(exists)Object.assign(exists,obj);else customLibrary.push(obj);persist();toast('개인 라이브러리에 저장했습니다.');
+ }
+ else if(a==='clear-part'){state.equipment[slot].parts[part]=DATA.blankPart();state.equipment[slot].reviewed=false;render();}
+ else if(a==='paste-tooltip')openModal('장비 툴팁 붙여넣기',`<div class="note-block">영문/한글의 주요 고정 피해·피해 증가·공격 능력·속도 등을 인식합니다. <strong>기본 아이템 옵션만</strong> 붙여넣으세요. 발동 스킬 설명이나 +스킬 레벨은 자동 해석하지 않습니다.</div><textarea id="tooltip-text" rows="10" placeholder="예: 10 Piercing Damage&#10;+50% Piercing Damage&#10;70 Defensive Ability" style="margin-top:14px"></textarea><div class="row" style="margin-top:12px"><button class="btn primary" data-action="parse-tooltip">인식 결과 확인</button></div><div id="tooltip-preview"></div>`);
+ else if(a==='parse-tooltip'){tooltipPreview=GD.parseTooltip($('#tooltip-text').value);$('#tooltip-preview').innerHTML=`<div class="inline-message">${tooltipPreview.recognized.length}줄 인식 · ${tooltipPreview.unknown.length}줄 미반영</div><table><thead><tr><th>적용할 항목</th><th>값</th></tr></thead><tbody>${Object.entries(tooltipPreview.stats).map(([k,v])=>`<tr><td>${esc(FIELD_LABELS[k]||k)}</td><td>${fmt(v,2)}</td></tr>`).join('')}</tbody></table>${tooltipPreview.unknown.length?`<details><summary>자동 적용하지 않는 줄</summary><pre class="code">${esc(tooltipPreview.unknown.join('\n'))}</pre></details>`:''}<div class="hint">이 결과로 현재 항목의 숫자를 교체합니다. 누락·잘못 인식한 수치를 직접 고쳐주세요.</div><button class="btn primary" data-action="apply-tooltip" ${!tooltipPreview.recognized.length?'disabled':''}>확인 · 현재 항목에 적용</button>`;}
+ else if(a==='apply-tooltip'&&tooltipPreview){state.equipment[slot].parts[part].stats=GD.copy(tooltipPreview.stats);state.equipment[slot].reviewed=false;closeModal();render();}
+ else if(a==='add-buff'){state.buffs.push({name:'추가 버프',enabled:true,stats:{}});render();}
+ else if(a==='delete-buff'){state.buffs.splice(i,1);render();}
+ else if(a==='add-wps'){if(state.wps.length>=20)throw new Error('발동 사격은 최대 20개입니다.');state.wps.push({id:'custom-'+Date.now(),name:'새 발동 사격',enabled:true,chance:0,wd:100,hitsMain:1,hitsOff:1,cycleMs:400,flat:{},conversion:{}});render();}
+ else if(a==='delete-wps'){state.wps.splice(i,1);render();}
+ else if(a==='add-extra'){state.extras.push({id:'extra-'+Date.now(),name:'출혈 (유지 DPS 직접 입력)',enabled:true,kind:'dot',type:'bleed',group:'weapon-bleed',rate:0,uptime:100,afterMitigation:false});render();}
+ else if(a==='delete-extra'){state.extras.splice(i,1);render();}
+ else if(a==='add-rr'){state.target.rr.push({id:'rr-'+Date.now(),name:'새 저항 감소',group:'effect-'+Date.now(),type:'pierce',kind:'stack',value:0,enabled:true});render();}
+ else if(a==='delete-rr'){state.target.rr.splice(i,1);render();}
+ else if(a==='edit-meta')openModal('빌드 정보',`${field('빌드 이름','meta.name',{type:'text'})}<div style="margin-top:12px">${field('게임 버전 / 데이터 기준','meta.gameVersion',{type:'text'})}</div><div style="margin-top:12px">${field('메모','meta.note',{type:'text'})}</div><div style="margin:15px 0">${check('작동 예제 · 실제 장비 미검증 표시','meta.demo')}</div><button class="btn primary" data-action="close-meta">확인</button>`);
+ else if(a==='close-meta'){closeModal();render();}
+ else if(a==='import-log')filePick('log');
+ else if(a==='sample-log'||a==='simulation-log')demoLog();
+ else if(a==='apply-log')logMapApply();
+ else if(a==='export-log'){const rows=logData.events.filter(e=>(logData.filterSource==='all'||e.source===logData.filterSource)&&(logData.filterTarget==='all'||e.target===logData.filterTarget)&&e.time>=logData.start&&e.time<=logData.end);const csv=['time,damage,skill,target,source',...rows.map(e=>[e.time,e.damage,e.skill,e.target,e.source].map(v=>'"'+String(v).replaceAll('"','""')+'"').join(','))].join('\n');download('filtered-damage.csv','\uFEFF'+csv,'text/csv;charset=utf-8');}
+ else if(a==='log-schema')openModal('입력 예시 · 앱 공통 이벤트 형식',`<p class="small muted">DPYes 원본 스키마라고 주장하는 형식이 아닙니다. 원본의 필드를 이 의미에 맞춰 매핑합니다. 기록당 시간과 피해량이 필요합니다.</p><pre class="code">${esc(JSON.stringify({events:[{time:0.4,damage:12500,skill:'폭풍 분사',target:'대상 A',source:'player'},{time:0.8,damage:19000,skill:'냉각성 탄환',target:'대상 A',source:'player'}]},null,2))}</pre><div class="hint">이벤트 파일과 별개로, 실제 전투 시작·종료 시간을 입력해야 전체 평균이 정확해집니다.</div>`);
+ }catch(err){console.error(err);toast(err.message||'입력을 확인하세요.');}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if(e.key==='Tab'&&$('.modal')){const f=[...$('.modal').querySelectorAll('button,input,select,textarea,a')].filter(e=>!e.disabled);const first=f[0],last=f.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+loadLocal();try{const seed=$('#embedded-build');if(seed)state=validateState(JSON.parse(seed.textContent));}catch(e){console.warn(e);}render();
+CATALOG.DB.on(()=>{if(CATALOG.DB.phase==='ready'){render();}const node=$('#db-status');if(node)node.innerHTML=dbStatus();if($('#library-results'))renderLibrary($('#library-search')?.value||'');});
+CATALOG.DB.load();
+AUTOUI.install();
+window.LAB={getState:()=>GD.copy(state),installDb:(id,slot,part)=>{installDb(CATALOG.DB.get(id),{slot,part});render();},setState:s=>{state=validateState(s);render();},getResult:()=>GD.calculate(state),getLog:()=>GD.copy(logData),render};
+})();
+</script>
+</body>
+</html>

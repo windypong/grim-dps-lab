@@ -1,0 +1,1023 @@
+{
+  "note": "SYNTHETIC EXAMPLE — not an actual DPYes log",
+  "measurementStart": 0,
+  "measurementEnd": 60,
+  "events": [
+    {
+      "time": 0.4823529411764706,
+      "damage": 185287.33805999998,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 0.9647058823529412,
+      "damage": 185287.33805999998,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 1.4470588235294117,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 1.9294117647058824,
+      "damage": 207325.92012000002,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 2.364705882352941,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 2.905882352941177,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 3.2976470588235296,
+      "damage": 42619,
+      "skill": "일반 맹공격",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 3.7329411764705887,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 4.215294117647059,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 4.69764705882353,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 5.238823529411765,
+      "damage": 183275.18949999998,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 5.674117647058824,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 6.132941176470589,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 6.524705882352942,
+      "damage": 42619,
+      "skill": "일반 맹공격",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 7.0070588235294125,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 7.4423529411764715,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 7.983529411764707,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 8.465882352941177,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 8.901176470588236,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 9.336470588235295,
+      "damage": 163213.3705,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 9.87764705882353,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 10.360000000000001,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 10.818823529411766,
+      "damage": 241672.25160000005,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 11.277647058823531,
+      "damage": 206840.48580000002,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 11.71294117647059,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 12.254117647058825,
+      "damage": 183275.18949999998,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 12.71294117647059,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 13.148235294117649,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 13.63058823529412,
+      "damage": 185287.33805999998,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 14.065882352941179,
+      "damage": 163213.3705,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 14.54823529411765,
+      "damage": 207325.92012000002,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 15.007058823529414,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 15.465882352941179,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 15.94823529411765,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 16.43058823529412,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 16.971764705882357,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 17.43058823529412,
+      "damage": 206840.48580000002,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 17.91294117647059,
+      "damage": 185287.33805999998,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 18.454117647058826,
+      "damage": 183275.18949999998,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 18.91294117647059,
+      "damage": 206840.48580000002,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 19.395294117647058,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 19.936470588235295,
+      "damage": 183275.18949999998,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 20.371764705882352,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 20.80705882352941,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 21.242352941176467,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 21.783529411764704,
+      "damage": 183275.18949999998,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 22.242352941176467,
+      "damage": 206840.48580000002,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 22.63411764705882,
+      "damage": 119759.39,
+      "skill": "일반 맹공격",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 23.069411764705876,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 23.504705882352933,
+      "damage": 163213.3705,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 23.93999999999999,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 24.375294117647048,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 24.83411764705881,
+      "damage": 206840.48580000002,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 25.31647058823528,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 25.79882352941175,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 26.234117647058806,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 26.775294117647043,
+      "damage": 214138.57899999997,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 27.2105882352941,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 27.645882352941157,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 28.187058823529394,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 28.72823529411763,
+      "damage": 183275.18949999998,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 29.119999999999983,
+      "damage": 85238,
+      "skill": "일반 맹공격",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 29.602352941176452,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 30.08470588235292,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 30.51999999999998,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 31.061176470588215,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 31.496470588235272,
+      "damage": 163213.3705,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 31.93176470588233,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 32.4141176470588,
+      "damage": 207325.92012000002,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 32.87294117647057,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 33.4141176470588,
+      "damage": 183275.18949999998,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 33.84941176470586,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 34.284705882352924,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 34.82588235294116,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 35.36705882352939,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 35.80235294117645,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 36.1941176470588,
+      "damage": 85238,
+      "skill": "일반 맹공격",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 36.629411764705864,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 37.064705882352925,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 37.5470588235294,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 38.08823529411763,
+      "damage": 183275.18949999998,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 38.52352941176469,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 38.98235294117646,
+      "damage": 206840.48580000002,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 39.441176470588225,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 39.9235294117647,
+      "damage": 185287.33805999998,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 40.35882352941176,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 40.79411764705882,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 41.27647058823529,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 41.71176470588235,
+      "damage": 163213.3705,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 42.194117647058825,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 42.629411764705885,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 43.08823529411765,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 43.570588235294125,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 44.11176470588236,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 44.59411764705883,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 45.0529411764706,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 45.59411764705883,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 46.135294117647064,
+      "damage": 214138.57899999997,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 46.617647058823536,
+      "damage": 207325.92012000002,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 47.0764705882353,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 47.53529411764707,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 47.97058823529413,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 48.40588235294119,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 48.88823529411766,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 49.370588235294136,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 49.8294117647059,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 50.311764705882375,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 50.79411764705885,
+      "damage": 207325.92012,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 51.27647058823532,
+      "damage": 207325.92012,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 51.735294117647086,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 52.21764705882356,
+      "damage": 185287.33806,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 52.676470588235325,
+      "damage": 206840.48580000002,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 53.13529411764709,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 53.57058823529415,
+      "damage": 210260.641,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 54.052941176470625,
+      "damage": 163248.756,
+      "skill": "폭풍 분사",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 54.51176470588239,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 54.903529411764744,
+      "damage": 42619,
+      "skill": "일반 맹공격",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 55.338823529411805,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 55.88000000000004,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 56.42117647058827,
+      "damage": 152411.8,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 56.962352941176505,
+      "damage": 214138.57899999997,
+      "skill": "냉각성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 57.35411764705886,
+      "damage": 42619,
+      "skill": "일반 맹공격",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 57.78941176470592,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 58.248235294117684,
+      "damage": 172008.72000000003,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 58.70705882352945,
+      "damage": 206840.48580000002,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 59.16588235294122,
+      "damage": 206840.48580000002,
+      "skill": "피의 송곳니",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    },
+    {
+      "time": 59.60117647058828,
+      "damage": 116166.09999999999,
+      "skill": "폭발성 탄환",
+      "target": "단일 대상",
+      "source": "player",
+      "kind": "direct"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "suite": "native Windows end-to-end",
+  "platform": "linux",
+  "status": "not_run",
+  "checks": [],
+  "gameDPSValidated": false,
+  "defaultBrowserAssociationValidated": false,
+  "fixture": false,
+  "reason": "Requires native Windows. Linux/Wine/UA spoofing is not Windows verification."
+}

@@ -1,0 +1,41 @@
+{
+  "version": "3.0-BETA",
+  "generatedAtUtc": "2026-09-21T04:10:47.686762+00:00",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "implementationTests": {
+    "automaticEngine": 68,
+    "backendAndHTTP": 27,
+    "chromiumUI": 39,
+    "legacyEngine": 48,
+    "legacyCatalog": 20
+  },
+  "implementationTestsPassed": 202,
+  "implementationTestsFailed": 0,
+  "fixturesUsed": true,
+  "fixtureIsRealGameData": false,
+  "browserMethod": "Linux Chromium set_content of actual local HTTP response; no browser localhost navigation",
+  "fullLiveDatabaseDownload": "failed_dns_resolution",
+  "nativeWindows": "not_run",
+  "nativeWindowsReason": "Requires native Windows. Linux/Wine/UA spoofing is not Windows verification.",
+  "allSkillsBehaviorImplemented": false,
+  "actualGameDPSValidated": false,
+  "sourceSha256": {
+    "START_WINDOWS.cmd": "e90b5aa77e5585f4ff3554303d149f72571a05365792cdd5e08f51098881c580",
+    "automation_backend.py": "9e9d732dc3416fad49847e3c632edbf316d09542910ca8499fe9aa21bb8f4ec1",
+    "build.py": "3b4ce0438f830f5feb8b0b949b8b64d7836ce31ca0cc0488861da41cb00bc1e6",
+    "catalog_backend.py": "5e9b99f81924c5eb377b0cbef11d22c89b12f948d9159ca2d6122ffcdbbb5abd",
+    "index.html": "4839c20c4e80bcd572326a2d64db906bb222e28656108c2e948e7cdf125044af",
+    "launch.ps1": "7ceed7aab88fce4f51fbd297a00051a9e22b38339327a569351ddd0919db5925",
+    "server.py": "b9c9a951446fc60f08031e421dbafcec8305da3808f29a27471ed85380829aaa",
+    "src/app.js": "b96012d51082c579f4a1dd7cc0275c7780d3b4a8ccdb23b9d72dc4684326457d",
+    "src/auto-engine.js": "ce4ecb910d4006f9ed99524c508e6372ea18ecb85068094fc123b71daebabc76",
+    "src/auto-ui.js": "ad536b45a008cf9eca69c6b52f703f81a56e4600cafc6bfbe43f7effff210163",
+    "src/catalog.js": "1bcb9661e7bea3b8dd95b09a12c520313f7ff55c925d5370e9520f8fb04d6b59",
+    "src/data.js": "869d79dcf08a88670c731a3cb89dd40e36c47e3b427867b667c249d9fd393b24",
+    "src/engine.js": "0f7c3477aa0561662ccc8ee6a87b307260b5fe23455be480cba845c54f51263e",
+    "src/shell.html": "9fad3250217a79b7f4cbcc95f409d74c2be3249f242cc1ca171d7aef9a52ac60",
+    "src/style.css": "9d8cb75fe7c6a41c77d64f5e0e842551bae1b558793ef86e74744f418a01770c",
+    "start.sh": "3438afab388edd12b5574eed442f6315f9f53d2de48d5f8c4fab78dadcc951db",
+    "tests/windows_e2e.py": "306f316b6a28b99e2a76d35c7a62b799b02f08910e14634d6027ea612829546d"
+  }
+}

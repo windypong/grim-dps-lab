@@ -1,0 +1,19 @@
+{
+  "schema": "grim-dps-items/v1",
+  "items": [
+    {
+      "name": "직접 입력 예시 증강제 (실제 아이템 아님)",
+      "part": "augment",
+      "slots": [
+        "amulet",
+        "ring1",
+        "ring2"
+      ],
+      "stats": {
+        "flat_pierce": 10,
+        "inc_pierce": 50,
+        "da": 70
+      }
+    }
+  ]
+}

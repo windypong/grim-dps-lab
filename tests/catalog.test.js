@@ -1,0 +1,26 @@
+const assert=require('node:assert/strict');const fs=require('node:fs');
+const C=require('../src/catalog.js'),GD=require('../src/engine.js'),DATA=require('../src/data.js');
+const data=JSON.parse(fs.readFileSync(__dirname+'/catalog-fixture.json','utf8'));C.DB.accept(data);
+let count=0;function test(name,f){f();console.log('PASS '+name);count++;}
+const r=C.DB.data.items.find(x=>x.en==='Oathbearer'&&x.level===94);
+test('Korean search loads actual numeric item, not name-only template',()=>{const x=C.DB.search('서약운반자','main','item',null).rows[0];assert.equal(x.id,r.id);assert.equal(C.mapped(x).stats.oa,78);});
+test('English Mythical prefix also matches unprefixed translated name',()=>assert.equal(C.DB.search('Mythical Oathbearer','main','item',null).total,2));
+test('Weapon is filtered from helmet',()=>assert.equal(C.DB.search('Oathbearer','head','item',null).total,0));
+test('Highest tier comes first',()=>assert.equal(C.DB.search('Oath','main','item',null).rows[0].level,94));
+test('Level filter preserves low level version',()=>assert.equal(C.DB.search('Oath','main','item',null,{maxLevel:70}).rows[0].level,65));
+test('Weapon min/max is intrinsic average, not doubled',()=>assert.equal(C.mapped(r).stats.flat_physical,68.5));
+test('Global conversion is read from conversions table',()=>assert.equal(C.mapped(r).stats.conv_elemental,45));
+test('Roll low/high on displayed option',()=>{assert.ok(Math.abs(C.mapped(r,'low').stats.oa-62.4)<1e-9);assert.ok(Math.abs(C.mapped(r,'high').stats.oa-93.6)<1e-9);});
+test('Proc damage is not mistaken for permanent flat damage',()=>{const x=structuredClone(r);x.raw.push({source:'skill',stat:'offensiveFire',min:9999,max:9999});assert.equal(C.mapped(x).stats.flat_fire,undefined);assert.ok(C.mapped(x).unapplied.length);});
+test('Other damage conversions are visible unsupported',()=>{const x=structuredClone(r);x.conversions.push({from:'Physical',to:'Fire',percent:100});assert.equal(C.mapped(x).stats.conv_physical,undefined);assert.ok(C.mapped(x).unapplied.some(u=>u.reason.includes('미지원')));});
+test('Relic slot filtering',()=>assert.equal(C.DB.search('평온','relic','item',null).rows[0].domain,'relic'));
+test('Both ring slots are allowed',()=>assert.equal(C.DB.search('검사용 반지','ring2','item',null).total,1));
+test('Component applicability follows gear type',()=>{assert.equal(C.DB.search('문장','main','component',r).total,1);assert.equal(C.DB.search('문장','ring1','component',{type:'ring'}).total,0);});
+test('Prefix not allowed on legendary base item',()=>assert.equal(C.DB.search('무자비','main','prefix',r).total,0));
+test('Prefix allowed on rare armor with compatibility disclaimer',()=>assert.equal(C.DB.search('무자비','gloves','prefix',{rarity:'Rare'}).total,1));
+test('Unknown ascension rule is not faked',()=>assert.equal(C.DB.search('','gloves','ascension',null).total,0));
+test('Single skill weapon modifier maps only to intended attack',()=>{const x=C.DB.data.items.find(x=>x.en==='Test Onslaught Medal');assert.equal(C.mapped(x).stats.darWD,10);assert.equal(C.mapped(x).modifiers[0].key,'conv_cold');});
+test('Unrelated Righteous Fervor modifier does not affect Onslaught',()=>{const x=structuredClone(r);x.modifiers.push({name:'정의의 열정',en:'Righteous Fervor',skill:'rf.dbr',stat:'weaponDamagePct',value:14});assert.equal(C.mapped(x).stats.darWD,undefined);});
+test('Auto item changes computed DPS and OA',()=>{const s=DATA.state(true);s.equipment.main.parts.item={enabled:true,name:r.name,stats:C.mapped(r).stats};const a=GD.calculate(s);assert.ok(a.total>0);assert.equal(a.a.g.oa,3478);});
+test('Item skill-local cold conversion is used without global leakage',()=>{const s=DATA.state(true);s.base={oa:3000,flat_cold:100,attackSpeed:100};s.combat.skillConversion={};s.combat.darFlat={};s.equipment.main.parts.item.stats={};s.equipment.off.parts.item.stats={};const med=C.DB.data.items.find(x=>x.en==='Test Onslaught Medal');const m=C.mapped(med);s.equipment.medal.parts.item={name:med.name,enabled:true,stats:m.stats,db:{modifiers:m.modifiers}};const a=GD.calculate(s);assert.ok(a.rows[0].rawMain.pierce>0);assert.equal(a.rows[0].rawMain.cold,0);});
+console.log(count+' catalog integration tests passed');

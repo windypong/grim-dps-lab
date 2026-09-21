@@ -1,0 +1,1 @@
+{"history": [{"timestampMs": 1000, "damage": 100, "skillName": "A", "source": "player", "target": "boss"}, {"timestampMs": 2000, "damage": 300, "skillName": "B", "source": "player", "target": "boss"}, {"timestampMs": 3000, "damage": 600, "skillName": "C", "source": "pet", "target": "add"}]}

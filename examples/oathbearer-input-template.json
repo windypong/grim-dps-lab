@@ -1,0 +1,636 @@
+{
+  "schema": "grim-dps-lab/v1",
+  "meta": {
+    "name": "서약운반자 · 내 장비",
+    "demo": false,
+    "gameVersion": "직접 확인 필요",
+    "note": "이름만 채워진 입력 템플릿입니다. 장비·버프·스킬의 실제 수치를 확인해야 합니다. 아래 공격 계수도 예제 참조값입니다."
+  },
+  "base": {
+    "oa": 1
+  },
+  "equipment": {
+    "main": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "신화적인 서약운반자",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "칼날의 문장",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "래비저의 눈동자",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "off": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "신화적인 서약운반자",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "칼날의 문장",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "래비저의 눈동자",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "head": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "풀려버린 운명의 시선",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "무지개빛 다이아몬드",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "chest": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "신화적인 코르보란의 흉갑",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "살아있는 갑옷",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "shoulders": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "빈의 견갑",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "무자비한",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "드란구울의",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "신성한 판금",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "gloves": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "역병보호 장갑",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "무자비한",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "아마라스타의 날렵함의",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "봉헌된 천",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "pants": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "솔라엘 교파 다리보호대",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "가공할",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "생명력의",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "비늘달린 통가죽",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "boots": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "용기의 전쟁부츠",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "벼락맞은",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "왕의",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "모그드로젠의 표식",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "belt": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "신화적인 의심스러운 수단의 꾸러미",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "우그덴늪 가죽",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "amulet": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "실바리아의 뿌리",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "잔인성의",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "완비의",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "섬멸의 문장",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "제련 부산물 가루",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "ring1": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "칼날 비트는 자의 인장",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "피에 물든 크리스탈",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "제련 부산물 가루",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "ring2": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "신화적인 돌의 테인의 인장",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "피에 물든 크리스탈",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "제련 부산물 가루",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "medal": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "신화적인 무서운 늑대의 문장",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "룬새겨진 토파즈",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    },
+    "relic": {
+      "enabled": true,
+      "reviewed": false,
+      "notes": "",
+      "parts": {
+        "item": {
+          "name": "평온",
+          "enabled": true,
+          "stats": {}
+        },
+        "prefix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "suffix": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "component": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "augment": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        },
+        "ascension": {
+          "name": "",
+          "enabled": true,
+          "stats": {}
+        }
+      }
+    }
+  },
+  "buffs": [],
+  "combat": {
+    "dual": true,
+    "darName": "맹공격",
+    "darWD": 220,
+    "darFlat": {
+      "flat_cold": 188
+    },
+    "skillConversion": {
+      "conv_cold": 100
+    },
+    "totalDamageModifier": 0,
+    "basicCycleMs": 333,
+    "referenceSpeed": 200,
+    "speedCap": 200,
+    "timingMode": "cycles",
+    "measuredAPS": 2.5,
+    "uptime": 85
+  },
+  "target": {
+    "name": "사용자 지정 단일 대상",
+    "da": 3000,
+    "daReduction": 0,
+    "resistMode": "final",
+    "resists": {
+      "physical": 20,
+      "pierce": -70,
+      "fire": 50,
+      "cold": 50,
+      "lightning": 50,
+      "acid": 50,
+      "vitality": 50,
+      "aether": 50,
+      "chaos": 50,
+      "bleed": 30
+    },
+    "rr": [],
+    "armor": 0,
+    "armorAbsorption": 70,
+    "absorption": 0,
+    "flatAbsorption": 0,
+    "avoidance": 0
+  },
+  "wps": [
+    {
+      "id": "fang",
+      "name": "피의 송곳니",
+      "enabled": true,
+      "chance": 26,
+      "wd": 90,
+      "hitsMain": 2,
+      "hitsOff": 2,
+      "cycleMs": 390,
+      "flat": {
+        "flat_pierce": 100
+      },
+      "conversion": {}
+    },
+    {
+      "id": "cold",
+      "name": "냉각성 탄환",
+      "enabled": true,
+      "chance": 21,
+      "wd": 75,
+      "hitsMain": 2,
+      "hitsOff": 2,
+      "cycleMs": 460,
+      "flat": {
+        "flat_cold": 110
+      },
+      "conversion": {}
+    },
+    {
+      "id": "storm",
+      "name": "폭풍 분사",
+      "enabled": true,
+      "chance": 23,
+      "wd": 43,
+      "hitsMain": 3,
+      "hitsOff": 3,
+      "cycleMs": 410,
+      "flat": {
+        "flat_lightning": 120
+      },
+      "conversion": {}
+    },
+    {
+      "id": "burst",
+      "name": "폭발성 탄환",
+      "enabled": true,
+      "chance": 22,
+      "wd": 125,
+      "hitsMain": 1,
+      "hitsOff": 1,
+      "cycleMs": 370,
+      "flat": {
+        "flat_fire": 170
+      },
+      "conversion": {}
+    }
+  ],
+  "extras": [],
+  "duration": 60,
+  "seed": 37
+}

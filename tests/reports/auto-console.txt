@@ -1,0 +1,69 @@
+PASS rank: exact nonlinear middle point, never interpolation
+PASS rank: clamps short array to last value
+PASS rank: no investment contributes zero
+PASS rank: constant scalar
+PASS skill bonuses require an invested skill
+PASS skill + mastery + all bonus, capped at ultimate
+PASS transmuter ignores all gear levels
+PASS raw min/max average once
+PASS chance gated damage is expectation weighted
+PASS elemental direct thirding
+PASS elemental resistance mapped once
+PASS crit and cast speed mapping
+PASS DoT raw is rate not divided again by duration
+PASS local conversion first and converted damage never reconverted
+PASS competing conversions normalize above 100
+PASS elemental conversion affects each component
+PASS armor piercing acts on unconverted physical only
+PASS physical->pierce does not create bleed from trauma
+PASS cold->fire transfers analogous DoT
+PASS equations use whitelist and case insensitive variables
+PASS equations block property access and code injection
+PASS equations reject missing variables
+PASS on-hit cooldown renewal
+PASS zero trigger rate gives zero procs
+PASS proc uptime asymptotically bounded
+PASS same-source -RR uses max, different sources stack
+PASS flat RR uses max not sum
+PASS percent reduced resistance magnifies negative resistance
+PASS single weapon expected damage oracle
+PASS gear bonus changes rank coefficient automatically
+PASS gear mastery bonus affects skill, not mastery bar
+PASS equip item skill modifier changes weapon multiplier
+PASS manual legacy stats do not double count in auto mode
+PASS dual weapon local damage remains local
+PASS off weapon can be explicitly disabled
+PASS global armor flat applied to every armor slot, body armor local
+PASS spell without WD does not accidentally receive weapon damage
+PASS missing primary does not fabricate DPS
+PASS missing v3 DB gives preparation result
+PASS unlearned prerequisite flagged
+PASS point budget validated
+PASS attribute budget validated
+PASS unverified primary skill arrays diagnosed
+PASS unsupported pet never presented as exact zero DPS complete
+PASS weapons cannot silently turn on pet bonuses
+PASS WPS probability overcap normalizes, does not stack extra attacks
+PASS measured APS mode honors override
+PASS uptime 0 results in zero offensive DPS
+PASS DoT saturates instead of multiplying directly by APS
+PASS completed constellation affinity granted once
+PASS partial constellation no completion affinity
+PASS missing predecessor invalid
+PASS duplicate identical set piece does not count twice
+PASS distinct set threshold boosts mastery levels
+PASS fixture marker travels into report
+PASS catalog fixture skills all exact-array callable
+PASS malicious label is data not executable
+PASS RR measured positive order oracle (Y -> Z -> X)
+PASS RR measured negative oracle
+PASS Assassins Mark public raw defensivePierce is enemy RR
+PASS Manticore public TotalResistanceReduction key recognized
+PASS Viper raw elemental percent reduced applies each elemental type only
+PASS positive defensive resistance is not enemy RR
+PASS conditional cooldown reset does not sum with flat cooldown
+PASS Skill_BuffDebuff classified as enemy attack not player buff
+PASS passive viper propagates through weapon damage and not player cold resistance
+PASS skill-tree damage bonus follows converted type additively
+PASS lowercase conversion damage types work
+68/68 passed

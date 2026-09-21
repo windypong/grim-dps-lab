@@ -1,0 +1,21 @@
+PASS Korean search loads actual numeric item, not name-only template
+PASS English Mythical prefix also matches unprefixed translated name
+PASS Weapon is filtered from helmet
+PASS Highest tier comes first
+PASS Level filter preserves low level version
+PASS Weapon min/max is intrinsic average, not doubled
+PASS Global conversion is read from conversions table
+PASS Roll low/high on displayed option
+PASS Proc damage is not mistaken for permanent flat damage
+PASS Other damage conversions are visible unsupported
+PASS Relic slot filtering
+PASS Both ring slots are allowed
+PASS Component applicability follows gear type
+PASS Prefix not allowed on legendary base item
+PASS Prefix allowed on rare armor with compatibility disclaimer
+PASS Unknown ascension rule is not faked
+PASS Single skill weapon modifier maps only to intended attack
+PASS Unrelated Righteous Fervor modifier does not affect Onslaught
+PASS Auto item changes computed DPS and OA
+PASS Item skill-local cold conversion is used without global leakage
+20 catalog integration tests passed

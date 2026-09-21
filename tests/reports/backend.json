@@ -1,0 +1,9 @@
+{
+  "suite": "v3 backend + local HTTP",
+  "platform": "linux",
+  "fixture": true,
+  "liveDownloadValidated": false,
+  "passed": 27,
+  "failed": 0,
+  "errors": []
+}

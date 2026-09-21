@@ -1,0 +1,49 @@
+test_checksum_failure_fails_closed (__main__.DownloadTests.test_checksum_failure_fails_closed) ... ok
+test_corrupt_raw_cache_redownloads (__main__.DownloadTests.test_corrupt_raw_cache_redownloads) ... ok
+test_full_orchestration_with_synthetic_parquet_reader (__main__.DownloadTests.test_full_orchestration_with_synthetic_parquet_reader) ... ok
+test_http_and_private_hosts_rejected (__main__.DownloadTests.test_http_and_private_hosts_rejected) ... ok
+test_mismatched_devotion_version_fails (__main__.DownloadTests.test_mismatched_devotion_version_fails) ... ok
+test_bad_numeric_values_not_treated_as_finite (__main__.RawTests.test_bad_numeric_values_not_treated_as_finite) ... ok
+test_chain_cycle_stops (__main__.RawTests.test_chain_cycle_stops) ... ok
+test_devotion_exact_power_arrays (__main__.RawTests.test_devotion_exact_power_arrays) ... ok
+test_effect_key_wins_without_erasing_other_root (__main__.RawTests.test_effect_key_wins_without_erasing_other_root) ... ok
+test_exact_mastery_arrays (__main__.RawTests.test_exact_mastery_arrays) ... ok
+test_formula_binding_only_known_canonical_key (__main__.RawTests.test_formula_binding_only_known_canonical_key) ... ok
+test_korean_skill_and_mastery_names (__main__.RawTests.test_korean_skill_and_mastery_names) ... ok
+test_last_duplicate_key_wins (__main__.RawTests.test_last_duplicate_key_wins) ... ok
+test_missing_raw_rank_diagnosed_not_filled (__main__.RawTests.test_missing_raw_rank_diagnosed_not_filled) ... ok
+test_non_linear_rank_arrays_not_interpolated (__main__.RawTests.test_non_linear_rank_arrays_not_interpolated) ... ok
+test_numeric_scalars_not_forced_to_arrays (__main__.RawTests.test_numeric_scalars_not_forced_to_arrays) ... ok
+test_numeric_weapon_requirement_retained (__main__.RawTests.test_numeric_weapon_requirement_retained) ... ok
+test_raw_root_and_buff_arrays_both_retained (__main__.RawTests.test_raw_root_and_buff_arrays_both_retained) ... ok
+test_set_arrays_and_piece_thresholds (__main__.RawTests.test_set_arrays_and_piece_thresholds) ... ok
+test_string_equations_preserved_not_evaluated (__main__.RawTests.test_string_equations_preserved_not_evaluated) ... ok
+test_api_contains_v3_automation (__main__.ServerTests.test_api_contains_v3_automation) ... 127.0.0.1 - - [21/Sep/2026 04:06:24] "GET /api/catalog HTTP/1.1" 200 -
+ok
+test_backend_files_not_served (__main__.ServerTests.test_backend_files_not_served) ... 127.0.0.1 - - [21/Sep/2026 04:06:24] "GET /server.py HTTP/1.1" 404 -
+ok
+test_cross_origin_mutation_blocked (__main__.ServerTests.test_cross_origin_mutation_blocked) ... 127.0.0.1 - - [21/Sep/2026 04:06:24] "POST /api/retry HTTP/1.1" 403 -
+ok
+test_offline_missing_cache_does_not_download (__main__.ServerTests.test_offline_missing_cache_does_not_download) ... ValueError: Offline launch requires an already prepared v3 catalog.json.
+Traceback (most recent call last):
+  File "/mnt/data/Grim_DPS_Lab_v3/server.py", line 26, in load
+    if offline_mode: raise ValueError('Offline launch requires an already prepared v3 catalog.json.')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Offline launch requires an already prepared v3 catalog.json.
+ok
+test_portable_contains_db_without_plain_script_injection (__main__.ServerTests.test_portable_contains_db_without_plain_script_injection) ... 127.0.0.1 - - [21/Sep/2026 04:06:24] "GET /api/portable HTTP/1.1" 200 -
+ok
+test_production_test_fixture_rejected (__main__.ServerTests.test_production_test_fixture_rejected) ... ValueError: Production cache contains a test fixture; remove this cache.
+Traceback (most recent call last):
+  File "/mnt/data/Grim_DPS_Lab_v3/server.py", line 21, in load
+    if not fixture and catalog.get('meta',{}).get('fixture'): raise ValueError('Production cache contains a test fixture; remove this cache.')
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Production cache contains a test fixture; remove this cache.
+ok
+test_rebinding_host_blocked (__main__.ServerTests.test_rebinding_host_blocked) ... 127.0.0.1 - - [21/Sep/2026 04:06:24] "GET / HTTP/1.1" 403 -
+ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.542s
+
+OK
