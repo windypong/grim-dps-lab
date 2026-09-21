@@ -26,6 +26,13 @@ function Download-Trusted([string]$Url,[string]$Output) {
   Invoke-WebRequest -UseBasicParsing -Uri $Url -OutFile $Output -TimeoutSec 180
   if ((Get-Item -LiteralPath $Output).Length -lt 100000) {throw 'Downloaded runtime archive is unexpectedly small.'}
 }
+# Verify checksums through .NET; do not depend on Get-FileHash module autoload.
+function Get-Sha256([string]$Path) {
+  $Stream=[IO.File]::OpenRead($Path)
+  $Algorithm=[Security.Cryptography.SHA256]::Create()
+  try { return [BitConverter]::ToString($Algorithm.ComputeHash($Stream)).Replace('-','').ToLowerInvariant() }
+  finally { $Algorithm.Dispose(); $Stream.Dispose() }
+}
 try {
   if (-not [Environment]::Is64BitOperatingSystem) {throw 'Windows x64 is required.'}
   if (-not (Test-Path -LiteralPath $Python)) {
@@ -55,7 +62,7 @@ try {
     New-Item -ItemType Directory -Force -Path $Site | Out-Null
     $Archive=Join-Path $Root '.runtime\duckdb.zip'
     Download-Trusted $Wheel.url $Archive
-    if ((Get-FileHash -LiteralPath $Archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $DuckHash) {Remove-Item -LiteralPath $Archive;throw 'DuckDB checksum mismatch.'}
+    if ((Get-Sha256 $Archive) -ne $DuckHash) {Remove-Item -LiteralPath $Archive;throw 'DuckDB checksum mismatch.'}
     Expand-Archive -LiteralPath $Archive -DestinationPath $Site -Force
     Remove-Item -LiteralPath $Archive
     & $Python -c "import sys,duckdb; assert sys.version_info[:2]==(3,12); assert duckdb.__version__=='$DuckVersion'; assert duckdb.sql('select 42').fetchone()[0]==42"
