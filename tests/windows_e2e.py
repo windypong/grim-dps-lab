@@ -61,12 +61,14 @@ def main():
         {'items':len(catalog['items']),'skills':len(auto.get('skills',[])),'devotions':len(auto.get('devotions',[]))})
   check('raw mastery arrays available',all(x['rankSource']=='raw-arrays' for x in auto['masteries']))
   report['dataMetadata']=catalog['meta']
+  (ROOT/'tests/reports/live-catalog.json').write_text(json.dumps(catalog,ensure_ascii=False),encoding='utf8')
   with sync_playwright() as p:
    browser=p.chromium.launch(headless=True);page=browser.new_page(viewport={'width':1440,'height':1000},accept_downloads=True)
    page.set_default_timeout(30000);errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.on('dialog',lambda d:d.accept())
    page.goto(info['url']);page.wait_for_function('window.CATALOG?.DB.phase==="ready"')
    check('Windows Chromium reaches localhost app',True)
    page.locator('[data-action="library"]').first.click();page.locator('#library-search').fill('서약운반자')
+   page.locator('.db-card').first.wait_for(state='visible')
    check('real Korean item search',page.locator('.db-card').count()>0)
    page.locator('.db-card').first.click();page.locator('[data-action="equip-db"]').click()
    check('item raw options automatically installed',bool(page.evaluate('LAB.getState().equipment.main.parts.item.db.id')))
@@ -88,6 +90,7 @@ def main():
    offpage.route('**/*',route);offpage.goto(offline.as_uri());offpage.wait_for_function('window.CATALOG?.DB.phase==="ready"')
    check('exported file reopens with no server/network',len(http)==0)
    restored=offpage.evaluate('LAB.getResult().total');check('offline calculation matches',abs(restored-r['total'])<1e-7)
+   shutil.copyfile(offline,ROOT/'tests/reports/Grim_DPS_Lab_Offline.html')
    check('no JavaScript exceptions',not errors,errors)
    page.reload();page.wait_for_function('window.CATALOG?.DB.phase==="ready"');check('same-origin persisted build restores',page.evaluate('LAB.getResult().autoReport.spent')==250)
    check('source files not publicly served',page.request.get(info['url']+'server.py').status==404)
@@ -104,7 +107,10 @@ def main():
    except Exception:pass
   stop()
   if reservation:reservation.close()
-  for f in temp.glob('*console.txt'):shutil.copyfile(f,ROOT/'tests/reports'/('windows-'+f.name))
+  for f in temp.glob('*console.txt'):
+   shutil.copyfile(f,ROOT/'tests/reports'/('windows-'+f.name))
+   if report['status']!='passed':
+    print('LAUNCHER LOG '+f.name+'\n'+f.read_text('utf8',errors='replace')[-16000:],flush=True)
   report['passed']=sum(x['status']=='passed' for x in report['checks']);report['finishedAt']=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
   REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
   shutil.rmtree(temp,ignore_errors=True)
