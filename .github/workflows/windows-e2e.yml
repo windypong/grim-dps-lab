@@ -31,6 +31,8 @@ jobs:
         run: |
           if (Test-Path tests/reports) { Remove-Item tests/reports -Recurse -Force }
           New-Item tests/reports -ItemType Directory -Force | Out-Null
+      - name: Apply the explicit reviewed UI and live-database candidate
+        run: python fixes/prepare_candidate.py
       - name: Build and deterministic tests
         shell: pwsh
         run: |
@@ -54,6 +56,11 @@ jobs:
         run: python tests/parquet_real_test.py
       - name: Actual CMD launcher, real DB, Windows Chromium, offline restart
         run: python tests/windows_e2e.py
+      - name: Native record semantics and preset integration
+        if: always()
+        run: node tests/live_catalog_test.js
+      - name: Package only successfully tested workspace
+        run: python tests/package_candidate.py
       - name: Upload actual reports even on failure
         if: always()
         uses: actions/upload-artifact@v4
